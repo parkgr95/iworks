@@ -6,12 +6,12 @@ import java.io.Serializable;
 
 @EqualsAndHashCode
 public class NotificationId implements Serializable {
-    private int categoryCode; //Notification.categoryCode 매핑
-    private int ownerId;  //Notification.ownerId 매핑
+    private int notificationCategoryCode;
+    private int notificationOwnerId;
 
-    public NotificationId(int categoryCode, int ownerId) {
-        this.categoryCode = categoryCode;
-        this.ownerId = ownerId;
+    public NotificationId(int notificationCategoryCode, int notificationOwnerId) {
+        this.notificationCategoryCode = notificationCategoryCode;
+        this.notificationOwnerId = notificationOwnerId;
     }
     public NotificationId() {
     }
