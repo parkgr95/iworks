@@ -12,12 +12,12 @@ import lombok.Setter;
 public class UserNotification {
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 유저 아이디 (외래키)
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "notification_category_code_id", referencedColumnName = "notification_category_code_id"),
             @JoinColumn(name = "notification_owner_id", referencedColumnName = "notification_owner_id" )

@@ -16,11 +16,11 @@ public class UserMeeting {
     @Column(name = "user_meeting_id", nullable = false)
     private int id; // 유저-회의 식별 아이디
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meeting_id", nullable = false)
     private Meeting meeting; // 회의방 아이디 (외래키)
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 유저 식별 아이디 (외래키)
 

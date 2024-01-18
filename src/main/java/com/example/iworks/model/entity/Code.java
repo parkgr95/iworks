@@ -21,7 +21,7 @@ public class Code {
     @Column(name = "code_is_use", nullable = false)
     private boolean isUse; // 코드 사용 여부
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_group_id", nullable = false)
     private CodeGroup codeGroup; // 코드 그룹 아이디 (외래키)
 
