@@ -76,7 +76,7 @@ public class User {
     @Column(name = "user_status")
     private Status status; // 상태
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="dept_id")
     private Department department; //부서
 
