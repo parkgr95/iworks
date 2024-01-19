@@ -15,20 +15,20 @@ public class CodeGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code_group_id", nullable = false)
-    private int id; // 코드 그룹 아이디
+    private int codeGroupId; // 코드 그룹 아이디
 
     @Column(name = "code_group_name", length = 30, nullable = false)
-    private String name; // 코드 그룹 이름
+    private String codeGroupName; // 코드 그룹 이름
 
     @Column(name = "code_group_is_used", nullable = false)
-    private boolean isUsed; // 코드 그룹 사용 여부
+    private boolean codeGroupIsUsed; // 코드 그룹 사용 여부
 
     @OneToMany(mappedBy = "codeGroup")
-    private List<Code> codes = new ArrayList<>();
+    private List<Code> codeGroupCodes = new ArrayList<>();
 
     public void setCodes(Code code){ //if code.group == this if code.setCodeGroup(this)
-        this.codes.add(code);
-        if(code.getCodeGroup() != this){
+        this.codeGroupCodes.add(code);
+        if(code.getCodeCodeGroup() != this){
             code.setCodeGroup(this);
         }
     }
