@@ -19,8 +19,8 @@ public class UserNotification {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "notification_category_code_id", referencedColumnName = "notification_category_code_id"),
-            @JoinColumn(name = "notification_owner_id", referencedColumnName = "notification_owner_id" )
+            @JoinColumn(name = "user_notification_category_code_id", referencedColumnName = "notification_category_code_id"),
+            @JoinColumn(name = "user_notification_owner_id", referencedColumnName = "notification_owner_id" )
     })
     private Notification notification;
 

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "notification")
 @Getter
-@Setter
 @IdClass(NotificationId.class)
 public class Notification {
 

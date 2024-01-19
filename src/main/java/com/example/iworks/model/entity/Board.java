@@ -52,7 +52,7 @@ public class Board {
     private LocalDateTime boardDeletedAt; // 삭제일시
 
     @Column(name = "board_is_deleted")
-    private boolean boardIsDeleted; // 삭제여부
+    private Boolean boardIsDeleted; // 삭제여부
 
     @Column(name = "board_modifier_id")
     private Integer boardModifierId; // 수정자 아이디

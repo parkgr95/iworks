@@ -8,18 +8,15 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_meeting")
 @Getter
-@Setter
+@IdClass(UserMeetingId.class)
 public class UserMeeting {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_meeting_id", nullable = false)
-    private int id; // 유저-회의 식별 아이디
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meeting_id", nullable = false)
     private Meeting meeting; // 회의방 아이디 (외래키)
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 유저 식별 아이디 (외래키)
