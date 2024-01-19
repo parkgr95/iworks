@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "code_group")
-@Getter @Setter
+@Getter
 public class CodeGroup {
 
     @Id
@@ -20,4 +23,13 @@ public class CodeGroup {
     @Column(name = "code_group_is_used", nullable = false)
     private boolean isUsed; // 코드 그룹 사용 여부
 
+    @OneToMany(mappedBy = "codeGroup")
+    private List<Code> codes = new ArrayList<>();
+
+    public void setCodes(Code code){ //if code.group == this if code.setCodeGroup(this)
+        this.codes.add(code);
+        if(code.getCodeGroup() != this){
+            code.setCodeGroup(this);
+        }
+    }
 }
