@@ -23,7 +23,7 @@ public class CodeGroup {
     @Column(name = "code_group_is_used", nullable = false)
     private boolean codeGroupIsUsed; // 코드 그룹 사용 여부
 
-    @OneToMany(mappedBy = "codeGroup")
+    @OneToMany(mappedBy = "codeCodeGroup")
     private List<Code> codeGroupCodes = new ArrayList<>();
 
     public void setCodes(Code code){ //if code.group == this if code.setCodeGroup(this)
