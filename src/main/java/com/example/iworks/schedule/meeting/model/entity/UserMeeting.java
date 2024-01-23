@@ -1,5 +1,6 @@
-package com.example.iworks.user.model.entity;
+package com.example.iworks.schedule.meeting.model.entity;
 
+import com.example.iworks.user.model.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 

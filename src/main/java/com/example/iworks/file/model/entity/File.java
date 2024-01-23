@@ -1,5 +1,6 @@
-package com.example.iworks.user.model.entity;
+package com.example.iworks.file.model.entity;
 
+import com.example.iworks.global.model.entity.Code;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

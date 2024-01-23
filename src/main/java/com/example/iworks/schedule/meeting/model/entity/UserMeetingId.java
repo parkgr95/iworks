@@ -1,4 +1,4 @@
-package com.example.iworks.user.model.entity;
+package com.example.iworks.schedule.meeting.model.entity;
 
 import lombok.EqualsAndHashCode;
 

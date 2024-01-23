@@ -1,4 +1,4 @@
-package com.example.iworks.user.model.entity;
+package com.example.iworks.notification.model.entity;
 
 public enum NotificationType {
     CREATE, MODIFIEDM, DELETE

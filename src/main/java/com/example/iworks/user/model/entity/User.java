@@ -1,6 +1,8 @@
 package com.example.iworks.user.model.entity;
 
 
+import com.example.iworks.department.model.entity.Department;
+import com.example.iworks.global.model.entity.Code;
 import com.example.iworks.user.model.Status;
 import jakarta.persistence.*;
 import lombok.Data;
