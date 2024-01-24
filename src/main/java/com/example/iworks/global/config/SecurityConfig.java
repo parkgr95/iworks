@@ -2,6 +2,7 @@ package com.example.iworks.global.config;
 
 import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
 import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
+import com.example.iworks.global.config.jwt.JwtProvider;
 import com.example.iworks.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,8 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
-
+    private final JwtProvider jwtProvider;
+    private static final String SECRETKEY = "sd#$%#$fnsWRTWRTsdfnsdSDFSDfnds##wr412";
 
     @Bean
     public BCryptPasswordEncoder encodePwd(){
@@ -60,8 +62,8 @@ public class SecurityConfig {
                             .anyRequest().permitAll();
                 })
                 .authenticationManager(authenticationManager)
-                .addFilter(new JwtAuthenticationFilter(authenticationManager))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager,userRepository))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager,userRepository, jwtProvider))
 
                 .build();
     }

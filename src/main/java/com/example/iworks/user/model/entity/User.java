@@ -36,8 +36,11 @@ public class User {
     @Column(name = "user_eid", nullable = false)
     private String userEid; //사번
 
-    @Column(name = "user_name")
-    private String userName; // 유저 이름
+    @Column(name = "user_name_first", nullable = false)
+    private String userNameFirst; // 유저 이름
+
+    @Column(name = "user_name_last", nullable = false)
+    private String userNameLast;
 
     @Column(name = "user_email", nullable = false)
     private String userEmail; //유저 이메일
