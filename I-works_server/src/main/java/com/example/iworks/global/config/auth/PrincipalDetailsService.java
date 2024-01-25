@@ -1,7 +1,7 @@
 package com.example.iworks.global.config.auth;
 
-import com.example.iworks.user.repository.UserRepository;
-import com.example.iworks.user.model.entity.User;
+import com.example.iworks.domain.user.repository.UserRepository;
+import com.example.iworks.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
