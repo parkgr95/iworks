@@ -5,7 +5,12 @@ import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.model.entity.Code;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,6 +19,9 @@ import java.util.List;
 @Entity
 @Table(name = "schedule")
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Schedule {
 
     @Id @GeneratedValue
@@ -49,11 +57,11 @@ public class Schedule {
     private String schedulePlace; //할 일의 장소
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "meeting_id")
-    private Meeting meeting; //회의방 아이디
+    @JoinColumn(name = "schedule_meeting_id", referencedColumnName = "meeting_id")
+    private Meeting scheduleMeeting; //회의방 아이디
 
     public void setMeeting(Meeting meeting){
-        this.meeting = meeting;
+        this.scheduleMeeting = meeting;
         if (meeting.getSchedule() != this){
             meeting.setSchedule(this);
         }
@@ -61,18 +69,18 @@ public class Schedule {
 
     @ManyToOne //단방향
     @JoinColumn(name = "schedule_creator_id", referencedColumnName = "user_id", nullable = false)
-    private User scheduleCreatorId; // 등록자 아이디
+    private User scheduleCreator; // 등록자 아이디
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "schedule_created_at", nullable = false)
+    @Column(name = "schedule_created_at", nullable = false, columnDefinition = "datetime default current_timestamp")
     private LocalDateTime scheduleCreatedAt; //등록 일시
 
     @ManyToOne //단방향
     @JoinColumn(name = "schedule_modifier_id", referencedColumnName = "user_id", nullable = true)
-    private User scheduleModifierId; // 수정한 사람의 아이디
+    private User scheduleModifier; // 수정한 사람의 아이디
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "schedule_modified_at")
+    @Column(name = "schedule_modified_at", columnDefinition = "datetime default current_timestamp")
     private LocalDateTime scheduleModifiedAt; //할 일의 수정일시
 
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
