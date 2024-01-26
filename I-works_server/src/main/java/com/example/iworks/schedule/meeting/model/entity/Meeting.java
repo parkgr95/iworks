@@ -25,5 +25,11 @@ public class Meeting {
     @Column(name = "meeting_code", length = 2000)
     private String meetingCode; // 회의 참여 코드
 
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+        if (schedule.getMeeting() != this){
+            schedule.setMeeting(this);
+        }
 
+    }
 }
