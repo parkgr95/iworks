@@ -13,7 +13,7 @@ public class JwtProvider {
 
     public String createAccessToken(String eid, List<String> role){
         String accessToken = JWT.create()
-                .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 1))) // 토큰의 만료시간 10분
+                .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 10))) // 토큰의 만료시간 10분
                 .withClaim("type","access")
                 .withClaim("eid", eid)
                 .withClaim("role", role)
