@@ -2,7 +2,7 @@ package com.example.iworks.global.config.jwt;
 
 import com.example.iworks.global.config.auth.PrincipalDetails;
 import com.example.iworks.global.model.entity.JWToken;
-import com.example.iworks.user.model.entity.User;
+import com.example.iworks.domain.user.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
