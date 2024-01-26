@@ -18,7 +18,7 @@ public class Schedule {
 
     @Id @GeneratedValue
     @Column(name = "schedule_id")
-    private int scheduleId; // 할 일 아이디
+    private Integer scheduleId; // 할 일 아이디
 
     @ManyToOne //단방향
     @JoinColumn(name = "schedule_division_id")
