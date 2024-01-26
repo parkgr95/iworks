@@ -26,5 +26,4 @@ public class Meeting {
     private String meetingCode; // 회의 참여 코드
 
 
-
 }
