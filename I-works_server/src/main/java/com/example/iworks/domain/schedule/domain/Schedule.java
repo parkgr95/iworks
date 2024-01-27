@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CurrentTimestamp;
 
@@ -22,13 +23,14 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Schedule {
 
     @Id @GeneratedValue
     @Column(name = "schedule_id")
     private Integer scheduleId; // 할 일 아이디
 
-    @ManyToOne //단방향
+    @ManyToOne(fetch = FetchType.LAZY) //단방향
     @JoinColumn(name = "schedule_division_id")
     private Code scheduleDivisionId; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
 
@@ -41,9 +43,10 @@ public class Schedule {
     @Column(name = "schedule_content", columnDefinition = "TEXT" )
     private String scheduleContent; //할 일 내용
 
+    @Builder.Default
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_start_date", nullable = false)
-    private LocalDateTime scheduleStartDate; //할 일의 시작일시
+    private LocalDateTime scheduleStartDate = LocalDateTime.now(); //할 일의 시작일시
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_end_date", nullable = false)
@@ -56,7 +59,7 @@ public class Schedule {
     @Column(name = "schedule_place", length = 50)
     private String schedulePlace; //할 일의 장소
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "schedule_meeting_id", referencedColumnName = "meeting_id")
     private Meeting scheduleMeeting; //회의방 아이디
 
@@ -67,7 +70,7 @@ public class Schedule {
         }
     }
 
-    @ManyToOne //단방향
+    @ManyToOne(fetch = FetchType.LAZY) //단방향
     @JoinColumn(name = "schedule_creator_id", referencedColumnName = "user_id", nullable = false)
     private User scheduleCreator; // 등록자 아이디
 
@@ -75,14 +78,15 @@ public class Schedule {
     @Column(name = "schedule_created_at", nullable = false, columnDefinition = "datetime default current_timestamp")
     private LocalDateTime scheduleCreatedAt; //등록 일시
 
-    @ManyToOne //단방향
-    @JoinColumn(name = "schedule_modifier_id", referencedColumnName = "user_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY) //단방향
+    @JoinColumn(name = "schedule_modifier_id", referencedColumnName = "user_id")
     private User scheduleModifier; // 수정한 사람의 아이디
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_modified_at", columnDefinition = "datetime default current_timestamp")
     private LocalDateTime scheduleModifiedAt; //할 일의 수정일시
 
+    @Builder.Default
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
     private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할 일 배정자
 

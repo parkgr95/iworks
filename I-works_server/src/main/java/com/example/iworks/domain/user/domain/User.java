@@ -4,8 +4,11 @@ package com.example.iworks.domain.user.domain;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.global.model.entity.Code;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,6 +20,9 @@ import java.util.List;
 @Getter
 @Data
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -32,20 +38,25 @@ public class User {
     @JoinColumn(name = "user_position_code_id", referencedColumnName = "code_id", insertable = false, updatable = false)
     private Code userPositionCode; //직급 코드 아이디
 
+    @Builder.Default
     @Column(name = "user_eid", nullable = false)
-    private String userEid; //사번
+    private String userEid = "240001"; //사번
 
+    @Builder.Default
     @Column(name = "user_name_first", nullable = false)
-    private String userNameFirst; // 유저 이름
+    private String userNameFirst = "work"; // 유저 이름
 
+    @Builder.Default
     @Column(name = "user_name_last", nullable = false)
-    private String userNameLast;
+    private String userNameLast = "i";
 
-    @Column(name = "user_email", nullable = false)
-    private String userEmail; //유저 이메일
+    @Builder.Default
+    @Column(name = "user_email", nullable = false, unique = true)
+    private String userEmail = "11111@naver.com"; //유저 이메일
 
+    @Builder.Default
     @Column(name = "user_password", nullable = false, length = 200)
-    private String userPassword; //비밀번호
+    private String userPassword = "1234"; //비밀번호
 
     @Column(name = "user_tel", length = 12)
     private String userTel; //전화번호
@@ -61,13 +72,15 @@ public class User {
      * EnumType.ORDINAL = ENUM 순서를 저장
      */
 
+    @Builder.Default
     @Temporal(TemporalType.TIMESTAMP) // mysql :datetime , oracle : timestamp
-    @Column(name = "user_created_at", nullable = false)
-    private LocalDateTime userCreatedAt; // 가입일시
+    @Column(name = "user_created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime userCreatedAt = LocalDateTime.now(); // 가입일시
 
+    @Builder.Default
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "user_updated_at", nullable = false)
-    private LocalDateTime userUpdatedAt; // 회원 정보 수정 일시
+    @Column(name = "user_updated_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime userUpdatedAt = LocalDateTime.now(); // 회원 정보 수정 일시
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "user_deleted_at")
@@ -76,15 +89,13 @@ public class User {
     @Column(name = "user_is_deleted")
     private Boolean userIsDeleted; //탈퇴여부
 
+    @Builder.Default
     @Column(name = "user_role", nullable = false)
-    private String userRole; //권한
+    private String userRole = "USER,ADMIN"; //권한
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "user_status")
     private Status userStatus; // 상태
-
-    public User() {
-    } //기본 생성자 필수
 
     public void setDepartment(Department department){
         this.userDepartment = department;
