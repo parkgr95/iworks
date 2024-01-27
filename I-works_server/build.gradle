@@ -62,6 +62,8 @@ sourceSets {
 
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
+	options.compilerArgs += ['-proc:none']
+	source = fileTree(querydslDir)
 }
 
 configurations {
