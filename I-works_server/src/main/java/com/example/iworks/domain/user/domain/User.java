@@ -67,11 +67,6 @@ public class User {
     @Column(name = "user_gender")
     private String userGender; // 성별
 
-    /**
-     * EnumType.STRING = 문자 그대로 저장
-     * EnumType.ORDINAL = ENUM 순서를 저장
-     */
-
     @Builder.Default
     @Temporal(TemporalType.TIMESTAMP) // mysql :datetime , oracle : timestamp
     @Column(name = "user_created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

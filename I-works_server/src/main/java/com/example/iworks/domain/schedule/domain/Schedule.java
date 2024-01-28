@@ -34,14 +34,17 @@ public class Schedule {
     @JoinColumn(name = "schedule_division_id")
     private Code scheduleDivisionId; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
 
+    @Builder.Default
     @Column(name = "schedule_title", nullable = false, length = 50)
-    private String scheduleTitle; //할 일 이름
+    private String scheduleTitle = "scheduleName"; //할 일 이름
 
+    @Builder.Default
     @Column(name = "schedule_priority", nullable = false, length = 1)
-    private Character schedulePriority; //할 일 우선순위 H: high, M:Medium, L:low
+    private Character schedulePriority = 'M'; //할 일 우선순위 H: high, M:Medium, L:low
 
+    @Builder.Default
     @Column(name = "schedule_content", columnDefinition = "TEXT" )
-    private String scheduleContent; //할 일 내용
+    private String scheduleContent = "this is content..."; //할 일 내용
 
     @Builder.Default
     @Temporal(TemporalType.TIMESTAMP)
@@ -52,9 +55,17 @@ public class Schedule {
     @Column(name = "schedule_end_date", nullable = false)
     private LocalDateTime scheduleEndDate; //할 일의 종료일시
 
+//    @Temporal(TemporalType.TIMESTAMP)
+//    @Column(name = "schedule_deadline")
+//    private LocalDateTime scheduleDeadline; //할 일의 마감일시
+    @Builder.Default
+    @Column(name = "schedule_is_finish", nullable = false)
+    private Boolean scheduleIsFinish = false; //할일의 완료 여부
+
+
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "schedule_deadline")
-    private LocalDateTime scheduleDeadline; //할 일의 마감일시
+    @Column(name = "schedule_finished_at")
+    private LocalDateTime scheduleFinishedAt; //할일 완료 일시
 
     @Column(name = "schedule_place", length = 50)
     private String schedulePlace; //할 일의 장소

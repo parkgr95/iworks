@@ -44,7 +44,6 @@ public class UserApiController {
         dept.setDepartmentId(1);
         dept.setDepartmentName("testDept");
         Code code = new Code();
-        code.setCodeId(1);
         user.setUserPositionCode(code);
         user.setUserCreatedAt(LocalDateTime.now());
         user.setUserUpdatedAt(LocalDateTime.now());

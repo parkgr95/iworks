@@ -3,11 +3,15 @@ package com.example.iworks.domain.schedule.domain;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.global.model.entity.Code;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "schedule_assign")
 @Getter
+@Builder @AllArgsConstructor @NoArgsConstructor
 public class ScheduleAssign {
 
     @Id
@@ -29,7 +33,7 @@ public class ScheduleAssign {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_assignee_category_id", referencedColumnName = "code_id")
-    private Code scheduleAssigneeCategoryId; // 할일 배정자 카테고리 아이디
+    private Code scheduleAssigneeCategory; // 할일 배정자 카테고리 아이디
 
     @Column(name = "schedule_assignee_id", nullable = false, insertable = false, updatable = false)
     private int scheduleAssigneeId; //유저아이디 or 그룹아이디 or 부서아이디  or 전체
