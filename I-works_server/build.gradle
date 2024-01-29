@@ -36,6 +36,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation group: 'com.auth0', name: 'java-jwt', version: '4.4.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 
 	// === QueryDsl ===
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -62,6 +64,8 @@ sourceSets {
 
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
+	options.compilerArgs += ['-proc:none']
+	source = fileTree(querydslDir)
 }
 
 configurations {
