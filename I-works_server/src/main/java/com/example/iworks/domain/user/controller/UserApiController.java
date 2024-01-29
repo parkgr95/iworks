@@ -2,11 +2,10 @@ package com.example.iworks.domain.user.controller;
 
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
-import com.example.iworks.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 @RequestMapping("/api/user")
@@ -29,13 +27,6 @@ public class UserApiController {
     @GetMapping("/home")
     public String home() {
         return "<h1>home</h1>";
-    }
-
-
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
-        System.out.println(user);
-        return null;
     }
 
     @PostMapping("/join")

@@ -36,6 +36,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         //header 있는지 확인
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
+            System.out.println("다음으로");
             chain.doFilter(request, response);
             return;
         }
