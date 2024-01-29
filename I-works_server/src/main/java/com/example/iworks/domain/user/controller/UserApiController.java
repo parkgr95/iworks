@@ -2,6 +2,7 @@ package com.example.iworks.domain.user.controller;
 
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
 import com.example.iworks.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class UserApiController {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final Response response;
 
     @GetMapping("/home")
     public String home() {
@@ -37,7 +39,7 @@ public class UserApiController {
     }
 
     @PostMapping("/join")
-    public String join(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
         System.out.println(user);
 
         Department dept = new Department();
@@ -59,52 +61,47 @@ public class UserApiController {
         user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
         user.setRoleList(roleList);
         userRepository.save(user);
-        return "join success";
+        return response.handleSuccess("join success");
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<Map<String,Object>> getProfile(@RequestBody String eid){
+    public ResponseEntity<Map<String,Object>> getProfile(@RequestBody Map<String,String> map){
+        String eid = map.get("userEid");
+        System.out.println("eid : "+eid);
         User user= userRepository.findByUserEid(eid);
         if(user != null){
-            return handleSuccess(user);
+            return response.handleSuccess(user);
         }
-        return handleError("couldn't find user with "+eid);
+        return response.handleError("couldn't find user with "+map);
     }
 
     @PutMapping("/mypage")
     @Transactional
     public ResponseEntity<Map<String,Object>> updateProfile(@RequestBody User user){
         User origin = userRepository.findByUserEid(user.getUserEid());
+        System.out.print("origin:");
+        System.out.println(origin);
         if(origin != null){
-        origin.setUserPassword(user.getUserPassword());
-        origin.setUserAddress(user.getUserAddress());
-        origin.setUserEmail(user.getUserEmail());
-        origin.setUserTel(user.getUserTel());
-            return handleSuccess(origin);
+
+            if(user.getUserPassword() != null){
+                origin.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
+            }
+
+            if(user.getUserAddress()!=null){
+                origin.setUserAddress(user.getUserAddress());
+            }
+
+            if(user.getUserEmail()!=null){
+                origin.setUserEmail(user.getUserEmail());
+            }
+
+            if(user.getUserTel() !=null){
+                origin.setUserTel(user.getUserTel());
+            }
+            return response.handleSuccess(origin);
         }
-        return handleError("couldn't find user with "+user.toString());
+
+        return response.handleError("couldn't find user with "+user.toString());
     }
 
-
-    private ResponseEntity<Map<String,Object>> handleSuccess(Object data){
-        Map<String,Object> result = new HashMap<>();
-        result.put("result","success");
-        result.put("data",data);
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.OK);
-    }
-
-    private ResponseEntity<Map<String,Object>> handleError(Object data){
-        Map<String,Object> result = new HashMap<>();
-        result.put("result","failed");
-        result.put("data",data);
-        return new ResponseEntity<Map<String,Object>>(result, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String,Object>> ExceptionHandler(Exception e){
-        Map<String,Object> result = new HashMap<>();
-        result.put("result","error");
-        result.put("data",e.getMessage());
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
