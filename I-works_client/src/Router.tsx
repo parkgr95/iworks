@@ -17,14 +17,9 @@ const router = createBrowserRouter([
     //     element: <TestPage />,
     //   },
       {
-        path: 'user',
-        children:[
-          {
-            path: 'login',
-            element: <LoginPage />
-          }
-        ],
-      },
+        path: 'login',
+        element: <LoginPage />
+      }
     //   {
     //     path: 'logout',
     //     action: logoutAction,
