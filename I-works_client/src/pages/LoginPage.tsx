@@ -3,6 +3,7 @@ import { useState, ChangeEvent, FormEvent, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, useNavigate } from 'react-router-dom';
 import { Button, Card, TextInput } from 'flowbite-react';
+import iworks_logo from '../assets/iworks_logo.png'
 
 interface LoginResponse {
   token: string;
@@ -60,10 +61,13 @@ function LoginPage() {
 
   return createPortal(
     <>
-      <div className="modal-overlay"></div>
+      <div className="w-full h-full fixed bg-[#1f4068]"></div>
       <Card className="max-w-sm">
-        <dialog ref={dialog} className="modal rounded-lg">
-          <h1 className="text-xl font-semibold text-center mb-4">I-Works</h1>
+        <dialog ref={dialog} className="modal rounded-xl w-1/2 max-w-sm min-w-min p-10 bg-[#EBECF1]">
+          {/* <h1 className="text-xl font-semibold text-center mb-4">I-Works</h1> */}
+          <div className='ml-auto mr-auto w-2/3 mb-10'>
+            <img className="inline-block" src={iworks_logo} alt="logo" />
+          </div>
           <Form onSubmit={handleLogin} className="flex flex-col gap-4">
             <TextInput
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
