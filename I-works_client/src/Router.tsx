@@ -1,10 +1,18 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
+import MyPage, { detailLoader } from "./pages/MyPage";
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    children: [
+      {
+        path:'mypage',
+        element: <MyPage />,
+        loader: detailLoader,
+      }
+    ]
     // children: [
     //   {
     //     index: true,
