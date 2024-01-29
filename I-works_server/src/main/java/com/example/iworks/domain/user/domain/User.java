@@ -44,17 +44,11 @@ public class User {
     @Column(name = "user_email", nullable = false)
     private String userEmail; //유저 이메일
 
-    @Column(name = "user_password", nullable = false)
+    @Column(name = "user_password", nullable = false, length = 200)
     private String userPassword; //비밀번호
 
-    @Column(name = "user_tel_first")
-    private String userTelFirst; //전화번호 첫 필드
-
-    @Column(name = "user_tel_middle")
-    private String userTelMiddle; //전화번호 중간 필드
-
-    @Column(name = "user_tel_last")
-    private String userTelLast; //전화번호 끝 필드
+    @Column(name = "user_tel", length = 12)
+    private String userTel; //전화번호
 
     @Column(name = "user_address")
     private String userAddress; //주소
@@ -79,8 +73,8 @@ public class User {
     @Column(name = "user_deleted_at")
     private LocalDateTime userDeletedAt; // 탈퇴일시
 
-    @Column(name = "user_is_deleted", nullable = false)
-    private boolean userIsDeleted; //탈퇴여부
+    @Column(name = "user_is_deleted")
+    private Boolean userIsDeleted; //탈퇴여부
 
     @Column(name = "user_role", nullable = false)
     private String userRole; //권한

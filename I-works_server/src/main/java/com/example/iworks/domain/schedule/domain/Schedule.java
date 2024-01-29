@@ -1,43 +1,36 @@
 package com.example.iworks.domain.schedule.domain;
 
-import com.example.iworks.domain.schedule.meeting.model.entity.Meeting;
+import com.example.iworks.domain.meeting.domain.Meeting;
+import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.model.entity.Code;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "schedule")
 @Getter
-@IdClass(ScheduleId.class)
 public class Schedule {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "schedule_id", nullable = false)
+    @Id @GeneratedValue
+    @Column(name = "schedule_id")
     private int scheduleId; // 할 일 아이디
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_category_code_id",
-            referencedColumnName = "code_id",
-            nullable = false, updatable = false, insertable = false
-    )
-    private Code scheduleCategoryCode; //할 일 카테코리 코드
+    @ManyToOne //단방향
+    @JoinColumn(name = "schedule_division_id")
+    private Code scheduleDivisionId; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
 
-    @Id
-    @Column(name = "schedule_owner_id",
-            nullable = false, updatable = false, insertable = false
-    )
-    private int scheduleOwnerId; // 할 일 주체 아이디
-
-    @Column(name = "schedule_title", nullable = false)
+    @Column(name = "schedule_title", nullable = false, length = 50)
     private String scheduleTitle; //할 일 이름
 
-    @Column(name = "schedule_priority", nullable = false)
-    private String schedulePriority; //할 일 우선순위 H: high, M:Medium, L:low
+    @Column(name = "schedule_priority", nullable = false, length = 1)
+    private Character schedulePriority; //할 일 우선순위 H: high, M:Medium, L:low
 
-    @Column(name = "schedule_content")
+    @Column(name = "schedule_content", columnDefinition = "TEXT" )
     private String scheduleContent; //할 일 내용
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -52,26 +45,42 @@ public class Schedule {
     @Column(name = "schedule_deadline")
     private LocalDateTime scheduleDeadline; //할 일의 마감일시
 
-    @Column(name = "schedule_place")
+    @Column(name = "schedule_place", length = 50)
     private String schedulePlace; //할 일의 장소
 
-    @Column(name = "schedule_creator_id", nullable = false)
-    private int scheduleCreatorId; // 등록자 아이디
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "meeting_id")
+    private Meeting meeting; //회의방 아이디
+
+    public void setMeeting(Meeting meeting){
+        this.meeting = meeting;
+        if (meeting.getSchedule() != this){
+            meeting.setSchedule(this);
+        }
+    }
+
+    @ManyToOne //단방향
+    @JoinColumn(name = "schedule_creator_id", referencedColumnName = "user_id", nullable = false)
+    private User scheduleCreatorId; // 등록자 아이디
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_created_at", nullable = false)
     private LocalDateTime scheduleCreatedAt; //등록 일시
 
-    @Column(name = "schedule_modifier_id")
-    private int scheduleModifierId; // 수정한 사람의 아이디
+    @ManyToOne //단방향
+    @JoinColumn(name = "schedule_modifier_id", referencedColumnName = "user_id", nullable = true)
+    private User scheduleModifierId; // 수정한 사람의 아이디
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_modified_at")
     private LocalDateTime scheduleModifiedAt; //할 일의 수정일시
 
-    @OneToOne
-    @JoinColumn(name = "meeting_id")
-    private Meeting meeting;
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
+    private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할 일 배정자
 
+    public void addScheduleAssigns(ScheduleAssign scheduleAssign){
+        this.scheduleAssigns.add(scheduleAssign);
+        scheduleAssign.setSchedule(this);
+    }
 
 }
