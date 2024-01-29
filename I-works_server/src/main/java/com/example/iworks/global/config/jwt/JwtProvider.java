@@ -2,7 +2,7 @@ package com.example.iworks.global.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -13,15 +13,21 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
-@RequiredArgsConstructor
 public class JwtProvider {
     private static final String SECRET_KEY = "sd#$%#$fnsWRTWRTsdfnsdSDFSDfnds##wr412";
+
+
     private final RedisTemplate<String, String> redisTemplate;
+
     @Value("${jwt.accessExpTime}")
     long accessExpTime;
 
     @Value("${jwt.refreshExpTime}")
     long refreshExpTime;
+
+    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public String createAccessToken(String eid, List<String> role) {
         String accessToken = JWT.create()
