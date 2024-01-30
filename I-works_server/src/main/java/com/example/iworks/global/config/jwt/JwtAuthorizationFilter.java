@@ -1,7 +1,6 @@
 package com.example.iworks.global.config.jwt;
 
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
@@ -74,9 +73,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         // 서명이 정상적으로 됨
         System.out.println("tok"+jwtToken);
-        }catch (JWTDecodeException e){
-            response.getWriter().write(new Response().getErrorString("jwt 인증실패"));
-        }catch (JWTVerificationException e){
+        } catch (JWTVerificationException e){
             response.getWriter().write(new Response().getErrorString("jwt 인증실패"));
         }
 
