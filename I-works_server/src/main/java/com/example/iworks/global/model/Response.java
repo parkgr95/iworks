@@ -16,13 +16,14 @@ public class Response {
         Map<String,Object> result = new HashMap<>();
         result.put("result","success");
         result.put("data",data);
-        return  new ObjectMapper().writeValueAsString(result);
+        System.out.println(result);
+        return new ObjectMapper().writeValueAsString(result);
     }
     public String getErrorString(Object data) throws JsonProcessingException {
         Map<String,Object> result = new HashMap<>();
         result.put("result","failed");
         result.put("data",data);
-        return  new ObjectMapper().writeValueAsString(result);
+        return new ObjectMapper().writeValueAsString(result);
     }
     public ResponseEntity<Map<String,Object>> handleSuccess(Object data){
         Map<String,Object> result = new HashMap<>();
