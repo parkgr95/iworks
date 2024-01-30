@@ -3,6 +3,7 @@ package com.example.iworks.global.config;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
 import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
+import com.example.iworks.global.config.jwt.JwtExceptionFilter;
 import com.example.iworks.global.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -68,7 +69,7 @@ public class SecurityConfig {
                 .authenticationManager(authenticationManager)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager,userRepository, jwtProvider))
-
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
                 .build();
     }
 }
