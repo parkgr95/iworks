@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit;
 public class JwtProvider {
     @Value("${jwt.secret}")
     String SECRET_KEY;
-    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${jwt.accessExpTime}")
     long accessExpTime;
 
     @Value("${jwt.refreshExpTime}")
     long refreshExpTime;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -78,9 +78,10 @@ public class JwtProvider {
     }
 
     public Boolean validateAccessToken(String accessToken) {
+        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         System.out.println("val access");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody();
@@ -90,8 +91,9 @@ public class JwtProvider {
     }
 
     public Boolean validateRefreshToken(String refreshToken) {
+        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
@@ -109,8 +111,9 @@ public class JwtProvider {
     }
 
     public String getUserEid(String jwt) {
+        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
@@ -118,8 +121,9 @@ public class JwtProvider {
     }
 
     public List<String> getUserRole(String jwt) {
+        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
