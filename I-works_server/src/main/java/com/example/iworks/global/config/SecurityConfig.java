@@ -5,7 +5,6 @@ import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
 import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
 import com.example.iworks.global.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,9 +27,6 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final JwtProvider jwtProvider;
-
-    @Value("${login.api.url}")
-    String LOGIN_API_URL;
 
     @Bean
     public BCryptPasswordEncoder encodePwd(){
