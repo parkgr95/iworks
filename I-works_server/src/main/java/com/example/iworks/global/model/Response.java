@@ -18,7 +18,7 @@ public class Response {
         result.put("data",data);
         return new ObjectMapper().writeValueAsString(result);
     }
-    public String getErrorString(Object data) throws JsonProcessingException {
+    public String getFailString(Object data) throws JsonProcessingException {
         Map<String,Object> result = new HashMap<>();
         result.put("result","failed");
         result.put("data",data);
@@ -31,7 +31,7 @@ public class Response {
         return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<String,Object>> handleError(Object data){
+    public ResponseEntity<Map<String,Object>> handleFail(Object data){
         Map<String,Object> result = new HashMap<>();
         result.put("result","failed");
         result.put("data",data);

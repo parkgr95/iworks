@@ -66,14 +66,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(jwtToken).build();
             response.getWriter().write(new Response().getSuccessString(token));
         } else {
-            response.getWriter().write(new Response().getErrorString("jwt 인증실패"));
+            response.getWriter().write(new Response().getFailString("jwt 인증실패"));
             return;
         }
 
         // 서명이 정상적으로 됨
         System.out.println("tok"+jwtToken);
         } catch (JWTVerificationException e){
-            response.getWriter().write(new Response().getErrorString("jwt 인증실패"));
+            response.getWriter().write(new Response().getFailString("jwt 인증실패"));
         }
 
     }

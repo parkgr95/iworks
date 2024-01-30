@@ -82,6 +82,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("unsuccessfulAuthentication : login failed!!");
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().write(new Response().getErrorString("ID/PW를 확인해주세요"));
+        response.getWriter().write(new Response().getFailString("ID/PW를 확인해주세요"));
     }
 }

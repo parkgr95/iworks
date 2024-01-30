@@ -32,7 +32,7 @@ public class UserApiController {
     @PostMapping("/join")
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
         if (userRepository.findByUserEid(user.getUserEid())!=null){
-            return response.handleError("이미 존재하는 계정입니다.");
+            return response.handleFail("이미 존재하는 계정입니다.");
         }
 
         Department dept = new Department();
@@ -67,7 +67,7 @@ public class UserApiController {
         if(user != null){
             return response.handleSuccess(user);
         }
-        return response.handleError("couldn't find user with "+eid);
+        return response.handleFail("couldn't find user with "+eid);
     }
 
     @PutMapping("/mypage")
@@ -96,7 +96,7 @@ public class UserApiController {
             return response.handleSuccess(origin);
         }
 
-        return response.handleError("couldn't find user with "+user.toString());
+        return response.handleFail("couldn't find user with "+user.toString());
     }
 
 }
