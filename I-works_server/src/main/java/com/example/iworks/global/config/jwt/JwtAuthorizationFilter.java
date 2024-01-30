@@ -72,11 +72,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         } catch (JWTVerificationException e){
-            response.getWriter().write(new Response().getFailString("jwt 인증실패"));
+            throw new JWTVerificationException(e.getMessage());
         }
 
         } catch (ExpiredJwtException e){
-            response.getWriter().write(new Response().getExpiredString("jwt 토큰 만료"));
+            throw new ExpiredJwtException(null,null,e.getMessage());
         }
     }
 }

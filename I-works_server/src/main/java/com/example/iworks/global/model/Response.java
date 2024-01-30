@@ -25,13 +25,6 @@ public class Response {
         return new ObjectMapper().writeValueAsString(result);
     }
 
-    public String getExpiredString(Object data) throws JsonProcessingException {
-        Map<String,Object> result = new HashMap<>();
-        result.put("result","expired");
-        result.put("data",data);
-        return new ObjectMapper().writeValueAsString(result);
-    }
-
     public ResponseEntity<Map<String,Object>> handleSuccess(Object data){
         Map<String,Object> result = new HashMap<>();
         result.put("result","success");
@@ -46,11 +39,5 @@ public class Response {
         return new ResponseEntity<Map<String,Object>>(result, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String,Object>> exceptionHandler(Exception e){
-        Map<String,Object> result = new HashMap<>();
-        result.put("result","error");
-        result.put("data",e.getMessage());
-        return new ResponseEntity<Map<String,Object>>(result,HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+
 }
