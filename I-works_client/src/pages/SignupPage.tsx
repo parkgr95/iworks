@@ -1,0 +1,109 @@
+import {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  FormEvent,
+  RefObject,
+} from 'react'
+import { createPortal } from 'react-dom'
+import { Form, json } from 'react-router-dom'
+import axios from 'axios'
+import { TextInput, Button, Card, Radio, Label } from 'flowbite-react'
+
+interface SignupProps {
+  // Props 타입 정의 (필요한 경우 추가)
+}
+
+export interface SignupRef {
+  open: () => void
+}
+
+const API_URL = 'https://dummyjson.com/users/add'
+
+function formDataToJson(formData: FormData): string {
+  const json: Record<string, string> = {};
+  
+  formData.forEach((value, key) => {
+    json[key] = value.toString();
+  });
+
+  return JSON.stringify(json);
+}
+
+const Signup = forwardRef<SignupRef, SignupProps>(function Signup(props, ref) {
+  const dialog = useRef<HTMLDialogElement>(null)
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      open() {
+        dialog.current?.showModal()
+      },
+    }),
+    [],
+  )
+
+  
+
+  function handleSignUp(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const fd = new FormData(event.currentTarget)
+
+    const jsonData = formDataToJson(fd)
+    console.log(jsonData)
+
+    axios
+      .post(API_URL, jsonData)
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((err) => alert(err))
+  }
+
+  return createPortal(
+      <dialog className="rounded-xl p-10 w-2/3 max-w-lg" ref={dialog as RefObject<HTMLDialogElement>}>
+          <h1 className='text-3xl text-center mb-10'>구성원 추가</h1>
+          <Form className="flex flex-col gap-4" onSubmit={handleSignUp}>
+            <div>
+              <Label className='text-lg'>사번</Label>
+              <TextInput type="text" name="userEid" required />
+            </div>
+            <div>
+              <Label className='text-lg'>이름</Label>
+              <TextInput type="text" name="userFirstName" required />
+            </div>
+            <div>
+              <Label className='text-lg'>성</Label>
+              <TextInput type="text" name="userLastName" required />
+            </div>
+            <div>
+              <Label className='text-lg'>이메일</Label>
+              <TextInput type="email" name="userEmail" required />
+            </div>
+            <div>
+              <Label className='text-lg'>전화번호</Label>
+              <TextInput type="text" name="userTel" required />
+            </div>
+            <div>
+              <Label className='text-lg'>주소</Label>
+              <TextInput type="text" name="userAddress" placeholder="주소" required />
+            </div>
+            <div className='flex gap-4'>
+              <div className=''>
+                <Radio id="male" name="userGender" placeholder="성별" value="male" />
+                <Label className="" htmlFor='male'>남성</Label>
+              </div>
+              <div>              
+                <Radio id='female' name="userGender" placeholder="성별" value="female" />   
+                <Label htmlFor='female'>여성</Label>
+              </div>
+            </div>
+            <Button className="mt-10"type="submit">구성원 추가</Button>
+          </Form>
+      </dialog>,
+    document.getElementById('modal')! as HTMLElement,
+  )
+})
+
+export default Signup

@@ -1,11 +1,12 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
+import AddressPage from "./pages/AddressPage";
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    // children: [
+    children: [
     //   {
     //     index: true,
     //     element: <HomePage />,
@@ -53,7 +54,11 @@ const router = createBrowserRouter([
     //       },
     //     ]
     //   }
-    // ]
+      {
+        path: 'address',
+        element: <AddressPage />
+      }
+    ]
   },
 ])
 
