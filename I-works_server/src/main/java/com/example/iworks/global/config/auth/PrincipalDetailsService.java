@@ -19,8 +19,10 @@ public class PrincipalDetailsService implements UserDetailsService {
         System.out.println("PrincipalDetails Service's loadUserByUserName");
         System.out.println("userEid: "+userEid);
         User userEntity = userRepository.findByUserEid(userEid);
-        System.out.println("userEntity");
-        System.out.println(userEntity);
+        System.out.println("userEntity: "+userEntity);
+        if(userEntity == null){
+            throw new UsernameNotFoundException("wrong id");
+        }
         return new PrincipalDetails(userEntity);
 
     }

@@ -1,14 +1,13 @@
 package com.example.iworks.global.config.jwt;
 
+import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.config.auth.PrincipalDetails;
 import com.example.iworks.global.model.entity.JWToken;
-import com.example.iworks.domain.user.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,18 +16,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
-@RequiredArgsConstructor
+
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider tokenProvider;
 
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider tokenProvider) {
+        this.authenticationManager = authenticationManager;
+        this.tokenProvider = tokenProvider;
+        setFilterProcessesUrl("/api/user/login");
+    }
 
 
     // /login 요청을 하면 로그인 시도를 위해서 실행되는 함수
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         System.out.println("attempt login");
-
         // 1. username, password 받기
         try {
             ObjectMapper om = new ObjectMapper();
@@ -36,7 +39,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             System.out.println(user);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserEid(), user.getUserPassword());
-            System.out.println(authenticationToken);
+            System.out.println("token: "+authenticationToken);
             // PrincipalDetailsService의 loadUserByUsername()이 실행됨.
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             // authentication이 들어왔다는건 DB에 username과 password가 일치하는 것을 찾았다는 것.
@@ -72,5 +75,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(refreshToken).build();
         String json = new ObjectMapper().writeValueAsString(token);
         response.getWriter().write(json);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        System.out.println("unsuccessfulAuthentication : login failed!!");
+        response.getWriter().write("ID/PW를 확인해주세요.");
     }
 }

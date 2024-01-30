@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtProvider {
-    private static final String SECRET_KEY = "sd#$%#$fnsWRTWRTsdfnsdSDFSDfnds##wr412";
-
+    @Value("${jwt.secret}")
+    String SECRET_KEY;
 
     private final RedisTemplate<String, String> redisTemplate;
 
