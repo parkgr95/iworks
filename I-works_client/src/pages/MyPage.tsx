@@ -1,7 +1,7 @@
-import axios, { AxiosResponse } from "axios";
-import { useState, FormEvent } from "react";
-import { useLoaderData, Form } from "react-router-dom";
-import { TextInput, Label, Button } from "flowbite-react";
+import axios, { AxiosResponse } from 'axios';
+import { useState, FormEvent } from 'react';
+import { useLoaderData, Form } from 'react-router-dom';
+import { TextInput, Label, Button } from 'flowbite-react';
 
 interface UserDetailData {
   id: number;
@@ -12,6 +12,7 @@ interface UserDetailData {
   weight: string;
 }
 
+const API_URL = 'https://dummyjson.com/users/1';
 
 function MyPage() {
   const userDetailLoad = useLoaderData() as UserDetailData;
@@ -31,12 +32,12 @@ function MyPage() {
 
     try {
       const response: AxiosResponse<UserDetailData> = await axios.put(
-        `https://dummyjson.com/users/1`,
+        API_URL,
         fd,
         // {
         //   headers: {
         //     'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-        //   } 
+        //   }
         // }
       );
 
@@ -56,10 +57,10 @@ function MyPage() {
       <Form onSubmit={handleSubmit}>
         <Label htmlFor="height">키</Label>
         <TextInput
-          id='height'
+          id="height"
           type="text"
           name="userHeight"
-          onChange={(e) => handleInfoChange("height", e.target.value)}
+          onChange={(e) => handleInfoChange('height', e.target.value)}
           value={userDetail.height}
         />
         <Label htmlFor="weight">몸무게</Label>
@@ -67,10 +68,12 @@ function MyPage() {
           id="weight"
           type="text"
           name="userWeight"
-          onChange={(e) => handleInfoChange("weight", e.target.value)}
+          onChange={(e) => handleInfoChange('weight', e.target.value)}
           value={userDetail.weight}
         />
-        <Button className="my-8" type="submit">수정</Button>
+        <Button className="my-8" type="submit">
+          수정
+        </Button>
       </Form>
     </div>
   );
@@ -79,16 +82,12 @@ function MyPage() {
 export default MyPage;
 
 async function detailLoader() {
-  const id = 1;
-
   try {
-    const response: AxiosResponse<UserDetailData> = await axios.get(
-      `https://dummyjson.com/users/${id}`
-    );
+    const response: AxiosResponse<UserDetailData> = await axios.get(API_URL);
 
     return response.data;
   } catch (error) {
-    console.error("데이터를 불러오는 도중 오류 발생:", error);
+    console.error('데이터를 불러오는 도중 오류 발생:', error);
     throw error; // 오류를 호출자에게 전파
   }
 }
