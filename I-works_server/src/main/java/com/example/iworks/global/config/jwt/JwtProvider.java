@@ -2,6 +2,8 @@ package com.example.iworks.global.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -64,10 +66,18 @@ public class JwtProvider {
     }
 
     public Boolean validateAccessToken(String accessToken) {
+        try{
+
         System.out.println("val access");
         String type = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(accessToken).getClaim("type").asString();
         String eid = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(accessToken).getClaim("eid").asString();
         return "access".equals(type) && eid != null;
+        }catch (ExpiredJwtException e){
+            throw new ExpiredJwtException(null,null,e.getMessage());
+        }
+        catch (JwtException e){
+            throw new JwtException(e.getMessage());
+        }
     }
 
     public Boolean validateRefreshToken(String refreshToken) {
