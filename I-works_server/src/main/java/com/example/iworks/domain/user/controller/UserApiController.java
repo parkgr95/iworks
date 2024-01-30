@@ -31,7 +31,9 @@ public class UserApiController {
 
     @PostMapping("/join")
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
-        System.out.println(user);
+        if (userRepository.findByUserEid(user.getUserEid())!=null){
+            return response.handleError("이미 존재하는 계정입니다.");
+        }
 
         Department dept = new Department();
         dept.setDepartmentId(1);
