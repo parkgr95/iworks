@@ -5,11 +5,14 @@ import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -17,10 +20,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static javax.crypto.Cipher.SECRET_KEY;
+
 @Component
 public class JwtProvider {
-    @Value("${jwt.secret}")
-    String SECRET_KEY;
 
     @Value("${jwt.accessExpTime}")
     long accessExpTime;
@@ -28,26 +31,27 @@ public class JwtProvider {
     @Value("${jwt.refreshExpTime}")
     long refreshExpTime;
     private final RedisTemplate<String, String> redisTemplate;
+    private final JwtSecretKey key;
 
-    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
+    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, JwtSecretKey key) {
         this.redisTemplate = redisTemplate;
+        this.key = key;
     }
 
     public String createAccessToken(String eid, List<String> role) {
-        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         String accessToken = Jwts.builder()
                 .setSubject(eid)
                 .claim("type","refresh")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
-                .signWith(key)
+                .signWith(key.secretKey())
                 .compact();
         return accessToken;
     }
 
     public String reCreateAccessToken(String refreshToken) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(key.secretKey())
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
@@ -57,15 +61,13 @@ public class JwtProvider {
         return createAccessToken(eid, role);
     }
 
-    public String createRefreshToken(String eid, List<String> role) {
-        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
-        System.out.println(key);
+    public String createRefreshToken(String eid, List<String> role) {key.secretKey()
         String refreshToken = Jwts.builder()
                 .setSubject(eid)
                 .claim("type","refresh")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
-                .signWith(key)
+                .signWith(key.secretKey())
                 .compact();
         redisTemplate.opsForValue().set(
                 refreshToken, //key
@@ -78,10 +80,9 @@ public class JwtProvider {
     }
 
     public Boolean validateAccessToken(String accessToken) {
-        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         System.out.println("val access");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(key.secretKey())
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody();
@@ -91,9 +92,8 @@ public class JwtProvider {
     }
 
     public Boolean validateRefreshToken(String refreshToken) {
-        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(key.secretKey())
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
@@ -103,7 +103,7 @@ public class JwtProvider {
             ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
             String redisValue = stringValueOperations.get(refreshToken);
             if (redisValue != null) {
-                return JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(refreshToken).getExpiresAt().after(new Date());
+                return claims.getExpiration().after(new Date());
             }
         }
         System.out.println("failed");
@@ -111,9 +111,8 @@ public class JwtProvider {
     }
 
     public String getUserEid(String jwt) {
-        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(key.secretKey())
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
@@ -121,9 +120,8 @@ public class JwtProvider {
     }
 
     public List<String> getUserRole(String jwt) {
-        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(key.secretKey())
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
