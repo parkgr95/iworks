@@ -3,13 +3,15 @@ import { useState, ChangeEvent, FormEvent, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Form, useNavigate } from 'react-router-dom';
 import { Button, Card, TextInput } from 'flowbite-react';
-import iworks_logo from '../assets/iworks_logo.png'
+import iworks_logo from '../assets/iworks_logo.png';
 
 interface LoginResponse {
-  token: string;
+  grantType: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
-const API_URL = 'https://dummyjson.com/auth/login';
+const API_URL = 'https://suhyeon.site/api/user/login';
 
 function LoginPage() {
   const [userEid, setUserEid] = useState<string>('');
@@ -18,23 +20,19 @@ function LoginPage() {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    // 페이지가 로딩될 때 showModal을 호출하여 모달을 엽니다.
     if (dialog.current) {
       dialog.current.showModal();
     }
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        // ESC 키를 눌렀을 때 모달을 닫지 않도록 수정
         event.preventDefault();
         event.stopPropagation();
       }
     };
 
-    // ESC 키 이벤트 리스너 추가
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      // 컴포넌트 언마운트 시 이벤트 리스너 제거
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
@@ -44,15 +42,11 @@ function LoginPage() {
 
     try {
       const response = await axios.post<LoginResponse>(API_URL, {
-        username: userEid,
-        password: userPassword,
-        // userEid,
-        // userPassword,
+        userEid,
+        userPassword,
       });
-
-      localStorage.setItem('authToken', response.data.token);
-      // localStorage.setItem('accessToken', response.data.accessToken);
-      // localStorage.setItem('refreshToken', response.data.refreshToken);
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
       navigate('/');
     } catch (error) {
       alert('로그인 할 수 없습니다.');
@@ -63,9 +57,11 @@ function LoginPage() {
     <>
       <div className="w-full h-full fixed bg-[#1f4068]"></div>
       <Card className="max-w-sm">
-        <dialog ref={dialog} className="modal rounded-xl w-1/2 max-w-sm min-w-min p-10 bg-[#EBECF1]">
-          {/* <h1 className="text-xl font-semibold text-center mb-4">I-Works</h1> */}
-          <div className='ml-auto mr-auto w-2/3 mb-10'>
+        <dialog
+          ref={dialog}
+          className="modal rounded-xl w-1/2 max-w-sm min-w-min p-10 bg-[#EBECF1]"
+        >
+          <div className="ml-auto mr-auto w-2/3 mb-10">
             <img className="inline-block" src={iworks_logo} alt="logo" />
           </div>
           <Form onSubmit={handleLogin} className="flex flex-col gap-4">
