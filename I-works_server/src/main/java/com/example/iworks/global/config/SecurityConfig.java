@@ -1,9 +1,9 @@
 package com.example.iworks.global.config;
 
+import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
 import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
 import com.example.iworks.global.config.jwt.JwtProvider;
-import com.example.iworks.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,6 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final JwtProvider jwtProvider;
-    private static final String SECRETKEY = "sd#$%#$fnsWRTWRTsdfnsdSDFSDfnds##wr412";
 
     @Bean
     public BCryptPasswordEncoder encodePwd(){
@@ -50,8 +49,14 @@ public class SecurityConfig {
                 // 특정 URL에 대한 권한 설정.
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests
-                            .requestMatchers("/api/employee/**")
+                            .requestMatchers("api/user/join").anonymous()
+                            .requestMatchers("api/user/login").anonymous()
+
+                            .requestMatchers("/api/user/**")
                             .hasAnyRole("EMPLOYEE", "LEADER","ADMIN","CEO")
+
+                            .requestMatchers("/api/user/join").permitAll()
+                            .requestMatchers("/api/user/login").permitAll()
 
                             .requestMatchers("/api/leader/**")
                             .hasAnyRole("ADMIN", "LEADER","CEO")
@@ -68,3 +73,4 @@ public class SecurityConfig {
                 .build();
     }
 }
+
