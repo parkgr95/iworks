@@ -1,11 +1,11 @@
 package com.example.iworks.global.config.jwt;
 
 
-import com.example.iworks.global.config.auth.PrincipalDetails;
-import com.example.iworks.global.model.entity.JWToken;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.iworks.global.config.auth.PrincipalDetails;
+import com.example.iworks.global.model.Response;
+import com.example.iworks.global.model.entity.JWToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,10 +61,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             System.out.println("REFRESH TOKEN!!");
             String accessToken = jwtProvider.reCreateAccessToken(jwtToken);
             JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(jwtToken).build();
-            String json = new ObjectMapper().writeValueAsString(token);
-            System.out.println("json");
-            System.out.println(json);
-            response.getWriter().write(json);
+            response.getWriter().write(new Response().getSuccessString(token));
         } else {
             return;
         }

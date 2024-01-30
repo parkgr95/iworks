@@ -2,6 +2,7 @@ package com.example.iworks.global.config.jwt;
 
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.config.auth.PrincipalDetails;
+import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.JWToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -80,6 +81,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         System.out.println("unsuccessfulAuthentication : login failed!!");
-        response.getWriter().write("ID/PW를 확인해주세요.");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        response.getWriter().write(new Response().getErrorString("ID/PW를 확인해주세요"));
     }
 }
