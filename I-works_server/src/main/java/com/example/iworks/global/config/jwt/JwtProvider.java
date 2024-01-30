@@ -117,4 +117,5 @@ public class JwtProvider {
                 .getBody();
         return (List<String>)claims.get("role");
     }
+
 }

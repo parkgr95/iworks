@@ -1,10 +1,7 @@
 package com.example.iworks.global.config;
 
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
-import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
-import com.example.iworks.global.config.jwt.JwtExceptionFilter;
-import com.example.iworks.global.config.jwt.JwtProvider;
+import com.example.iworks.global.config.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,7 +56,7 @@ public class SecurityConfig {
                             .requestMatchers("/api/user/login").permitAll()
 
                             .requestMatchers("/api/leader/**")
-                            .hasAnyRole("ADMIN", "LEADER","CEO")
+                            .hasAnyRole("ADMIN", "LEADER", "CEO")
 
                             .requestMatchers("/api/admin/**")
                             .hasRole("ADMIN")
@@ -68,8 +65,8 @@ public class SecurityConfig {
                 })
                 .authenticationManager(authenticationManager)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager,userRepository, jwtProvider))
-                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository, jwtProvider))
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class)
                 .build();
     }
 }
