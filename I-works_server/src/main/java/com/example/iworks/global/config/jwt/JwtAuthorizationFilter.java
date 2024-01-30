@@ -1,11 +1,13 @@
 package com.example.iworks.global.config.jwt;
 
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.auth.PrincipalDetails;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.JWToken;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +31,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        try{
 
         System.out.println("인증이나 권한이 필요한 주소 요청!");
 
@@ -43,7 +46,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         //JWT 검증
         String jwtToken = jwtHeader.replace("Bearer ", "");
-
+        try{
 
         if (jwtProvider.validateAccessToken(jwtToken)) {
             //access라면
@@ -56,7 +59,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             System.out.println(authentication);
             // 강제로 시큐리티의 세션에 접근하여 Authentication 객체 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            chain.doFilter(request, response);
+            chain.doFilter(request,response);
 
         } else if (jwtProvider.validateRefreshToken(jwtToken)) {
             //refresh라면
@@ -64,6 +67,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             String accessToken = jwtProvider.reCreateAccessToken(jwtToken);
             JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(jwtToken).build();
             response.getWriter().write(new Response().getSuccessString(token));
+        }
+        } catch (JWTVerificationException e){
+            throw new JWTVerificationException(e.getMessage());
+        }
+
+        } catch (ExpiredJwtException e){
+            throw new ExpiredJwtException(null,null,e.getMessage());
         }
     }
 }
