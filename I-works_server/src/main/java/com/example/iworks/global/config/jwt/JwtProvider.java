@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 public class JwtProvider {
     @Value("${jwt.secret}")
     String SECRET_KEY;
-    private SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
     private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${jwt.accessExpTime}")
@@ -35,6 +34,7 @@ public class JwtProvider {
     }
 
     public String createAccessToken(String eid, List<String> role) {
+        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         String accessToken = Jwts.builder()
                 .setSubject(eid)
                 .claim("type","refresh")
@@ -58,7 +58,7 @@ public class JwtProvider {
     }
 
     public String createRefreshToken(String eid, List<String> role) {
-
+        final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
         String refreshToken = Jwts.builder()
                 .setSubject(eid)
                 .claim("type","refresh")

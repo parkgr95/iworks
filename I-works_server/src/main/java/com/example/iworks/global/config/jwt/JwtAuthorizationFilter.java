@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import java.io.IOException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
