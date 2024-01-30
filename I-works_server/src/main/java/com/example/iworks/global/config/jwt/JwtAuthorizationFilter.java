@@ -7,6 +7,7 @@ import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.auth.PrincipalDetails;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.JWToken;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +46,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         //JWT 검증
         String jwtToken = jwtHeader.replace("Bearer ", "");
-
+        try{
+            
         if (jwtProvider.validateAccessToken(jwtToken)) {
             //access라면
             System.out.println("ACCESS TOKEN!!");
@@ -67,14 +69,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             response.getWriter().write(new Response().getSuccessString(token));
         } else {
             response.getWriter().write(new Response().getFailString("jwt 인증실패"));
-            return;
         }
 
-        // 서명이 정상적으로 됨
-        System.out.println("tok"+jwtToken);
         } catch (JWTVerificationException e){
             response.getWriter().write(new Response().getFailString("jwt 인증실패"));
         }
 
+        } catch (ExpiredJwtException e){
+            response.getWriter().write(new Response().getExpiredString("jwt 토큰 만료"));
+        }
     }
 }

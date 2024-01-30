@@ -24,6 +24,14 @@ public class Response {
         result.put("data",data);
         return new ObjectMapper().writeValueAsString(result);
     }
+
+    public String getExpiredString(Object data) throws JsonProcessingException {
+        Map<String,Object> result = new HashMap<>();
+        result.put("result","expired");
+        result.put("data",data);
+        return new ObjectMapper().writeValueAsString(result);
+    }
+
     public ResponseEntity<Map<String,Object>> handleSuccess(Object data){
         Map<String,Object> result = new HashMap<>();
         result.put("result","success");
