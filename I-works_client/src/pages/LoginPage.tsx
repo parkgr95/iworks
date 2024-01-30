@@ -6,9 +6,12 @@ import { Button, Card, TextInput } from 'flowbite-react';
 import iworks_logo from '../assets/iworks_logo.png';
 
 interface LoginResponse {
-  grantType: string;
-  accessToken: string;
-  refreshToken: string;
+  result: string;
+  data: {
+    grantType: string;
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 const API_URL = 'https://suhyeon.site/api/user/login';
@@ -46,11 +49,8 @@ function LoginPage() {
         userPassword,
       });
 
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
-
-      console.log(response.data)
-
+      localStorage.setItem('accessToken', response.data.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.data.refreshToken);
       navigate('/');
     } catch (error) {
       alert('로그인 할 수 없습니다.');
