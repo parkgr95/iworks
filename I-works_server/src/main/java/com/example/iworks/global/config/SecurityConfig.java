@@ -52,8 +52,7 @@ public class SecurityConfig {
                             .requestMatchers("api/user/join").anonymous()
                             .requestMatchers("api/user/login").anonymous()
 
-                            .requestMatchers("/api/user/**")
-                            .hasAnyRole("EMPLOYEE", "LEADER","ADMIN","CEO")
+                            .requestMatchers("/api/user/**").authenticated()
 
                             .requestMatchers("/api/user/join").permitAll()
                             .requestMatchers("/api/user/login").permitAll()
