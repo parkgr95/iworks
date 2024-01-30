@@ -45,8 +45,12 @@ function LoginPage() {
         userEid,
         userPassword,
       });
+
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
+
+      console.log(response.data)
+
       navigate('/');
     } catch (error) {
       alert('로그인 할 수 없습니다.');
