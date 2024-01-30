@@ -59,6 +59,7 @@ public class JwtProvider {
 
     public String createRefreshToken(String eid, List<String> role) {
         final SecretKey key = new SecretKeySpec(SECRET_KEY.getBytes(),SignatureAlgorithm.ES512.getJcaName());
+        System.out.println(key);
         String refreshToken = Jwts.builder()
                 .setSubject(eid)
                 .claim("type","refresh")
