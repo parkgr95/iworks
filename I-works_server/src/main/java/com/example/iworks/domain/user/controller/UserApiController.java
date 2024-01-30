@@ -5,7 +5,11 @@ import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +27,8 @@ public class UserApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final Response response;
+    @Value("${jwt.secret}")
+    String SECRET_KEY;
 
     @PostMapping("/join")
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
@@ -52,14 +58,18 @@ public class UserApiController {
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<Map<String,Object>> getProfile(@RequestBody Map<String,String> map){
-        String eid = map.get("userEid");
-        System.out.println("eid : "+eid);
+    public ResponseEntity<Map<String,Object>> getProfile(@RequestHeader("Authorization") String token){
+        Jws<Claims> jws = Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token.replace("Bearer ",""));
+        String eid = jws.getBody().getSubject();
+        System.out.println("token eid : "+eid);
         User user= userRepository.findByUserEid(eid);
         if(user != null){
             return response.handleSuccess(user);
         }
-        return response.handleError("couldn't find user with "+map);
+        return response.handleError("couldn't find user with "+eid);
     }
 
     @PutMapping("/mypage")
