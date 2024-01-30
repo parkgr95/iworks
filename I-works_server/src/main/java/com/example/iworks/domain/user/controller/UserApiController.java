@@ -24,11 +24,6 @@ public class UserApiController {
     private final UserRepository userRepository;
     private final Response response;
 
-    @GetMapping("/home")
-    public String home() {
-        return "<h1>home</h1>";
-    }
-
     @PostMapping("/join")
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
         System.out.println(user);
