@@ -37,6 +37,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         //header 있는지 확인
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
             chain.doFilter(request, response);
+            response.getWriter().write(new Response().getErrorString("잘못된 header"));
             return;
         }
 
@@ -63,6 +64,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(jwtToken).build();
             response.getWriter().write(new Response().getSuccessString(token));
         } else {
+            response.getWriter().write(new Response().getErrorString("jwt 인증실패"));
             return;
         }
 
