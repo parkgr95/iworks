@@ -1,26 +1,16 @@
 package com.example.iworks.global.config.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static javax.crypto.Cipher.SECRET_KEY;
 
 @Component
 public class JwtProvider {
@@ -61,7 +51,7 @@ public class JwtProvider {
         return createAccessToken(eid, role);
     }
 
-    public String createRefreshToken(String eid, List<String> role) {key.secretKey()
+    public String createRefreshToken(String eid, List<String> role) {
         String refreshToken = Jwts.builder()
                 .setSubject(eid)
                 .claim("type","refresh")
