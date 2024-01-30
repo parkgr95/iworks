@@ -1,6 +1,8 @@
 package com.example.iworks.global.config.jwt;
 
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.auth.PrincipalDetails;
@@ -29,6 +31,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        try{
+
         System.out.println("인증이나 권한이 필요한 주소 요청!");
 
         String jwtHeader = request.getHeader("Authorization");
@@ -70,6 +74,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         // 서명이 정상적으로 됨
         System.out.println("tok"+jwtToken);
+        }catch (JWTDecodeException e){
+            response.getWriter().write(new Response().getErrorString("jwt 인증실패"));
+        }catch (JWTVerificationException e){
+            response.getWriter().write(new Response().getErrorString("jwt 인증실패"));
+        }
 
     }
 }
