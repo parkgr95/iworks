@@ -16,7 +16,6 @@ public class Response {
         Map<String,Object> result = new HashMap<>();
         result.put("result","success");
         result.put("data",data);
-        System.out.println(result);
         return new ObjectMapper().writeValueAsString(result);
     }
     public String getErrorString(Object data) throws JsonProcessingException {

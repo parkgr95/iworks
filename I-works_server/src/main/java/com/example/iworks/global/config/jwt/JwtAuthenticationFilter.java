@@ -74,8 +74,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
         JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(refreshToken).build();
-        String json = new ObjectMapper().writeValueAsString(token);
-        response.getWriter().write(json);
+        response.getWriter().write(new Response().getSuccessString(token));
     }
 
     @Override
