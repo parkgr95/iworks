@@ -1,13 +1,12 @@
 package com.example.iworks.domain.user.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -59,11 +58,8 @@ public class UserApiController {
 
     @GetMapping("/mypage")
     public ResponseEntity<Map<String,Object>> getProfile(@RequestHeader("Authorization") String token){
-        Jws<Claims> jws = Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
-                .build()
-                .parseClaimsJws(token.replace("Bearer ",""));
-        String eid = jws.getBody().getSubject();
+        token = token.replace("Bearer ","");
+        String eid = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token).getClaim("eid").asString();
         System.out.println("token eid : "+eid);
         User user= userRepository.findByUserEid(eid);
         if(user != null){
