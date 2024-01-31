@@ -52,7 +52,7 @@ const Signup = forwardRef<SignupRef, SignupProps>(function Signup(props, ref) {
       .then((response) => {
         console.log(response.data)
       })
-      .catch((err) => alert(err))
+      .catch((err) => alert(err.data.data))
   }
 
   return createPortal(
