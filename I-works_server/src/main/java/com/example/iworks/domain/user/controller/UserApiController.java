@@ -1,12 +1,15 @@
 package com.example.iworks.domain.user.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.domain.user.repository.UserRepository;
+import com.example.iworks.global.config.util.RandomPasswordUtil;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
-import com.example.iworks.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,22 +28,15 @@ public class UserApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final Response response;
-
-    @GetMapping("/home")
-    public String home() {
-        return "<h1>home</h1>";
-    }
-
-
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
-        System.out.println(user);
-        return null;
-    }
+    private final RandomPasswordUtil randomPasswordUtil;
+    @Value("${jwt.secret}")
+    String SECRET_KEY;
 
     @PostMapping("/join")
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
-        System.out.println(user);
+        if (userRepository.findByUserEid(user.getUserEid())!=null){
+            return response.handleFail("이미 존재하는 계정입니다.");
+        }
 
         Department dept = new Department();
         dept.setDepartmentId(1);
@@ -58,21 +54,27 @@ public class UserApiController {
         } else{
             roleList.add("ROLE_EMPLOYEE");
         }
-        user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
+        int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
+        String password = randomPasswordUtil.getRandomPassword(length);
+        user.setUserPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
         userRepository.save(user);
-        return response.handleSuccess("join success");
+        Map<String, Object> map = new HashMap<>();
+        map.put("message","회원가입 성공!");
+        map.put("data",password);
+        return response.handleSuccess(map);
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<Map<String,Object>> getProfile(@RequestBody Map<String,String> map){
-        String eid = map.get("userEid");
-        System.out.println("eid : "+eid);
+    public ResponseEntity<Map<String,Object>> getProfile(@RequestHeader("Authorization") String token){
+        token = token.replace("Bearer ","");
+        String eid = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token).getClaim("eid").asString();
+        System.out.println("token eid : "+eid);
         User user= userRepository.findByUserEid(eid);
         if(user != null){
             return response.handleSuccess(user);
         }
-        return response.handleError("couldn't find user with "+map);
+        return response.handleFail("couldn't find user with "+eid);
     }
 
     @PutMapping("/mypage")
@@ -101,7 +103,7 @@ public class UserApiController {
             return response.handleSuccess(origin);
         }
 
-        return response.handleError("couldn't find user with "+user.toString());
+        return response.handleFail("couldn't find user with "+user.toString());
     }
 
 }

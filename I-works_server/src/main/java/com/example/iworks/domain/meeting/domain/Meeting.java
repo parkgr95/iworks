@@ -16,7 +16,7 @@ public class Meeting {
     @Column(name = "meeting_id", nullable = false)
     private int meetingId; // 회의방 아이디
 
-    @OneToOne(mappedBy = "scheduleMeeting", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "meeting", fetch = FetchType.LAZY)
     private Schedule schedule; // 할 일 아이디(외래키)
 
     @Column(name = "meeting_date")
@@ -27,9 +27,10 @@ public class Meeting {
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
-        if (schedule.getScheduleMeeting() != this){
+        if (schedule.getMeeting() != this){
             schedule.setMeeting(this);
         }
 
     }
+
 }

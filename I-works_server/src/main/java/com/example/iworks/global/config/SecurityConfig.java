@@ -1,9 +1,7 @@
 package com.example.iworks.global.config;
 
-import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
-import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
-import com.example.iworks.global.config.jwt.JwtProvider;
 import com.example.iworks.domain.user.repository.UserRepository;
+import com.example.iworks.global.config.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +25,6 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final JwtProvider jwtProvider;
-    private static final String SECRETKEY = "sd#$%#$fnsWRTWRTsdfnsdSDFSDfnds##wr412";
 
     @Bean
     public BCryptPasswordEncoder encodePwd(){
@@ -50,11 +47,16 @@ public class SecurityConfig {
                 // 특정 URL에 대한 권한 설정.
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests
-                            .requestMatchers("/api/employee/**")
-                            .hasAnyRole("EMPLOYEE", "LEADER","ADMIN","CEO")
+                            .requestMatchers("/api/user/join").anonymous() // 나중에 어드민으로 바꿈
+                            .requestMatchers("/api/user/login").anonymous()
+
+                            .requestMatchers("/api/user/**").authenticated()
+
+                            .requestMatchers("/api/user/join").permitAll()
+                            .requestMatchers("/api/user/login").permitAll()
 
                             .requestMatchers("/api/leader/**")
-                            .hasAnyRole("ADMIN", "LEADER","CEO")
+                            .hasAnyRole("ADMIN", "LEADER", "CEO")
 
                             .requestMatchers("/api/admin/**")
                             .hasRole("ADMIN")
@@ -63,8 +65,9 @@ public class SecurityConfig {
                 })
                 .authenticationManager(authenticationManager)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager,userRepository, jwtProvider))
-
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository, jwtProvider))
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class)
                 .build();
     }
 }
+
