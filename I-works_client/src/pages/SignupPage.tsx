@@ -85,7 +85,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
         </div>
         <div>
           <Label className="text-lg">전화번호</Label>
-          <TextInput type="text" name="userTel" required />
+          <TextInput type="text" name="userTel" />
         </div>
         <div>
           <Label className="text-lg">주소</Label>
@@ -93,7 +93,6 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
             type="text"
             name="userAddress"
             placeholder="주소"
-            required
           />
         </div>
         <div className="flex gap-4">
