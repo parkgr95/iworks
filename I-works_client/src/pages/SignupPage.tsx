@@ -44,7 +44,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
         formRef.current?.reset()        
       })
       .catch((error) => {
-        console.log(error)
+        alert(error.response.data.data)
       })
   }
 
