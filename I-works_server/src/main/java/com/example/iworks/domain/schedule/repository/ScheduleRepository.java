@@ -17,6 +17,10 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
     Schedule findScheduleByScheduleTitle(String name);
 
+    //완료 여부 -> Y
+
+    //완료 여부 -> N
+
     @Query("select s from Schedule s where s.scheduleStartDate between :startDate and :endDate")
     List<Schedule> findByScheduleStartDate (LocalDateTime startDate, LocalDateTime endDate);
 

@@ -55,13 +55,9 @@ public class Schedule {
     @Column(name = "schedule_end_date", nullable = false)
     private LocalDateTime scheduleEndDate; //할 일의 종료일시
 
-//    @Temporal(TemporalType.TIMESTAMP)
-//    @Column(name = "schedule_deadline")
-//    private LocalDateTime scheduleDeadline; //할 일의 마감일시
     @Builder.Default
     @Column(name = "schedule_is_finish", nullable = false)
     private Boolean scheduleIsFinish = false; //할일의 완료 여부
-
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_finished_at")
