@@ -77,7 +77,7 @@ public class JwtProvider {
                 .parseClaimsJws(accessToken)
                 .getBody();
         String type = (String)claims.get("type");
-        String eid = claims.getSubject();
+        String eid = (String)claims.get("eid");
         return "access".equals(type) && eid != null;
     }
 
