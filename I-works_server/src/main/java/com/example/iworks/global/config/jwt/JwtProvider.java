@@ -1,5 +1,6 @@
 package com.example.iworks.global.config.jwt;
 
+import com.example.iworks.global.util.JwtSecretKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Qualifier;
