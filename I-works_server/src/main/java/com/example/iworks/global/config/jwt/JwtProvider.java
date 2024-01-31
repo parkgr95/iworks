@@ -46,7 +46,7 @@ public class JwtProvider {
                 .parseClaimsJws(refreshToken)
                 .getBody();
 
-        String eid = claims.getSubject();
+        String eid = (String) claims.get("eid");
         List<String> role = (List<String>)claims.get("role");
         return createAccessToken(eid, role);
     }
