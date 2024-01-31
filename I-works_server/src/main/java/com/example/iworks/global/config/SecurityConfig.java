@@ -3,7 +3,7 @@ package com.example.iworks.global.config;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
 import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
-import com.example.iworks.global.filter.CorsFilter;
+import com.example.iworks.global.filter.CustomCorsFilter;
 import com.example.iworks.global.filter.JwtExceptionFilter;
 import com.example.iworks.global.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final JwtProvider jwtProvider;
-    private final CorsFilter corsFilter;
+    private final CustomCorsFilter corsFilter;
 
     @Bean
     public BCryptPasswordEncoder encodePwd(){
