@@ -59,7 +59,10 @@ public class UserApiController {
         user.setUserPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
         userRepository.save(user);
-        return response.handleSuccess("join success password:"+password);
+        String [] result = new String[2];
+        result[0]="회원가입 성공!";
+        result[1]=password;
+        return response.handleSuccess(result);
     }
 
     @GetMapping("/mypage")
