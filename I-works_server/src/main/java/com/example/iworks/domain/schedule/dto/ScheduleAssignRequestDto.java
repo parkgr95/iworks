@@ -4,10 +4,12 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 //@NoArgsConstructor
 @Getter
 @Builder
+@ToString
 public class ScheduleAssignRequestDto {
 
    private int scheduleCategoryCodeId;

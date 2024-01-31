@@ -18,27 +18,19 @@ import java.util.List;
 public class ScheduleAssignResponseDto {
 
    private Integer scheduleId; // 할 일 아이디
-   private Code scheduleDivisionId; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
-   private String scheduleTitle = "scheduleName"; //할 일 이름
-   private LocalDateTime scheduleStartDate = LocalDateTime.now(); //할 일의 시작일시
+   private String scheduleDivisionName; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
+   private String scheduleTitle; //할 일 이름
+   private LocalDateTime scheduleStartDate; //할 일의 시작일시
    private LocalDateTime scheduleEndDate; //할 일의 종료일시
-   private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할 일 배정자
+//   private List<ScheduleAssign> scheduleAssigns; //할 일 배정자
 
    @QueryProjection
-   public ScheduleAssignResponseDto(Integer scheduleId, Code scheduleDivisionId, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
+   public ScheduleAssignResponseDto(Integer scheduleId, String scheduleDivisionName, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
       this.scheduleId = scheduleId;
-      this.scheduleDivisionId = scheduleDivisionId;
+      this.scheduleDivisionName = scheduleDivisionName;
       this.scheduleTitle = scheduleTitle;
       this.scheduleStartDate = scheduleStartDate;
       this.scheduleEndDate = scheduleEndDate;
    }
-   @QueryProjection
-   public ScheduleAssignResponseDto(Integer scheduleId, Code scheduleDivisionId, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate, List<ScheduleAssign> scheduleAssigns) {
-      this.scheduleId = scheduleId;
-      this.scheduleDivisionId = scheduleDivisionId;
-      this.scheduleTitle = scheduleTitle;
-      this.scheduleStartDate = scheduleStartDate;
-      this.scheduleEndDate = scheduleEndDate;
-      this.scheduleAssigns = scheduleAssigns;
-   }
+
 }
