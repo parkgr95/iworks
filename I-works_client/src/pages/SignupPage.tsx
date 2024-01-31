@@ -28,6 +28,7 @@ const API_URL = 'https://https://suhyeon.site/api/user/join'
 
 const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
+  const formRef = useRef<HTMLFormElement>(null);
 
   useImperativeHandle(
     ref,
@@ -46,8 +47,9 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
 
     axios
       .post(API_URL, signupFormData)
-      .then((response) => {
-        console.log(response.data)
+      .then((_response) => {
+        alert('구성원이 추가 되었습니다.')
+        formRef.current?.reset()        
       })
       .catch((err) => alert(err.data.data))
   }
@@ -58,7 +60,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
       ref={dialog as RefObject<HTMLDialogElement>}
     >
       <h1 className="text-3xl text-center mb-10">구성원 추가</h1>
-      <Form className="flex flex-col gap-4" onSubmit={handleSignUp}>
+      <Form ref={formRef} className="flex flex-col gap-4" onSubmit={handleSignUp}>
         <div>
           <Label className="text-lg">사번</Label>
           <TextInput type="text" name="userEid" required />
