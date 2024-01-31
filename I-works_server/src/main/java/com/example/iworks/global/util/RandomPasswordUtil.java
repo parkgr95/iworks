@@ -1,4 +1,4 @@
-package com.example.iworks.global.config.util;
+package com.example.iworks.global.util;
 
 import org.springframework.stereotype.Component;
 
