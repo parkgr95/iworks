@@ -3,6 +3,8 @@ import RootLayout from './pages/RootLayout';
 import LoginPage from './pages/LoginPage';
 import AddressPage from "./pages/AddressPage";
 import MyPage, { myPageLoader } from "./pages/MyPage";
+import { logoutAction } from './pages/LogoutPage';
+
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,10 @@ const router = createBrowserRouter([
           {
             path: 'login',
             element: <LoginPage />,
+          },
+          {
+            path: 'logout',
+            action: logoutAction,
           },
           {
             path:'mypage',
