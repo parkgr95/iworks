@@ -47,11 +47,17 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
 
     axios
       .post(API_URL, signupFormData)
-      .then((_response) => {
+      .then((response) => {
+        console.log('res', response)
+        console.log('res.data', response.data)
+        
         alert('구성원이 추가 되었습니다.')
         formRef.current?.reset()        
       })
-      .catch((err) => alert(err.data.data))
+      .catch((err) => {
+        console.log('err', err)
+        console.log('err.data', err.data)
+      })
   }
 
   return createPortal(
