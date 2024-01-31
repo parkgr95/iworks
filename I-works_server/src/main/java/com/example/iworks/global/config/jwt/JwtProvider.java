@@ -70,7 +70,7 @@ public class JwtProvider {
     }
 
     public Boolean validateAccessToken(String accessToken) {
-        System.out.println("val access");
+        System.out.println("access check");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key.secretKey())
                 .build()
@@ -82,6 +82,7 @@ public class JwtProvider {
     }
 
     public Boolean validateRefreshToken(String refreshToken) {
+        System.out.println("refresh check");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key.secretKey())
                 .build()
@@ -89,7 +90,7 @@ public class JwtProvider {
                 .getBody();
         String type = (String)claims.get("type");
         if (type.equals("refresh")) {
-            System.out.println("success");
+            System.out.println("create refresh");
             ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
             String redisValue = stringValueOperations.get(refreshToken);
             if (redisValue != null) {
