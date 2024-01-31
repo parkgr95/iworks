@@ -15,7 +15,7 @@ function MainNav() {
           <Link to="#" className="block py-2 px-4">채팅</Link>
         </li>
         <li>
-          <Link to="#" className="block py-2 px-4">주소록</Link>
+          <Link to="/address" className="block py-2 px-4">주소록</Link>
         </li>
         <li>
           <Link to="#" className="block py-2 px-4">캘린더</Link>

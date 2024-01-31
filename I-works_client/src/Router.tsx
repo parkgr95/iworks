@@ -1,5 +1,7 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import RootLayout from "./pages/RootLayout";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import RootLayout from './pages/RootLayout';
+import LoginPage from './pages/LoginPage';
+import AddressPage from "./pages/AddressPage";
 import MyPage, { detailLoader } from "./pages/MyPage";
 
 const router = createBrowserRouter([
@@ -8,12 +10,58 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        path:'mypage',
-        element: <MyPage />,
-        loader: detailLoader,
+        path: 'user',
+        children: [
+          {
+            path: 'login',
+            element: <LoginPage />,
+          },
+          {
+            path:'mypage',
+            element: <MyPage />,
+            loader: detailLoader,
+          },
+        ],
+      },
+      {
+        path: 'address',
+        element: <AddressPage />
       }
-    ]
-    // children: [
+      //   {
+      //     index: true,
+      //     element: <HomePage />,
+      //   },
+      //   {
+      //     path: 'test',
+      //     element: <TestPage />,
+      //   },
+      //   {
+      //     path: 'logout',
+      //     action: logoutAction,
+      //   },
+      //   {
+      //     path: 'board',
+      //     element: <BoardPage />,
+      //     children: [
+      //       {
+      //         path: '',
+      //         element: <BoardIndex />
+      //       },
+      //       {
+      //         path: 'create',
+      //         element: <BoardCreate />
+      //       },
+      //       {
+      //         path: 'update/:boardId',
+      //         element: <BoardUpdate />
+      //       },
+      //       {
+      //         path: ':boardId',
+      //         element: <BoardDetail />
+      //       },
+      //     ]
+      //   }
+
     //   {
     //     index: true,
     //     element: <HomePage />,
@@ -61,13 +109,12 @@ const router = createBrowserRouter([
     //       },
     //     ]
     //   }
-    // ]
+    ]
   },
-])
+]);
 
 function AppProvider() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
 
-
-export default AppProvider
+export default AppProvider;
