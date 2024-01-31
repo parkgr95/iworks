@@ -16,14 +16,14 @@ export interface SignupRef {
 
 const API_URL = 'https://suhyeon.site/api/user/join'
 
-function formDataToJson(formData: FormData): string {
+function formDataToJson(formData: FormData): object {
   const json: Record<string, string> = {};
 
   formData.forEach((value, key) => {
     json[key] = value.toString();
   });
 
-  return JSON.stringify(json);
+  return json;
 }
 
 const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
