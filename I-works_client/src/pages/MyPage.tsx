@@ -44,8 +44,11 @@ function MyPage() {
           Authorization: 'Bearer ' + getAccessToken(),
         },
       })
-      .then((response) => {
-        console.log(response.data)
+      .then((_response) => {
+        alert('회원정보 수정이 완료되었습니다.')
+      })
+      .catch((error) => {
+        alert(error)
       })
   }
 
@@ -85,7 +88,7 @@ function MyPage() {
 export default MyPage
 
 async function myPageLoader() {
-  if (!getAccessToken()){
+  if (!getAccessToken()) {
     return redirect('/user/login')
   }
   try {
@@ -100,7 +103,7 @@ async function myPageLoader() {
     return response.data.data
   } catch (error) {
     console.error(error)
-  }  
+  }
 }
 
 export { myPageLoader }
