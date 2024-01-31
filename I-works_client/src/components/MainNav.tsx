@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, Form } from "react-router-dom"
 
 function MainNav() {
   
@@ -25,7 +25,9 @@ function MainNav() {
         </li>
       </ul>
       <div className="flex items-center text-white p-3.5">
-        <Link to="#" className="font-semibold">로그아웃</Link>
+        <Form action="/user/logout" method="post">
+          <button className="font-semibold">로그아웃</button>
+        </Form>
       </div>
     </nav>
   )
