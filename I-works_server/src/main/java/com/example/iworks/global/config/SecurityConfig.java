@@ -47,7 +47,7 @@ public class SecurityConfig {
                 // 특정 URL에 대한 권한 설정.
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests
-                            .requestMatchers("/api/user/join").anonymous()
+                            .requestMatchers("/api/user/join").anonymous() // 나중에 어드민으로 바꿈
                             .requestMatchers("/api/user/login").anonymous()
 
                             .requestMatchers("/api/user/**").authenticated()

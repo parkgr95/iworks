@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
+import com.example.iworks.global.config.util.RandomPasswordUtil;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class UserApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final Response response;
+    private final RandomPasswordUtil randomPasswordUtil;
     @Value("${jwt.secret}")
     String SECRET_KEY;
 
@@ -52,10 +54,12 @@ public class UserApiController {
         } else{
             roleList.add("ROLE_EMPLOYEE");
         }
-        user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
+        int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
+        String password = randomPasswordUtil.getRandomPassword(length);
+        user.setUserPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
         userRepository.save(user);
-        return response.handleSuccess("join success");
+        return response.handleSuccess("join success password:"+password);
     }
 
     @GetMapping("/mypage")
