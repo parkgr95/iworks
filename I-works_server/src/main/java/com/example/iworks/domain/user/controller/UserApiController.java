@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequestMapping("/api/user")
@@ -59,10 +60,10 @@ public class UserApiController {
         user.setUserPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
         userRepository.save(user);
-        String [] result = new String[2];
-        result[0]="회원가입 성공!";
-        result[1]=password;
-        return response.handleSuccess(result);
+        Map<String, Object> map = new HashMap<>();
+        map.put("message","회원가입 성공!");
+        map.put("data",password);
+        return response.handleSuccess(map);
     }
 
     @GetMapping("/mypage")
