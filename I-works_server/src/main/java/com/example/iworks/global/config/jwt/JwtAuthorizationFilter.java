@@ -68,7 +68,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 String accessToken = jwtProvider.reCreateAccessToken(jwtToken);
                 JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(jwtToken).build();
                 response.getWriter().write(new Response().getSuccessString(token));
-                chain.doFilter(request, response);
             }
         }
         catch (JWTVerificationException e){
