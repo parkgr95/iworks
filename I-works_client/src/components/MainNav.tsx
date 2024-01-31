@@ -20,6 +20,9 @@ function MainNav() {
         <li>
           <Link to="#" className="block py-2 px-4">캘린더</Link>
         </li>
+        <li>
+          <Link to="/user/mypage" className="block py-2 px-4">마이페이지</Link>
+        </li>
       </ul>
       <div className="flex items-center text-white p-3.5">
         <Link to="#" className="font-semibold">로그아웃</Link>

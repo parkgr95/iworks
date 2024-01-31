@@ -1,95 +1,106 @@
-import axios, { AxiosResponse } from 'axios';
-import { useState, FormEvent } from 'react';
-import { useLoaderData, Form } from 'react-router-dom';
-import { TextInput, Label, Button } from 'flowbite-react';
+import axios, { AxiosResponse } from 'axios'
+import { useState, FormEvent } from 'react'
+import { useLoaderData, Form, redirect } from 'react-router-dom'
+import { TextInput, Label, Button } from 'flowbite-react'
+import { formDataToRequestData } from '../utils/api'
+import { getAccessToken } from '../utils/auth'
 
-interface UserDetailData {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  height: string;
-  weight: string;
+interface UserDetailResponse {
+  result: string
+  data: {
+    userId: number
+    userEid: string
+    userNameFirst: string
+    userNameLast: string
+    userEmail: string
+    userTel: string
+    userAddress: string
+    userGender: string
+  }
 }
 
-const API_URL = 'https://dummyjson.com/users/1';
+const API_URL = 'https://suhyeon.site/api/user/mypage'
 
 function MyPage() {
-  const userDetailLoad = useLoaderData() as UserDetailData;
-  const [userDetail, setUserDetail] = useState<UserDetailData>(userDetailLoad);
+  const userDetailLoad = useLoaderData() as UserDetailResponse['data']
+  const [userDetail, setUserDetail] = useState(userDetailLoad)
 
   function handleInfoChange(key: string, value: string) {
-    setUserDetail((prevInfo) => ({
+    setUserDetail((prevInfo: UserDetailResponse['data']) => ({
       ...prevInfo,
       [key]: value,
-    }));
+    }))
   }
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault()
 
-    const fd = new FormData(event.target as HTMLFormElement);
+    const userDetailFormData = new FormData(event.target as HTMLFormElement)
+    const userDetailRequestData = formDataToRequestData(userDetailFormData)
 
-    try {
-      const response: AxiosResponse<UserDetailData> = await axios.put(
-        API_URL,
-        fd,
-        // {
-        //   headers: {
-        //     'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-        //   }
-        // }
-      );
-
-      console.log(response.data);
-    } catch (error) {
-      alert(error);
-    }
+    axios
+      .put(API_URL, userDetailRequestData, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
+      })
+      .then((response) => {
+        console.log(response.data)
+      })
   }
 
   return (
     <div className="p-16">
       <h1 className="text-2xl m-4">마이페이지</h1>
-      <p>아이디 : {userDetail.id}</p>
-      <p>이름 : {userDetail.firstName}</p>
-      <p>성 : {userDetail.lastName}</p>
-      <p>이메일 : {userDetail.email}</p>
+      <p>사번 : {userDetail.userEid}</p>
+      <p>이름 : {userDetail.userNameFirst}</p>
+      <p>성 : {userDetail.userNameLast}</p>
+      <p>이메일 : {userDetail.userEmail}</p>
+      <p>성별 : {userDetail.userGender}</p>
       <Form onSubmit={handleSubmit}>
-        <Label htmlFor="height">키</Label>
+        <Label htmlFor="userTel">전화번호</Label>
         <TextInput
-          id="height"
+          id="userTel"
           type="text"
-          name="userHeight"
-          onChange={(e) => handleInfoChange('height', e.target.value)}
-          value={userDetail.height}
+          name="userTel"
+          onChange={(e) => handleInfoChange('userTel', e.target.value)}
+          value={userDetail.userTel}
         />
-        <Label htmlFor="weight">몸무게</Label>
+        <Label htmlFor="userAddress">주소</Label>
         <TextInput
-          id="weight"
+          id="userAddress"
           type="text"
-          name="userWeight"
-          onChange={(e) => handleInfoChange('weight', e.target.value)}
-          value={userDetail.weight}
+          name="userAddress"
+          onChange={(e) => handleInfoChange('userAddress', e.target.value)}
+          value={userDetail.userAddress}
         />
         <Button className="my-8" type="submit">
           수정
         </Button>
       </Form>
     </div>
-  );
+  )
 }
 
-export default MyPage;
+export default MyPage
 
-async function detailLoader() {
-  try {
-    const response: AxiosResponse<UserDetailData> = await axios.get(API_URL);
-
-    return response.data;
-  } catch (error) {
-    console.error('데이터를 불러오는 도중 오류 발생:', error);
-    throw error; // 오류를 호출자에게 전파
+async function myPageLoader() {
+  if (!getAccessToken()){
+    return redirect('/user/login')
   }
+  try {
+    const response: AxiosResponse<UserDetailResponse> = await axios.get(
+      API_URL,
+      {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
+      },
+    )
+    return response.data.data
+  } catch (error) {
+    console.error(error)
+  }  
 }
 
-export { detailLoader };
+export { myPageLoader }

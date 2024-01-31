@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './pages/RootLayout';
 import LoginPage from './pages/LoginPage';
 import AddressPage from "./pages/AddressPage";
-import MyPage, { detailLoader } from "./pages/MyPage";
+import MyPage, { myPageLoader } from "./pages/MyPage";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
           {
             path:'mypage',
             element: <MyPage />,
-            loader: detailLoader,
+            loader: myPageLoader,
           },
         ],
       },
