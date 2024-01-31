@@ -52,7 +52,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (NullPointerException e) {
-
             filterChain.doFilter(request, response);
         }
     }

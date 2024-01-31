@@ -24,6 +24,13 @@ public class Response {
         return new ObjectMapper().writeValueAsString(result);
     }
 
+    public String getCustomResponseString(String resultString, Object data) throws JsonProcessingException {
+        Map<String,Object> result = new HashMap<>();
+        result.put("result",resultString);
+        result.put("data",data);
+        return new ObjectMapper().writeValueAsString(result);
+    }
+
     public ResponseEntity<Map<String,Object>> handleSuccess(Object data){
         Map<String,Object> result = new HashMap<>();
         result.put("result","success");
@@ -35,7 +42,14 @@ public class Response {
         Map<String,Object> result = new HashMap<>();
         result.put("result","failed");
         result.put("data",data);
-        return new ResponseEntity<>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<Map<String,Object>> handleCustomResponse(String resultString, Object data,HttpStatus status){
+        Map<String,Object> result = new HashMap<>();
+        result.put("result",resultString);
+        result.put("data",data);
+        return new ResponseEntity<>(result, status);
     }
 
 

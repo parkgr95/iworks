@@ -20,6 +20,7 @@ public class JwtProvider {
 
     @Value("${jwt.refreshExpTime}")
     long refreshExpTime;
+
     private final RedisTemplate<String, String> redisTemplate;
     private final JwtSecretKey key;
 

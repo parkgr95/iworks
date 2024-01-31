@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.global.config.util.RandomPasswordUtil;
+import com.example.iworks.global.util.RandomPasswordUtil;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
 import lombok.RequiredArgsConstructor;
