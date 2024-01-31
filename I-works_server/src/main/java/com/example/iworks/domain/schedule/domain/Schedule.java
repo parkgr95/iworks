@@ -32,7 +32,7 @@ public class Schedule {
 
     @ManyToOne(fetch = FetchType.LAZY) //단방향
     @JoinColumn(name = "schedule_division_id")
-    private Code scheduleDivisionId; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
+    private Code scheduleDivision; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
 
     @Builder.Default
     @Column(name = "schedule_title", nullable = false, length = 50)
@@ -85,9 +85,10 @@ public class Schedule {
     @JoinColumn(name = "schedule_creator_id", referencedColumnName = "user_id", nullable = false)
     private User scheduleCreator; // 등록자 아이디
 
+    @Builder.Default
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_created_at", nullable = false, columnDefinition = "datetime default current_timestamp")
-    private LocalDateTime scheduleCreatedAt; //등록 일시
+    private LocalDateTime scheduleCreatedAt = LocalDateTime.now(); //등록 일시
 
     @ManyToOne(fetch = FetchType.LAZY) //단방향
     @JoinColumn(name = "schedule_modifier_id", referencedColumnName = "user_id")
