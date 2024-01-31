@@ -3,6 +3,7 @@ package com.example.iworks.global.config;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
 import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
+import com.example.iworks.global.filter.CorsFilter;
 import com.example.iworks.global.filter.JwtExceptionFilter;
 import com.example.iworks.global.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @EnableWebSecurity //스프링 시큐리티 필터(SecurityConfig)가 스프링 필터체인에 등록됨.
@@ -28,6 +30,7 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final JwtProvider jwtProvider;
+    private final CorsFilter corsFilter;
 
     @Bean
     public BCryptPasswordEncoder encodePwd(){
@@ -67,6 +70,7 @@ public class SecurityConfig {
                             .anyRequest().permitAll();
                 })
                 .authenticationManager(authenticationManager)
+                .addFilterBefore(corsFilter, SecurityContextHolderFilter.class)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository, jwtProvider))
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class)
