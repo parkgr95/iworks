@@ -94,7 +94,7 @@ public class JwtProvider {
             ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
             String redisValue = stringValueOperations.get(refreshToken);
             if (redisValue != null) {
-                return claims.getExpiration().before(new Date());
+                return claims.getExpiration().after(new Date());
             }
         }
         System.out.println("failed");
