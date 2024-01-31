@@ -1,6 +1,5 @@
-package com.example.iworks.global.config.jwt;
+package com.example.iworks.global.util;
 
-import com.example.iworks.global.util.JwtSecretKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -73,6 +72,7 @@ public class JwtProvider {
 
     public Boolean validateAccessToken(String accessToken) {
         System.out.println("access check");
+        accessToken = accessToken.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key.secretKey())
                 .build()
@@ -85,6 +85,7 @@ public class JwtProvider {
 
     public Boolean validateRefreshToken(String refreshToken) {
         System.out.println("refresh check");
+        refreshToken = refreshToken.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key.secretKey())
                 .build()
@@ -104,6 +105,7 @@ public class JwtProvider {
     }
 
     public String getUserEid(String jwt) {
+        jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key.secretKey())
                 .build()
@@ -113,6 +115,7 @@ public class JwtProvider {
     }
 
     public List<String> getUserRole(String jwt) {
+        jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key.secretKey())
                 .build()

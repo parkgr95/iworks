@@ -1,10 +1,11 @@
-package com.example.iworks.global.config.jwt;
+package com.example.iworks.global.filter;
 
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.auth.PrincipalDetails;
+import com.example.iworks.global.util.JwtProvider;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.JWToken;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -37,17 +38,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             System.out.println("인증이나 권한이 필요한 주소 요청!");
 
-            String jwtHeader = request.getHeader("Authorization");
-            System.out.println("jwtHeader : " + jwtHeader);
+            String jwtToken = request.getHeader("Authorization");
+            System.out.println("jwtHeader : " + jwtToken);
 
             //header 있는지 확인
-            if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
+            if (jwtToken == null || !jwtToken.startsWith("Bearer")) {
                 chain.doFilter(request, response);
                 return;
             }
 
-            //JWT 검증
-            String jwtToken = jwtHeader.replace("Bearer ", "");
 
             if (jwtProvider.validateAccessToken(jwtToken)) {
                 //access라면

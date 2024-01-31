@@ -1,7 +1,8 @@
-package com.example.iworks.global.config.jwt;
+package com.example.iworks.global.filter;
 
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.config.auth.PrincipalDetails;
+import com.example.iworks.global.util.JwtProvider;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.JWToken;
 import com.fasterxml.jackson.databind.ObjectMapper;

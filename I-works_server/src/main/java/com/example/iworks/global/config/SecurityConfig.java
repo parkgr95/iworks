@@ -1,11 +1,11 @@
 package com.example.iworks.global.config;
 
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.global.config.jwt.JwtAuthenticationFilter;
-import com.example.iworks.global.config.jwt.JwtAuthorizationFilter;
+import com.example.iworks.global.filter.JwtAuthenticationFilter;
+import com.example.iworks.global.filter.JwtAuthorizationFilter;
 import com.example.iworks.global.filter.CustomCorsFilter;
 import com.example.iworks.global.filter.JwtExceptionFilter;
-import com.example.iworks.global.config.jwt.JwtProvider;
+import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
