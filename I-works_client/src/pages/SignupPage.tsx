@@ -24,15 +24,15 @@ interface SignupResponse {
 
 const API_URL = 'https://https://suhyeon.site/api/user/join'
 
-// function formDataToJson(formData: FormData): string {
-//   const json: Record<string, string> = {};
+function formDataToJson(formData: FormData): string {
+  const json: Record<string, string> = {};
 
-//   formData.forEach((value, key) => {
-//     json[key] = value.toString();
-//   });
+  formData.forEach((value, key) => {
+    json[key] = value.toString();
+  });
 
-//   return JSON.stringify(json);
-// }
+  return JSON.stringify(json);
+}
 
 const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
@@ -52,11 +52,12 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
     event.preventDefault()
 
     const signupFormData = new FormData(event.currentTarget)
+    const signupJsonData = formDataToJson(signupFormData)
 
     try {
       const response: AxiosResponse<SignupResponse> = await axios.post(
         API_URL,
-        signupFormData,
+        signupJsonData,
       )
       alert(response.data.data.message)
       formRef.current?.reset()
