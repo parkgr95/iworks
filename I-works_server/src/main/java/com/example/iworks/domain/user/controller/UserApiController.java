@@ -78,8 +78,7 @@ public class UserApiController {
     @Transactional
     public ResponseEntity<Map<String,Object>> updateProfile(@RequestHeader("Authorization") String token,@RequestBody User user){
         User origin = userRepository.findByUserEid(jwtProvider.getUserEid(token));
-        System.out.print("origin:");
-        System.out.println(origin);
+        System.out.println("origin: " + origin);
         if(origin != null){
 
             if(user.getUserPassword() != null){
