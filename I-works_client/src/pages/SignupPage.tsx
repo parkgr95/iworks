@@ -7,11 +7,19 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { Form } from 'react-router-dom'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { TextInput, Button, Radio, Label } from 'flowbite-react'
 
 export interface SignupRef {
   open: () => void
+}
+
+interface SignupResponse {
+  result: string
+  data: {
+    data: string
+    message: string
+  }
 }
 
 const API_URL = 'https://https://suhyeon.site/api/user/join'
@@ -28,7 +36,7 @@ const API_URL = 'https://https://suhyeon.site/api/user/join'
 
 const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null)
 
   useImperativeHandle(
     ref,
@@ -40,24 +48,21 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
     [],
   )
 
-  function handleSignUp(event: FormEvent<HTMLFormElement>) {
+  async function handleSignUp(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const signupFormData = new FormData(event.currentTarget)
 
-    axios
-      .post(API_URL, signupFormData)
-      .then((response) => {
-        console.log('res', response)
-        console.log('res.data', response.data)
-
-        alert('구성원이 추가 되었습니다.')
-        formRef.current?.reset()        
-      })
-      .catch((err) => {
-        console.log('err', err)
-        console.log('err.data', err.data)
-      })
+    try {
+      const response: AxiosResponse<SignupResponse> = await axios.post(
+        API_URL,
+        signupFormData,
+      )
+      alert(response.data.data.message)
+      formRef.current?.reset()
+    } catch (error: any) {
+      alert(error.data.message)
+    }
   }
 
   return createPortal(
@@ -66,7 +71,11 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
       ref={dialog as RefObject<HTMLDialogElement>}
     >
       <h1 className="text-3xl text-center mb-10">구성원 추가</h1>
-      <Form ref={formRef} className="flex flex-col gap-4" onSubmit={handleSignUp}>
+      <Form
+        ref={formRef}
+        className="flex flex-col gap-4"
+        onSubmit={handleSignUp}
+      >
         <div>
           <Label className="text-lg">사번</Label>
           <TextInput type="text" name="userEid" required />
@@ -85,7 +94,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
         </div>
         <div>
           <Label className="text-lg">전화번호</Label>
-          <TextInput type="text" name="userTel" />
+          <TextInput type="text" name="userTel" required />
         </div>
         <div>
           <Label className="text-lg">주소</Label>
@@ -93,6 +102,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
             type="text"
             name="userAddress"
             placeholder="주소"
+            required
           />
         </div>
         <div className="flex gap-4">
