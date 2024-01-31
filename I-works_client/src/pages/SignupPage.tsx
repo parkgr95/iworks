@@ -10,9 +10,6 @@ import { Form } from 'react-router-dom'
 import axios from 'axios'
 import { TextInput, Button, Radio, Label } from 'flowbite-react'
 
-interface SignupProps {
-}
-
 export interface SignupRef {
   open: () => void
 }
@@ -29,7 +26,7 @@ const API_URL = 'https://https://suhyeon.site/api/user/join'
 //   return JSON.stringify(json);
 // }
 
-const Signup = forwardRef<SignupRef, SignupProps>(function Signup(props, ref) {
+const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
 
   useImperativeHandle(
@@ -94,9 +91,7 @@ const Signup = forwardRef<SignupRef, SignupProps>(function Signup(props, ref) {
         <div className="flex gap-4">
           <div className="">
             <Radio id="male" name="userGender" value="M" />
-            <Label htmlFor="male">
-              남성
-            </Label>
+            <Label htmlFor="male">남성</Label>
           </div>
           <div>
             <Radio id="female" name="userGender" value="F" />
