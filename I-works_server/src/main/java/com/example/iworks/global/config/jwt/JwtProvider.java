@@ -30,8 +30,8 @@ public class JwtProvider {
 
     public String createAccessToken(String eid, List<String> role) {
         String accessToken = Jwts.builder()
-                .setSubject(eid)
-                .claim("type","refresh")
+                .claim("eid",eid)
+                .claim("type","access")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
                 .signWith(key.secretKey())
@@ -53,7 +53,7 @@ public class JwtProvider {
 
     public String createRefreshToken(String eid, List<String> role) {
         String refreshToken = Jwts.builder()
-                .setSubject(eid)
+                .claim("eid",eid)
                 .claim("type","refresh")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
@@ -107,7 +107,7 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
-        return claims.getSubject();
+        return (String)claims.get("eid");
     }
 
     public List<String> getUserRole(String jwt) {
