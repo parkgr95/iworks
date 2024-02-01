@@ -1,64 +1,82 @@
 package com.example.iworks.domain.board.controller;
 
-import com.example.iworks.domain.board.dto.request.RequestBoard;
-import com.example.iworks.domain.board.dto.request.SearchKeyword;
+import com.example.iworks.domain.board.dto.request.BoardCreateRequestDto;
+import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
+import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
 import com.example.iworks.domain.board.service.BoardService;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.global.model.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/board")
 @RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/board")
 public class BoardController {
 
     private final BoardService boardService;
+    private final Response response;
 
-    //게시글 목록 전체 조회
-    @GetMapping("/")
-    public ResponseEntity<?> findBoards() {
-        return ResponseEntity.ok(boardService.findBoards());
-    }
-
-    // 게시판 카테고리별 게시글 조회 (공지, 자유)
-    @GetMapping("/byCategory")
-    public ResponseEntity<?> findAllByBoardCategoryCode(@RequestParam Code categoryCode) {
-        return ResponseEntity.ok(boardService.findAllByBoardCategoryCode(categoryCode));
-    }
-
-    // 게시판 카테고리별 게시글 조회 (부서, 팀)
-    @GetMapping("byCategoryAndOwner")
-    public ResponseEntity<?> findAllByBoardCategoryCodeAndBoardOwnerId(
-            @RequestParam Code categoryCode,
-            @RequestParam int boardOwnerId) {
-        return ResponseEntity.ok(boardService.findAllByBoardCategoryCodeAndBoardOwnerId(categoryCode, boardOwnerId));
-    }
-
-    //게시글 작성
+    //게시글 등록
     @PostMapping("/")
-    public ResponseEntity<?> saveBoard(@RequestBody RequestBoard requestBoard) {
-        boardService.saveBoard(requestBoard.toEntity());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> createBoard(@RequestBody BoardCreateRequestDto boardCreateRequestDto) {
+        boardService.createBoard(boardCreateRequestDto);
+        return response.handleSuccess("게시글 등록 완료");
     }
 
     //게시글 수정
-    @PutMapping("/{boardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable int boardId, @RequestParam RequestBoard requestBoard) {
-        boardService.updateBoard(boardId, requestBoard);
-        return ResponseEntity.ok().build();
+    @PutMapping("/update/{boardId}")
+    public ResponseEntity<?> updateBoard(@PathVariable(name = "boardId") int boardId, @RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
+        boardService.updateBoard(boardId, boardUpdateRequestDto);
+        return response.handleSuccess("게시글 수정 완료");
     }
 
     //게시글 삭제
-    @DeleteMapping("/{boardId}")
-    public ResponseEntity<?> deleteBoard(@PathVariable int boardId) {
+    @PutMapping("/delete/{boardId}")
+    public ResponseEntity<?> deleteBoard(@PathVariable(name = "boardId") int boardId) {
         boardService.deleteBoard(boardId);
-        return ResponseEntity.ok().build();
+        return response.handleSuccess("게시글 삭제 완료");
     }
 
-    // 게시글 검색
-    @GetMapping("/search")
-    public ResponseEntity<?> searchBoard(@RequestBody SearchKeyword keyword) {
-        return ResponseEntity.ok(boardService.findAllByKeyword(keyword));
+    //게시글 전체 조회
+    @GetMapping("/")
+    public ResponseEntity<?> getBoards() {
+        return response.handleSuccess(boardService.getAll());
     }
+
+    //게시글 세부 조회
+    @GetMapping("/{boardId}")
+    public ResponseEntity<?> getBoard(@PathVariable(name = "boardId") int boardId) {
+        return response.handleSuccess(boardService.getBoard(boardId));
+    }
+
+    //카테고리별 게시글 전체 조회
+    @GetMapping("byCategory")
+    public ResponseEntity<?> getBoardsByCategory(
+            @RequestParam(name = "boardCategoryCodeId") int boardCategoryCodeId,
+            @RequestParam(name = "boardOwnerId") int boardOwnerId) {
+        return response.handleSuccess(boardService.getAllByCategory(boardCategoryCodeId, boardOwnerId));
+    }
+    
+    //카테고리별 게시글 세부 조회
+    @GetMapping("byCategory/{boardId}")
+    public ResponseEntity<?> getBoardByCategory(
+            @PathVariable(name = "boardId") int boardId,
+            @RequestParam(name = "boardCategoryCodeId") int boardCategoryCodeId,
+            @RequestParam(name = "boardOwnerId") int boardOwnerId) {
+        return response.handleSuccess(boardService.getByCategory(boardId, boardCategoryCodeId, boardOwnerId));
+    }
+
+    //키워드별 게시글 검색
+    @GetMapping("/search")
+    public ResponseEntity<?> getBoardsByKeyword(@RequestBody BoardSearchRequestDto keyword) {
+        return response.handleSuccess(boardService.getAllByKeyword(keyword));
+    }
+
+    //통합 키워드별 게시글 검색
+    @GetMapping("/total-search")
+    public ResponseEntity<?> getBoardsByKeywords(@RequestParam(name = "keywords") String keywords) {
+        return response.handleSuccess(boardService.getAllByKeywords(keywords));
+    }
+
 }
