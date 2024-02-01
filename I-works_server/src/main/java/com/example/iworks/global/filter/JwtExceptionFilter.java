@@ -25,7 +25,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             //토큰의 유효기간 만료
             Map<String,Object> result = new HashMap<>();
             result.put("result","expired");
-            result.put("data",e);
+            result.put("message","토큰 유효기간 만료");
+            response.setStatus(400);
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (JwtException | IllegalArgumentException e) {
@@ -33,7 +34,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             //유효하지 않은 토큰
             Map<String,Object> result = new HashMap<>();
             result.put("result","failed");
-            result.put("data",e);
+            result.put("message","유효하지 않은 토큰");
+            response.setStatus(400);
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (NoSuchElementException e) {
@@ -41,14 +43,16 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             //사용자 찾을 수 없음
             Map<String,Object> result = new HashMap<>();
             result.put("result","failed");
-            result.put("data",e);
+            result.put("data","찾을 수 없는 사용자");
+            response.setStatus(400);
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (ArrayIndexOutOfBoundsException e) {
 
             Map<String,Object> result = new HashMap<>();
             result.put("result","failed");
-            result.put("data",e);
+            result.put("data","ArrayIndexOutOfBoundsException");
+            response.setStatus(400);
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (NullPointerException e) {

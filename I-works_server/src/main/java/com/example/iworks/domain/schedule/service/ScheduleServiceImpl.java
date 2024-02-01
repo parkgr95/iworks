@@ -82,15 +82,15 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     /** 유저의 모든 할일 조회*/
     public List<Schedule> getAllScheduleByUser(User user){
-        User userBelong = userRepository.findUserBelong(user.getUserId());
-        List<Schedule> scheduleListByUser = new ArrayList<>();
-
-        int userDepartmentId = userBelong.getUserDepartment().getDepartmentId();
-        int userId = user.getUserId();
-        List<Integer> userTeamIdList = new ArrayList<>();
-        for (TeamUser teamUser : userBelong.getUserTeamUserList()){
-            userTeamIdList.add(teamUser.getTeamUserTeam().getTeamId());
-        }
+//        User userBelong = userRepository.findUserBelong(user.getUserId());
+//        List<Schedule> scheduleListByUser = new ArrayList<>();
+//
+//        int userDepartmentId = userBelong.getUserDepartment().getDepartmentId();
+//        int userId = user.getUserId();
+//        List<Integer> userTeamIdList = new ArrayList<>();
+//        for (TeamUser teamUser : userBelong.getUserTeamUserList()){
+//            userTeamIdList.add(teamUser.getTeamUserTeam().getTeamId());
+//        }
 
         //할일 배정
 
