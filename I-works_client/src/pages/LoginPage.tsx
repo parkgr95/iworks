@@ -1,61 +1,61 @@
-import axios from 'axios';
-import { useState, ChangeEvent, FormEvent, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { Form, useNavigate } from 'react-router-dom';
-import { Button, Card, TextInput } from 'flowbite-react';
-import iworks_logo from '../assets/iworks_logo.png';
+import axios from 'axios'
+import { useState, ChangeEvent, FormEvent, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import { Form, useNavigate } from 'react-router-dom'
+import { Button, Card, TextInput } from 'flowbite-react'
+import iworks_logo from '../assets/iworks_logo.png'
 
 interface LoginResponse {
-  result: string;
+  result: string
   data: {
-    grantType: string;
-    accessToken: string;
-    refreshToken: string;
-  };
+    grantType: string
+    accessToken: string
+    refreshToken: string
+  }
 }
 
-const API_URL = 'https://suhyeon.site/api/user/login';
+const API_URL = 'https://suhyeon.site/api/user/login'
 
 function LoginPage() {
-  const [userEid, setUserEid] = useState<string>('');
-  const [userPassword, setUserPassword] = useState<string>('');
-  const navigate = useNavigate();
-  const dialog = useRef<HTMLDialogElement>(null);
+  const [userEid, setUserEid] = useState<string>('')
+  const [userPassword, setUserPassword] = useState<string>('')
+  const navigate = useNavigate()
+  const dialog = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
     if (dialog.current) {
-      dialog.current.showModal();
+      dialog.current.showModal()
     }
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        event.preventDefault();
-        event.stopPropagation();
+        event.preventDefault()
+        event.stopPropagation()
       }
-    };
+    }
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   const handleLogin = async (event: FormEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
       const response = await axios.post<LoginResponse>(API_URL, {
         userEid,
         userPassword,
-      });
+      })
 
-      localStorage.setItem('accessToken', response.data.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.data.refreshToken);
-      navigate('/');
-    } catch (error) {
-      alert('로그인 할 수 없습니다.');
+      localStorage.setItem('accessToken', response.data.data.accessToken)
+      localStorage.setItem('refreshToken', response.data.data.refreshToken)
+      navigate('/')
+    } catch (error: any) {
+      alert(error.response.data.data)
     }
-  };
+  }
 
   return createPortal(
     <>
@@ -98,7 +98,7 @@ function LoginPage() {
       </Card>
     </>,
     document.getElementById('modal') as HTMLElement,
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage
