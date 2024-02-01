@@ -16,7 +16,7 @@ public class CommentController {
     private final CommentService commentService;
     private final Response response;
 
-    //게시글별 댓글 전체 조회
+    //게시글 별 댓글 전체 조회
     @GetMapping("/byBoard/{boardId}")
     public ResponseEntity<?> getCommentsByBoardId(@PathVariable(name = "boardId") int boardId) {
         return response.handleSuccess(commentService.getAllByBoardId(boardId));

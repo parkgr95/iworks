@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -23,11 +21,13 @@ public class CommentServiceImpl implements CommentService{
     private final PageRequest pageRequest = PageRequest.of(0, 10);
 
     @Transactional
+    @Override
     public void createComment(CommentCreateRequestDto commentCreateRequestDto) {
         commentRepository.save(commentCreateRequestDto.toEntity());
     }
 
     @Transactional
+    @Override
     public void updateComment(int commentId, CommentUpdateRequestDto commentUpdateRequestDto) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(IllegalStateException::new);
@@ -35,12 +35,14 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Transactional
+    @Override
     public void deleteComment(int commentId) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(IllegalStateException::new);
         findComment.delete();
     }
 
+    @Override
     public Page<CommentGetResponseDto> getAllByBoardId(int boardId) {
         return commentRepository.findAllByBoard(pageRequest, boardId);
     }

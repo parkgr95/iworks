@@ -12,10 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.example.iworks.domain.board.domain.QBoard.board;
 import static com.example.iworks.domain.comment.domain.QComment.comment;
 import static java.util.stream.Collectors.*;
-
 
 @RequiredArgsConstructor
 @Repository

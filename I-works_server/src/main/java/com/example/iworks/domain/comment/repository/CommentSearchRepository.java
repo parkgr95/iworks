@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommentSearchRepository {
 
-    //게시판별 댓글 전체 조회
+    //게시판 별 댓글 전체 조회
     Page<CommentGetResponseDto> findAllByBoard(Pageable pageable, int boardId);
 }
