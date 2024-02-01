@@ -31,6 +31,9 @@ public interface BoardService {
     //카테고리별 게시글 세부 조회
     public BoardGetResponseDto getByCategory(int boardId, int boardCategoryCodeId, int boardOwnerId);
 
+    //작성한 게시글 전체 조회
+    List<BoardGetResponseDto> getAllByCreator(int boardCreatorId);
+
     //키워드별 게시글 검색
     public List<BoardGetResponseDto> getAllByKeyword(BoardSearchRequestDto keyword);
 

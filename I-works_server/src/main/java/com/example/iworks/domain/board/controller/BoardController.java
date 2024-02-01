@@ -51,7 +51,7 @@ public class BoardController {
     }
 
     //카테고리별 게시글 전체 조회
-    @GetMapping("byCategory")
+    @GetMapping("/byCategory")
     public ResponseEntity<?> getBoardsByCategory(
             @RequestParam(name = "boardCategoryCodeId") int boardCategoryCodeId,
             @RequestParam(name = "boardOwnerId") int boardOwnerId) {
@@ -59,12 +59,18 @@ public class BoardController {
     }
     
     //카테고리별 게시글 세부 조회
-    @GetMapping("byCategory/{boardId}")
+    @GetMapping("/byCategory/{boardId}")
     public ResponseEntity<?> getBoardByCategory(
             @PathVariable(name = "boardId") int boardId,
             @RequestParam(name = "boardCategoryCodeId") int boardCategoryCodeId,
             @RequestParam(name = "boardOwnerId") int boardOwnerId) {
         return response.handleSuccess(boardService.getByCategory(boardId, boardCategoryCodeId, boardOwnerId));
+    }
+
+    //작성한 게시글 전체 조회
+    @GetMapping("/byCreator")
+    public ResponseEntity<?> getBoardsByCreator(@RequestParam(name = "boardCreatorId") int boardCreatorId) {
+        return response.handleSuccess(boardService.getAllByCreator(boardCreatorId));
     }
 
     //키워드별 게시글 검색

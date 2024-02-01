@@ -11,7 +11,7 @@ import com.example.iworks.domain.board.repository.BookmarkRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.entity.Code;
-import com.example.iworks.global.model.entity.CodeRepository;
+import com.example.iworks.global.model.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -77,7 +77,11 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public BoardGetResponseDto getByCategory(int boardId, int boardCategoryCodeId, int boardOwnerId) {
         return boardRepository.findByCategory(boardId, findCode(boardCategoryCodeId), boardOwnerId);
+    }
 
+    @Override
+    public List<BoardGetResponseDto> getAllByCreator(int boardCreatorId) {
+        return boardRepository.findAllByCreator(pageRequest, boardCreatorId);
     }
 
     public List<BoardGetResponseDto> getAllByKeyword(BoardSearchRequestDto keyword) {
