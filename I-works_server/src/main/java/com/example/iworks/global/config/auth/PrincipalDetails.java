@@ -1,14 +1,14 @@
 package com.example.iworks.global.config.auth;
 
 import com.example.iworks.domain.user.domain.User;
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Data
+@Getter
 public class PrincipalDetails implements UserDetails {
 
     private User user; // Composition
