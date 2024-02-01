@@ -36,7 +36,7 @@ class ScheduleRepositoryTest {
 
         Schedule schedule = Schedule.builder()
                 .scheduleId(1)
-                .scheduleDivisionId(new Code())
+                .scheduleDivision(new Code())
                 .scheduleTitle("title")
                 .schedulePriority('H')
                 .scheduleContent("sdfdf")
@@ -66,7 +66,7 @@ class ScheduleRepositoryTest {
 
         Schedule schedule = Schedule.builder()
                 .scheduleId(1)
-                .scheduleDivisionId(new Code())
+                .scheduleDivision(new Code())
                 .scheduleTitle("수정된 title")
                 .schedulePriority('H')
                 .scheduleContent("sdfdf")
@@ -81,7 +81,7 @@ class ScheduleRepositoryTest {
 //        Schedule beforeSchedule = scheduleRepository.findById(1).get();
         Schedule alterSchedule = Schedule.builder()
                 .scheduleId(1)
-                .scheduleDivisionId(new Code())
+                .scheduleDivision(new Code())
                 .scheduleTitle("수정된 title")
                 .scheduleStartDate(LocalDateTime.now())
                 .scheduleEndDate(LocalDateTime.now())
@@ -122,7 +122,7 @@ class ScheduleRepositoryTest {
         userRepository.save(user);
 
         Schedule schedule = Schedule.builder()
-                .scheduleDivisionId(new Code())
+                .scheduleDivision(new Code())
                 .scheduleEndDate(LocalDateTime.now())
                 .schedulePlace("회의실B")
                 .scheduleCreator(user)
@@ -130,7 +130,7 @@ class ScheduleRepositoryTest {
         scheduleRepository.save(schedule);
 
         Schedule schedule2 = Schedule.builder()
-                .scheduleDivisionId(new Code())
+                .scheduleDivision(new Code())
                 .scheduleEndDate(LocalDateTime.now())
                 .schedulePlace("공원")
                 .scheduleCreator(user)
@@ -138,7 +138,7 @@ class ScheduleRepositoryTest {
         scheduleRepository.save(schedule2);
 
         Schedule schedule3 = Schedule.builder()
-                .scheduleDivisionId(new Code())
+                .scheduleDivision(new Code())
                 .scheduleEndDate(LocalDateTime.now())
                 .schedulePlace("컨퍼런스룸")
                 .scheduleCreator(user)

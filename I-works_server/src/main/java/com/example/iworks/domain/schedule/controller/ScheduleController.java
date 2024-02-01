@@ -1,6 +1,8 @@
 package com.example.iworks.domain.schedule.controller;
 
 import com.example.iworks.domain.schedule.domain.Schedule;
+import com.example.iworks.domain.schedule.dto.schedule.ScheduleCreateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.service.ScheduleService;
 import com.example.iworks.global.model.Response;
 import lombok.Getter;
@@ -19,19 +21,19 @@ public class ScheduleController {
     private final Response response;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createSchedule(@RequestBody Schedule schedule){
-        scheduleService.registerSchedule(schedule);
+    public ResponseEntity<?> createSchedule(@RequestBody ScheduleCreateRequestDto schedule){
+        scheduleService.createSchedule(schedule);
         return response.handleSuccess("할일 등록 완료");
     }
 
     @GetMapping("/{scheduleId}")
     public ResponseEntity<?> getSchedule(@PathVariable int scheduleId){
-        return response.handleSuccess(scheduleService.getSchedule(scheduleId));
+        return response.handleSuccess(scheduleService.readOne(scheduleId));
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> updateSchedule(@RequestBody Schedule schedule){
-        scheduleService.updateSchedule(schedule);
+    @PostMapping("/{scheduleId}/update")
+    public ResponseEntity<?> updateSchedule(@PathVariable(name = "scheduleId") int scheduleId, @RequestBody ScheduleUpdateRequestDto scheduleUpdateRequestDto){
+        scheduleService.updateSchedule(scheduleId, scheduleUpdateRequestDto);
         return response.handleSuccess("할일 수정 완료");
     }
 

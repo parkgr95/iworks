@@ -1,6 +1,7 @@
 package com.example.iworks.domain.schedule.domain;
 
 import com.example.iworks.domain.meeting.domain.Meeting;
+import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.model.entity.Code;
 
@@ -70,13 +71,6 @@ public class Schedule {
     @JoinColumn(name = "schedule_meeting_id", referencedColumnName = "meeting_id")
     private Meeting scheduleMeeting; //회의방 아이디
 
-    public void setMeeting(Meeting meeting){
-        this.scheduleMeeting = meeting;
-        if (meeting.getSchedule() != this){
-            meeting.setSchedule(this);
-        }
-    }
-
     @ManyToOne(fetch = FetchType.LAZY) //단방향
     @JoinColumn(name = "schedule_creator_id", referencedColumnName = "user_id", nullable = false)
     private User scheduleCreator; // 등록자 아이디
@@ -92,15 +86,36 @@ public class Schedule {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_modified_at", columnDefinition = "datetime default current_timestamp")
-    private LocalDateTime scheduleModifiedAt; //할 일의 수정일시
+    private LocalDateTime scheduleModifiedAt; //할일의 수정일시
 
     @Builder.Default
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
-    private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할 일 배정자
+    private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할일 배정자
 
     public void addScheduleAssigns(ScheduleAssign scheduleAssign){
         this.scheduleAssigns.add(scheduleAssign);
         scheduleAssign.setSchedule(this);
+    }
+
+    public void setMeeting(Meeting meeting){
+        this.scheduleMeeting = meeting;
+        if (meeting.getSchedule() != this){
+            meeting.setSchedule(this);
+        }
+    }
+    public void isFinished(boolean isFinish){
+        scheduleIsFinish = isFinish;
+    }
+
+    public void updateSchedule(Code code, ScheduleUpdateRequestDto scheduleUpdateRequestDto){
+        this.scheduleDivision = code;
+        this.scheduleTitle = scheduleUpdateRequestDto.getScheduleTitle();
+        this.schedulePriority = scheduleUpdateRequestDto.getSchedulePriority();
+        this.scheduleContent = scheduleUpdateRequestDto.getScheduleContent();
+        this.scheduleStartDate = scheduleUpdateRequestDto.getScheduleStartDate();
+        this.scheduleEndDate = scheduleUpdateRequestDto.getScheduleEndDate();
+        this.schedulePlace = scheduleUpdateRequestDto.getSchedulePlace();
+        this.scheduleMeeting.updateMeeting(scheduleUpdateRequestDto.getMeetingDate(), scheduleUpdateRequestDto.getMeetingCode());
     }
 
 }

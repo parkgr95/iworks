@@ -2,13 +2,18 @@ package com.example.iworks.domain.schedule.service;
 
 
 import com.example.iworks.domain.schedule.domain.Schedule;
+import com.example.iworks.domain.schedule.dto.schedule.ScheduleCreateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.ScheduleReadOneResponseDto;
+import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateRequestDto;
 
 public interface ScheduleService {
-    void registerSchedule(Schedule schedule);
+    void createSchedule(ScheduleCreateRequestDto scheduleDto);
 
-    void updateSchedule(Schedule schedule);
+    void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto);
 
-    Schedule getSchedule(Integer scheduleId);
+    ScheduleReadOneResponseDto readOne(Integer scheduleId);
 
     void removeSchedule(Integer scheduleId);
+
+    void isFinishedSchedule(int scheduleId, boolean isFinish);
 }
