@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @Data
 @Builder @NoArgsConstructor @AllArgsConstructor
+@Table(name = "department")
 public class Department {
 
     @Id
@@ -54,7 +55,7 @@ public class Department {
 
     @Builder.Default
     @OneToMany(mappedBy = "userDepartment")
-    private List<User> departmentUsers = new ArrayList<User>();
+    private List<User> departmentUsers = new ArrayList<>();
 
     public void addUser(User user){
         this.departmentUsers.add(user);

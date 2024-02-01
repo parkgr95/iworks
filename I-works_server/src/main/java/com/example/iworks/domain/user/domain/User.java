@@ -6,7 +6,11 @@ import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
 import com.example.iworks.global.model.entity.Code;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -28,12 +32,12 @@ public class User {
     @Column(name = "user_id", nullable = false) // 생략시 primitive type의 경우 not null로 생성
     private int userId; //유저 아이디
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_department_id")
     private Department userDepartment; //부서
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_position_code_id", referencedColumnName = "code_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_position_code_id", referencedColumnName = "code_id", insertable = false, updatable = false)
     private Code userPositionCode; //직급 코드 아이디
 
     @Builder.Default
@@ -52,9 +56,8 @@ public class User {
     @Column(name = "user_email", nullable = false, unique = true)
     private String userEmail = "11111@naver.com"; //유저 이메일
 
-    @Builder.Default
     @Column(name = "user_password", nullable = false, length = 200)
-    private String userPassword = "1234"; //비밀번호
+    private String userPassword; //비밀번호
 
     @Column(name = "user_tel", length = 12)
     private String userTel; //전화번호
@@ -149,4 +152,9 @@ public class User {
         }
         this.userUpdatedAt = LocalDateTime.now();
     }
+
+    public String getUserName(){
+        return this.userNameFirst +" "+this.userNameLast;
+    }
+
 }

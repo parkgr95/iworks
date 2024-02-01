@@ -1,6 +1,7 @@
 package com.example.iworks.domain.schedule.repository;
 import com.example.iworks.domain.schedule.domain.QSchedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
+import com.example.iworks.domain.schedule.dto.QScheduleAssignResponseDto;
 import com.example.iworks.domain.schedule.dto.ScheduleAssignRequestDto;
 import com.example.iworks.domain.schedule.dto.ScheduleAssignResponseDto;
 import com.querydsl.core.Tuple;
