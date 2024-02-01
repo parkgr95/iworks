@@ -7,11 +7,13 @@ import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.model.entity.Code;
 import com.example.iworks.global.model.entity.CodeGroup;
+import com.example.iworks.global.util.RandomPasswordUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +28,17 @@ import java.util.List;
 public class InitData {
 
     private final InitDataService initDataService;
+    private final static RandomPasswordUtil randomPasswordUtil  = new RandomPasswordUtil();
 
     @PostConstruct
     public void init(){
         initDataService.init();
     }
 
+    private static String makeRandomPassword(){
+        int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
+        return randomPasswordUtil.getRandomPassword(length);
+    }
     private static Long Eid = 1L; //락 걸기?
 
     private static String generateEid(){
@@ -132,6 +139,7 @@ public class InitData {
                 for (int j = 1; j <= 20; j++){
                     User user = User.builder()
                             .userEid(generateEid())
+                            .userPassword(makeRandomPassword())
                             .userEmail(userEmailSeq+++"")
                             .userNameFirst("유저"+userSeq)
                             .userDepartment(department)
@@ -158,12 +166,7 @@ public class InitData {
 //                Schedule scheduleByUser = em.find(Schedule.class, "할일1"+scheduleSeq++);
                 //모든 유저를 할일에 배정
                 for (User user : userList){
-//                    schedule.addScheduleAssigns(
-//                            ScheduleAssign.builder()
-//                                    .scheduleAssigneeId(user.getUserId())
-//                                    .scheduleAssigneeCategory(codeUser)
-//                                    .build()
-//                    );
+//
                     ScheduleAssign scheduleAssign =
                             ScheduleAssign.builder()
                                     .scheduleAssigneeCategory(codeUser)
@@ -173,12 +176,7 @@ public class InitData {
                 }
                 //모든 부서를 할일에 배정
                 for (Department department : departmentList){
-//                    schedule.addScheduleAssigns(
-//                            ScheduleAssign.builder()
-//                                    .scheduleAssigneeId(department.getDepartmentId())
-//                                    .scheduleAssigneeCategory(codeDepartment)
-//                                    .build()
-//                    );
+//
                     ScheduleAssign scheduleAssign =
                             ScheduleAssign.builder()
                                     .scheduleAssigneeCategory(codeUser)
