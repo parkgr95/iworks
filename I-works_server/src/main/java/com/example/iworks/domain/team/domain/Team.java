@@ -15,7 +15,7 @@ public class Team {
 
     @Id @GeneratedValue
     @Column(name = "team_id")
-    private int id; // 그룹 아이디
+    private int teamId; // 그룹 아이디
 
     @Column(name = "team_name", length = 20, nullable = false)
     private String teamName; // 그룹명
