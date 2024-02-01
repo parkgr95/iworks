@@ -16,6 +16,7 @@ interface UserDetailResponse {
     userTel: string
     userAddress: string
     userGender: string
+    userPassword: string
   }
 }
 
@@ -36,6 +37,17 @@ function MyPage() {
     event.preventDefault()
 
     const userDetailFormData = new FormData(event.target as HTMLFormElement)
+
+    if (
+      userDetailFormData.get('userPassword') !==
+      userDetailFormData.get('userPasswordCheck')
+    ) {
+      alert('비밀번호가 비밀번호 확인과 다릅니다.')
+      return
+    }
+
+    userDetailFormData.delete('userPasswordCheck')
+
     const userDetailRequestData = formDataToRequestData(userDetailFormData)
 
     axios
@@ -76,6 +88,19 @@ function MyPage() {
           name="userAddress"
           onChange={(e) => handleInfoChange('userAddress', e.target.value)}
           value={userDetail.userAddress}
+        />
+        <Label htmlFor="userPassword">비밀번호</Label>
+        <TextInput
+          id="userPassword"
+          type="password"
+          name="userPassword"
+          onChange={(e) => handleInfoChange('userPassword', e.target.value)}
+        />
+        <Label htmlFor="userPasswordCheck">비밀번호 확인</Label>
+        <TextInput
+          id="userPasswordCheck"
+          type="password"
+          name="userPasswordCheck"
         />
         <Button className="my-8" type="submit">
           수정
