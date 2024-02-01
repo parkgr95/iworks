@@ -45,6 +45,10 @@ public class UserServiceImpl implements UserService{
             return response.handleFail("이미 존재하는 계정입니다.");
         }
 
+        if(userRepository.findByUserEmail(dto.getUserEmail())!=null){
+            return response.handleFail("이미 존재하는 이메일입니다.");
+        }
+
         int deptId = dto.getUserDepartmentId();
         int posCodeId = dto.getUserPositionCodeId();
 
