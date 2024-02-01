@@ -1,15 +1,13 @@
 package com.example.iworks.domain.user.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.global.util.RandomPasswordUtil;
 import com.example.iworks.global.model.Response;
 import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.global.util.JwtProvider;
+import com.example.iworks.global.util.RandomPasswordUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +27,7 @@ public class UserApiController {
     private final UserRepository userRepository;
     private final Response response;
     private final RandomPasswordUtil randomPasswordUtil;
-    @Value("${jwt.secret}")
-    String SECRET_KEY;
+    private  final JwtProvider jwtProvider;
 
     @PostMapping("/join")
     public ResponseEntity<Map<String, Object>> join(@RequestBody User user) {
@@ -67,8 +64,7 @@ public class UserApiController {
 
     @GetMapping("/mypage")
     public ResponseEntity<Map<String,Object>> getProfile(@RequestHeader("Authorization") String token){
-        token = token.replace("Bearer ","");
-        String eid = JWT.require(Algorithm.HMAC512(SECRET_KEY)).build().verify(token).getClaim("eid").asString();
+        String eid = jwtProvider.getUserEid(token);
         System.out.println("token eid : "+eid);
         User user= userRepository.findByUserEid(eid);
         if(user != null){
@@ -79,10 +75,9 @@ public class UserApiController {
 
     @PutMapping("/mypage")
     @Transactional
-    public ResponseEntity<Map<String,Object>> updateProfile(@RequestBody User user){
-        User origin = userRepository.findByUserEid(user.getUserEid());
-        System.out.print("origin:");
-        System.out.println(origin);
+    public ResponseEntity<Map<String,Object>> updateProfile(@RequestHeader("Authorization") String token,@RequestBody User user){
+        User origin = userRepository.findByUserEid(jwtProvider.getUserEid(token));
+        System.out.println("origin: " + origin);
         if(origin != null){
 
             if(user.getUserPassword() != null){

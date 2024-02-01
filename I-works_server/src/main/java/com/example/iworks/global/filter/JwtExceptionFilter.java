@@ -1,4 +1,4 @@
-package com.example.iworks.global.config.jwt;
+package com.example.iworks.global.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;

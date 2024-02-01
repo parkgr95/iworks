@@ -1,4 +1,4 @@
-package com.example.iworks.global.config.jwt;
+package com.example.iworks.global.util;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
