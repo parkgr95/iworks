@@ -9,6 +9,8 @@ interface UserDetailResponse {
   result: string
   data: {
     userId: number
+    userPosition: string
+    departmentName: string
     userEid: string
     userNameFirst: string
     userNameLast: string
@@ -71,6 +73,8 @@ function MyPage() {
       <p>이름 : {userDetail.userNameFirst}</p>
       <p>성 : {userDetail.userNameLast}</p>
       <p>이메일 : {userDetail.userEmail}</p>
+      <p>부서 : {userDetail.departmentName}</p>
+      <p>직급 : {userDetail.userPosition}</p>
       <p>성별 : {userDetail.userGender}</p>
       <Form onSubmit={handleSubmit}>
         <Label htmlFor="userTel">전화번호</Label>
@@ -125,9 +129,11 @@ async function myPageLoader() {
         },
       },
     )
+    console.log(response.data.data)
     return response.data.data
   } catch (error) {
     console.error(error)
+    return null
   }
 }
 
