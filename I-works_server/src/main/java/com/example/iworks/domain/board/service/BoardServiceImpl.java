@@ -54,6 +54,7 @@ public class BoardServiceImpl implements BoardService{
         findBoard.delete();
     }
 
+    @Override
     public List<BoardGetResponseDto> getAll() {
         return boardRepository.findAll(pageRequest)
                 .stream()
@@ -70,6 +71,7 @@ public class BoardServiceImpl implements BoardService{
                 .orElseThrow(IllegalStateException::new);
     }
 
+    @Override
     public List<BoardGetResponseDto> getAllByCategory(int boardCategoryCodeId, int boardOwnerId) {
         return boardRepository.findAllByCategory(pageRequest, findCode(boardCategoryCodeId), boardOwnerId);
     }
@@ -84,20 +86,22 @@ public class BoardServiceImpl implements BoardService{
         return boardRepository.findAllByCreator(pageRequest, boardCreatorId);
     }
 
+    @Override
     public List<BoardGetResponseDto> getAllByKeyword(BoardSearchRequestDto keyword) {
         return boardRepository.findAllByKeyword(pageRequest, keyword);
     }
 
+    @Override
     public List<BoardGetResponseDto> getAllByKeywords(String keywords) {
         return boardRepository.findAllByKeywords(pageRequest, keywords);
     }
+
     @Transactional
+    @Override
     public void updateBookmark(int boardId, String userEid) {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(IllegalStateException::new);
-        System.out.println("findBoard = " + findBoard);
         User findUser = userRepository.findByUserEid(userEid);
-        System.out.println("findUser = " + findUser.getUserEid());
         if (findBoard == null || findUser == null) {
             throw new IllegalStateException("해당 북마크가 없습니다.");
         }
@@ -110,7 +114,8 @@ public class BoardServiceImpl implements BoardService{
                     .bookmarkIsActive(true)
                     .build();
             bookmarkRepository.save(bookmark);
-        } else {
+        }
+        else {
             findBookmark.update();
         }
     }

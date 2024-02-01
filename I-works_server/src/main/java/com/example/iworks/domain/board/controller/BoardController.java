@@ -50,7 +50,7 @@ public class BoardController {
         return response.handleSuccess(boardService.getBoard(boardId));
     }
 
-    //카테고리별 게시글 전체 조회
+    //카테고리 별 게시글 전체 조회
     @GetMapping("/byCategory")
     public ResponseEntity<?> getBoardsByCategory(
             @RequestParam(name = "boardCategoryCodeId") int boardCategoryCodeId,
@@ -58,7 +58,7 @@ public class BoardController {
         return response.handleSuccess(boardService.getAllByCategory(boardCategoryCodeId, boardOwnerId));
     }
     
-    //카테고리별 게시글 세부 조회
+    //카테고리 별 게시글 세부 조회
     @GetMapping("/byCategory/{boardId}")
     public ResponseEntity<?> getBoardByCategory(
             @PathVariable(name = "boardId") int boardId,
@@ -73,13 +73,13 @@ public class BoardController {
         return response.handleSuccess(boardService.getAllByCreator(boardCreatorId));
     }
 
-    //키워드별 게시글 검색
+    //키워드 별 게시글 검색
     @GetMapping("/search")
     public ResponseEntity<?> getBoardsByKeyword(@RequestBody BoardSearchRequestDto keyword) {
         return response.handleSuccess(boardService.getAllByKeyword(keyword));
     }
 
-    //통합 키워드별 게시글 검색
+    //통합 키워드 별 게시글 검색
     @GetMapping("/total-search")
     public ResponseEntity<?> getBoardsByKeywords(@RequestParam(name = "keywords") String keywords) {
         return response.handleSuccess(boardService.getAllByKeywords(keywords));

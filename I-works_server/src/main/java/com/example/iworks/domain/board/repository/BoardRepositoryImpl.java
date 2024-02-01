@@ -44,6 +44,7 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 .collect(toList());
     }
 
+    @Override
     public BoardGetResponseDto findByCategory(int boardId, Code boardCategoryCode, int boardOwnerId) {
         Board findBoard = queryFactory
                 .selectFrom(board)

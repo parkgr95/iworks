@@ -6,8 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDateTime;
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
@@ -16,7 +14,7 @@ import java.time.LocalDateTime;
 public class Bookmark {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bookmarkId; // 즐겨찾기 아이디
+    private int bookmarkId; //북마크 아이디
 
     @OneToOne
     @JoinColumn(name="board_id", nullable = false)
@@ -29,7 +27,7 @@ public class Bookmark {
     private User user;
 
     @Column(name = "bookmark_is_active")
-    private Boolean bookmarkIsActive; // 즐겨찾기 여부
+    private Boolean bookmarkIsActive; //북마크 여부
 
     public void update() {
         this.bookmarkIsActive = !this.bookmarkIsActive;
