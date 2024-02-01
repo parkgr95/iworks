@@ -37,4 +37,7 @@ public interface BoardService {
     //통합 키워드별 게시글 검색
     public List<BoardGetResponseDto> getAllByKeywords(String keywords);
 
+    //게시글 북마크 등록/삭제
+    public void updateBookmark(int boardId, String userEid);
+
 }

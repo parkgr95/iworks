@@ -78,5 +78,12 @@ public class BoardController {
     public ResponseEntity<?> getBoardsByKeywords(@RequestParam(name = "keywords") String keywords) {
         return response.handleSuccess(boardService.getAllByKeywords(keywords));
     }
+    
+    //북마크 등록/삭제
+    @PostMapping("/bookmark/{boardId}")
+    public ResponseEntity<?> updateBookmark(@PathVariable(name = "boardId") int boardId, @RequestParam(name = "userEid") String userEid) {
+        boardService.updateBookmark(boardId, userEid);
+        return response.handleSuccess("북마크 완료");
+    }
 
 }
