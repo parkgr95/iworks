@@ -50,7 +50,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
 
   return createPortal(
     <dialog
-      className="rounded-xl p-10 w-2/3 max-w-xl"
+      className="rounded-xl p-10 w-2/3 max-w-xl min-w-fit"
       ref={dialog as RefObject<HTMLDialogElement>}
     >
       <h1 className="text-3xl text-center mb-10">구성원 추가</h1>
@@ -66,6 +66,14 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
         <div>
           <Label className="text-lg">성</Label>
           <TextInput type="text" name="userNameLast" required />
+        </div>
+        <div>
+          <Label className="text-lg">부서</Label>
+          <TextInput type="text" name="userDepartmentId" required />
+        </div>
+        <div>
+          <Label className="text-lg">직급</Label>
+          <TextInput type="text" name="userPositionCodeId" required />
         </div>
         <div>
           <Label className="text-lg">이메일</Label>

@@ -9,6 +9,8 @@ interface UserDetailResponse {
   result: string
   data: {
     userId: number
+    userPosition: string
+    departmentName: string
     userEid: string
     userNameFirst: string
     userNameLast: string
@@ -16,6 +18,7 @@ interface UserDetailResponse {
     userTel: string
     userAddress: string
     userGender: string
+    userPassword: string
   }
 }
 
@@ -36,6 +39,17 @@ function MyPage() {
     event.preventDefault()
 
     const userDetailFormData = new FormData(event.target as HTMLFormElement)
+
+    if (
+      userDetailFormData.get('userPassword') !==
+      userDetailFormData.get('userPasswordCheck')
+    ) {
+      alert('비밀번호가 비밀번호 확인과 다릅니다.')
+      return
+    }
+
+    userDetailFormData.delete('userPasswordCheck')
+
     const userDetailRequestData = formDataToRequestData(userDetailFormData)
 
     axios
@@ -59,6 +73,8 @@ function MyPage() {
       <p>이름 : {userDetail.userNameFirst}</p>
       <p>성 : {userDetail.userNameLast}</p>
       <p>이메일 : {userDetail.userEmail}</p>
+      <p>부서 : {userDetail.departmentName}</p>
+      <p>직급 : {userDetail.userPosition}</p>
       <p>성별 : {userDetail.userGender}</p>
       <Form onSubmit={handleSubmit}>
         <Label htmlFor="userTel">전화번호</Label>
@@ -76,6 +92,19 @@ function MyPage() {
           name="userAddress"
           onChange={(e) => handleInfoChange('userAddress', e.target.value)}
           value={userDetail.userAddress}
+        />
+        <Label htmlFor="userPassword">비밀번호</Label>
+        <TextInput
+          id="userPassword"
+          type="password"
+          name="userPassword"
+          onChange={(e) => handleInfoChange('userPassword', e.target.value)}
+        />
+        <Label htmlFor="userPasswordCheck">비밀번호 확인</Label>
+        <TextInput
+          id="userPasswordCheck"
+          type="password"
+          name="userPasswordCheck"
         />
         <Button className="my-8" type="submit">
           수정
@@ -100,9 +129,11 @@ async function myPageLoader() {
         },
       },
     )
+    console.log(response.data.data)
     return response.data.data
   } catch (error) {
     console.error(error)
+    return null
   }
 }
 
