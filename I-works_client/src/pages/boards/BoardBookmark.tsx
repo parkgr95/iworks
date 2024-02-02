@@ -1,29 +1,29 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
-import PostType from "./interface/BoardType"
+import PostType from '../../interface/BoardType.ts';
 import { Link, useParams } from "react-router-dom"
 
-function BoardList() {
-  const { boardCategoryCodeId, boardOwnerId } = useParams()
-  const [boardList, setBoardList] = useState<PostType[]>([])
+function BoardBookMark() {
+  const { boardCreatorId = '' } = useParams<{boardCreatorId: string}>()
+  const [bookMarkList, setBookMarkList] = useState<PostType[]>([])
   
   useEffect(() => {
-    async function getBoardList(boardCategoryCodeId, boardOwnerId) {
+    async function getBoardList(boardCreatorId: string) {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/?boardCategoryCodeId=${boardCategoryCodeId}&boardOwnerId=${boardOwnerId}`)
-        const boardListData = res.data
-        setBoardList(boardListData)
+        const res = await axios.get(`${boardCreatorId}`)
+        const bookMarkListData = res.data
+        setBookMarkList(bookMarkListData)
       }
       catch (err) {
         console.log(err)
       }
     }
-    getBoardList(boardCategoryCodeId, boardOwnerId)
-  }, [boardOwnerId])
+    getBoardList(boardCreatorId)
+  }, [boardCreatorId])
 
   return (
     <div className="">
-      {boardList.map((article) => (
+      {bookMarkList.map((article) => (
         <div className="border-b-2 pb-2 mb-2" key={article.id}>
           <div className="mb-2 text-md font-semibold">
             <Link to={`/board/${article.id}`}>{article.title}</Link>
@@ -43,4 +43,4 @@ function BoardList() {
   )
 }
 
-export default BoardList
+export default BoardBookMark

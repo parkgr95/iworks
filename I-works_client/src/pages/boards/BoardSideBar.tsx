@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from "react"
+import axios from "axios"
+import { ChangeEvent, useState, useEffect } from "react"
 import { Outlet, Link, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
 
@@ -8,7 +9,7 @@ function BoardSideBar() {
   const moveToCreate = () => {
     navigate(`/board/create`)
   }
-  
+
   // 검색
   const [seachKeyword, setSearchKeyword] = useState<string>('')
   const onSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -17,10 +18,31 @@ function BoardSideBar() {
   const moveToSearch = () => {
     navigate('/board/search/' + seachKeyword)
   }
-  
-  //토글
-  const [open, setOpen] = useState(true);
-  const toggleOpen = () => setOpen((cur) => !cur)
+
+  // 토글
+  const [allOpen, setAllOpen] = useState(true);
+  const toggleAllOpen = () => setAllOpen((cur) => !cur)
+
+  const [departmentOpen, setDepartmentOpen] = useState(true);
+  const toggleDepartmentOpen = () => setDepartmentOpen((cur) => !cur)
+
+  const [teamOpen, setTeamOpen] = useState(true);
+  const toggleTeamOpen = () => setTeamOpen((cur) => !cur)
+
+  // 부서, 팀 받아오기
+  // const [departmentList, setDepartmentList] = useState([])
+  // const [teamList, setTeamList] = useState([])
+
+  // useEffect(() => {
+  //   axios.get(API_URL)
+  //     .then((res) => {
+  //       setDepartmentList(res.data.departments)
+  //       setTeamList(res.data.teams)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }, [])
 
   return (
     <div className="flex h-full">
@@ -32,28 +54,57 @@ function BoardSideBar() {
         </div>
         <div className="flex justify-center items-center w-full h-12 border-b-2 ">
           <ul className="flex justify-center">
-            <li className="px-4">최신글</li>
-            <li className="px-4">중요</li>
-            <li className="px-4">내 게시글</li>
+            <li className="px-4">
+              <Link to="/board">최신글</Link>
+            </li>
+            <li className="px-4">
+              <Link to="/board">중요</Link>
+            </li>
+            <li className="px-4">
+              <Link to="/board">내 게시글</Link>
+            </li>
+            {/* <li className="px-4">
+              <Link to={`/board/bookmark/${Id}`}>중요</Link>
+            </li>
+            <li className="px-4">
+              <Link to={`/board/my/${Id}`}>내 게시글</Link>
+            </li> */}
           </ul>
         </div>
-        <div className="w-full my-2 border-b-2">
-          <button onClick={toggleOpen} type="button" className="flex items-center w-full p-2 text-base text-gray-900" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
-            <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">전체게시판</span>
+        <div className="w-full my-2 border-b-2 pb-2">
+          <button onClick={toggleAllOpen} type="button" className="flex items-center w-full p-2 text-base text-gray-900" aria-controls="ropdownAll" data-collapse-toggle="dropdownAll">
+            <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-semibold">전체게시판</span>
           </button>
-          <ul id="dropdown-example" className={`${open ? '' : 'hidden'} py-2 space-y-2`}>
+          <ul id="dropdownAll" className={`${allOpen ? '' : 'hidden'} space-y-2`}>
             <li>
-              <Link to="#" className="flex items-center w-full p-2 text-mainBlack pl-11">공지게시판</Link>
+              <Link to="/board/1/1" className="flex items-center w-full text-mainBlack pl-11">공지게시판</Link>
             </li>
             <li>
-              <Link to="#" className="flex items-center w-full p-2 text-mainBlack pl-11">자유게시판</Link>
+              <Link to="/board/2/2" className="flex items-center w-full text-mainBlack pl-11">자유게시판</Link>
             </li>
             <li>
-              <Link to="#" className="flex items-center w-full p-2 text-mainBlack pl-11">부서게시판</Link>
+              <button onClick={toggleDepartmentOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownDepartment" data-collapse-toggle="dropdownDepartment">
+                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">부서게시판</span>
+              </button>
+              <ul id="dropdownDepartment" className={`${departmentOpen ? '' : 'hidden'} space-y-2`}>
+                {/* {departmentList.map((dept) => (
+                  <li>
+                    <Link to={`/board/3/${dept.departmentId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
+                  </li>
+                ))} */}
+              </ul>
             </li>
             <li>
-              {/* 토글 + 맵함수로 추가 필요 */}
-              <Link to="#" className="flex items-center w-full p-2 text-mainBlack pl-11">그룹게시판</Link>
+              <button onClick={toggleTeamOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownTeam" data-collapse-toggle="dropdownTeam">
+                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">그룹게시판</span>
+              </button>
+              <ul id="dropdownTeam" className={`${teamOpen ? '' : 'hidden'} space-y-2`}>
+                {/* {teamList.map((team) => (
+                  <li>
+                    <Link to={`/board/4/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
+                  </li>
+                ))} */}
+              </ul>
             </li>
           </ul>
         </div>
