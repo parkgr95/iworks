@@ -1,7 +1,7 @@
 package com.example.iworks.domain.schedule.repository;
 
-import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.domain.Schedule;
+import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.entity.Code;
@@ -12,9 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -31,7 +28,6 @@ class ScheduleRepositoryTest {
     public void 할일저장(){
         //given
         User user = new User();
-        user.setUserId(1);
         userRepository.save(user);
 
         Schedule schedule = Schedule.builder()
@@ -61,7 +57,6 @@ class ScheduleRepositoryTest {
     public void 할일수정(){
         //given
         User user = new User();
-        user.setUserId(1);
         userRepository.save(user);
 
         Schedule schedule = Schedule.builder()
@@ -118,7 +113,6 @@ class ScheduleRepositoryTest {
 
     public void makeScheduleDummyData(){
         User user = new User();
-        user.setUserId(1);
         userRepository.save(user);
 
         Schedule schedule = Schedule.builder()

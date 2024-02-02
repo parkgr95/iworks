@@ -1,16 +1,11 @@
 package com.example.iworks.domain.schedule.controller;
 
-import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.dto.schedule.ScheduleCreateRequestDto;
-import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateIsFinishRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateRequestDto;
-import com.example.iworks.domain.schedule.service.ScheduleService;
+import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
 import com.example.iworks.global.model.Response;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,5 +44,6 @@ public class ScheduleController {
         scheduleService.removeSchedule(scheduleId);
         return response.handleSuccess("할일 삭제 성공");
     }
+
 
 }
