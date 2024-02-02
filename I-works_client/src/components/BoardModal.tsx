@@ -1,27 +1,25 @@
-import React from 'react';
+// function BoardModal({ isOpen, onClose, onSelectBoard, boards }) {
 
-function BoardModal({ isOpen, onClose, onSelectBoard, boards }) {
+//   if (!isOpen) {
+//     return null
+//   }
 
-  if (!isOpen) {
-    return null
-  }
+//   return (
+//     <div className="modal">
+//       <div className="modal-content">
+//         <span className="close" onClick={onClose}>&times;</span>
+//         <h2>Select a Board</h2>
+//         <select onChange={(e) => onSelectBoard(e.target.value)}>
+//           {boards.map(board => (
+//             <option key={board.id} value={board.id}>{board.name}</option>
+//           ))}
+//         </select>
+//       </div>
+//     </div>
+//   )
+// }
 
-  return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="close" onClick={onClose}>&times;</span>
-        <h2>Select a Board</h2>
-        <select onChange={(e) => onSelectBoard(e.target.value)}>
-          {boards.map(board => (
-            <option key={board.id} value={board.id}>{board.name}</option>
-          ))}
-        </select>
-      </div>
-    </div>
-  )
-}
-
-export default BoardModal
+// export default BoardModal
 
 
 // import React, { useState, useEffect } from 'react';

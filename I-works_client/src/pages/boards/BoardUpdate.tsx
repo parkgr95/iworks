@@ -7,7 +7,7 @@ import "react-quill/dist/quill.snow.css"
 import { Button } from 'flowbite-react'
 
 const BoardUpdate = () => {
-  const { boardId } = useParams<{boardId: string}>()
+  const { boardId='' } = useParams<{boardId: string}>()
 
   const navigate = useNavigate()
   const backToDetail = () => {
@@ -27,7 +27,7 @@ const BoardUpdate = () => {
   }
 
   useEffect(() => {
-    async function getBoardDetail(boardId) {
+    async function getBoardDetail(boardId: string) {
       try {
         const res = await axios.get(`https://dummyjson.com/posts/${boardId}`)
         const boardDetailData = res.data

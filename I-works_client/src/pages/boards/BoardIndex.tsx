@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
-import PostType from "./interface/BoardType"
+import PostType from "../../interface/BoardType"
 import { Link } from "react-router-dom"
 
 const API_URL = "https://dummyjson.com/posts"

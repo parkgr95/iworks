@@ -1,14 +1,14 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
-import PostType from "./interface/BoardType"
+import PostType from "../../interface/BoardType"
 import { Link, useParams } from "react-router-dom"
 
 function BoardList() {
-  const { boardCategoryCodeId, boardOwnerId } = useParams()
+  const { boardCategoryCodeId='', boardOwnerId='' } = useParams<{boardCategoryCodeId: string, boardOwnerId: string}>()
   const [boardList, setBoardList] = useState<PostType[]>([])
   
   useEffect(() => {
-    async function getBoardList(boardCategoryCodeId, boardOwnerId) {
+    async function getBoardList(boardCategoryCodeId: string, boardOwnerId: string) {
       try {
         const res = await axios.get(`https://suhyeon.site/api/?boardCategoryCodeId=${boardCategoryCodeId}&boardOwnerId=${boardOwnerId}`)
         const boardListData = res.data

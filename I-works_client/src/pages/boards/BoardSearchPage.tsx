@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import axios from "axios"
-import PostType from "../../interface/BoardType"
+// import { useEffect, useState } from "react"
+// import { useParams } from "react-router-dom"
+// import axios from "axios"
+// import PostType from "../../interface/BoardType"
 
 function BoardSearch() {
-  const { searchKeyword } = useParams()
-  const [searchResult, setSearchResult] = useState<PostType[]>([])
+  // const { searchKeyword='' } = useParams<{searchKeyword: string}>()
+  // const [searchResult, setSearchResult] = useState<PostType[]>([])
   
-  useEffect(() => {
-    async function getSearchData(searchKeyword) {
-      try {
-        const res = await axios.get(`https://suhyeon.site/api/search?requestBoard=${searchKeyword}`)
-        const boardSearchData = res.data
+  // useEffect(() => {
+  //   async function getSearchData(searchKeyword: string) {
+  //     try {
+  //       const res = await axios.get(`https://suhyeon.site/api/search?requestBoard=${searchKeyword}`)
+  //       const boardSearchData = res.data
 
-        setSearchResult(boardSearchData)
-      }
-      catch (err) {
-        console.log(err)
-      }
-    }
-    getSearchData(searchKeyword)
-  }, [searchKeyword])
+  //       setSearchResult(boardSearchData)
+  //     }
+  //     catch (err) {
+  //       console.log(err)
+  //     }
+  //   }
+  //   getSearchData(searchKeyword)
+  // }, [searchKeyword])
 
   return (
     <div>
