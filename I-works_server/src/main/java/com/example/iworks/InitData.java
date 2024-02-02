@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//@Profile("local")
+@Profile("local")
 @Component
 @RequiredArgsConstructor
 public class InitData {
@@ -135,6 +135,7 @@ public class InitData {
                 em.persist(department);
                 departmentList.add(department);
 
+
                 //부서 별 유저 데이터
                 for (int j = 1; j <= 20; j++){
                     User user = User.builder()
@@ -148,11 +149,27 @@ public class InitData {
                     userList.add(user);
                 }
             }
+            User user1 = em.find(User.class, 1);
+            Department department1 = em.find(Department.class, 1);
+            //부서 1에 할일 생성
+            Schedule scheduleByDepartment = Schedule.builder()
+                    .scheduleDivision(codeUser)
+                    .scheduleTitle("부서의 할일"+ scheduleSeq)
+                    .scheduleEndDate(LocalDateTime.now())
+                    .scheduleCreator(user1)
+                    .build();
+            em.persist(scheduleByDepartment);
+            //부서 1에 할일 배정
+            ScheduleAssign scheduleAssignDept =
+                    ScheduleAssign.builder()
+                            .scheduleAssigneeCategory(codeDepartment)
+                            .scheduleAssigneeId(department1.getDepartmentId())
+                            .build();
+            scheduleByDepartment.addScheduleAssigns(scheduleAssignDept);
 
             //팀 별 유저
 
             //할 일 3개 생성
-            User user1 = em.find(User.class, 1);
             for (int i = 0; i <= 3; i++){
                 Schedule schedule = Schedule.builder()
                         .scheduleDivision(codeUser)
@@ -162,8 +179,6 @@ public class InitData {
                         .build();
 
                 em.persist(schedule);
-
-//                Schedule scheduleByUser = em.find(Schedule.class, "할일1"+scheduleSeq++);
                 //모든 유저를 할일에 배정
                 for (User user : userList){
 //
@@ -172,7 +187,7 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(user.getUserId())
                                     .build();
-                    em.persist(scheduleAssign);
+                    schedule.addScheduleAssigns(scheduleAssign);
                 }
                 //모든 부서를 할일에 배정
                 for (Department department : departmentList){
@@ -182,11 +197,10 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(department.getDepartmentId())
                                     .build();
-                    em.persist(scheduleAssign);
-                }
-//                em.persist(schedule);
-            }
+                    schedule.addScheduleAssigns(scheduleAssign);
 
+                }
+            }
 
         }
 

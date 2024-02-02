@@ -172,7 +172,8 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(user.getUserId())
                                     .build();
-                    em.persist(scheduleAssign);
+                    schedule.addScheduleAssigns(scheduleAssign);
+//                    em.persist(scheduleAssign);
                 }
                 //모든 부서를 할일에 배정
                 for (Department department : departmentList){
@@ -182,9 +183,10 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(department.getDepartmentId())
                                     .build();
-                    em.persist(scheduleAssign);
+                    schedule.addScheduleAssigns(scheduleAssign);
+//                    em.persist(scheduleAssign);
                 }
-//                em.persist(schedule);
+
             }
 
 
