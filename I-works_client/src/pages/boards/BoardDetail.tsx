@@ -3,6 +3,8 @@ import { FormEvent, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 
 import { Button } from "flowbite-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faStar } from "@fortawesome/free-regular-svg-icons"
 
 function BoardDetail() {
   const { boardId } = useParams()
@@ -47,6 +49,8 @@ function BoardDetail() {
       })
   }
 
+  // 북마크 기능
+  
 
   return (
     <div className="flex flex-col">
@@ -55,7 +59,8 @@ function BoardDetail() {
       </div>
       <div className="flex justify-between items-center mb-4">
         <p className="text-3xl font-semibold">{boardDetail.title}</p>
-        <span>별</span>
+        {/* 로직 추가필요 */}
+        <FontAwesomeIcon icon={faStar} size="xl" style={{color: "#1F4068",}} />
       </div>
       <div className="mb-4">
         <div className="flex items-center">

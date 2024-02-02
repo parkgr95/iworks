@@ -8,7 +8,7 @@ function RootLayout() {
 			<header>
 				<MainNav />
 			</header>
-			<main>
+			<main className='h-full'>
 				<Outlet />
 			</main>
 		</>

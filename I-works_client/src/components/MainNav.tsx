@@ -18,7 +18,7 @@ function MainNav() {
           <Link to="#" className="block py-2 px-4">주소록</Link>
         </li>
         <li>
-          <Link to="#" className="block py-2 px-4">캘린더</Link>
+          <Link to="/schedule" className="block py-2 px-4">캘린더</Link>
         </li>
       </ul>
       <div className="flex items-center text-white p-3.5">
