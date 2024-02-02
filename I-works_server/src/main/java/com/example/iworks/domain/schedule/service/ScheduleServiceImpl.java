@@ -66,15 +66,6 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
-        int divisionCodeId = scheduleUpdateRequestDto.getScheduleDivisionCodeId();
-        Code findCode = codeRepository.findById(divisionCodeId).orElseThrow(IllegalArgumentException::new);
-        Schedule findSchedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
-        findSchedule.updateSchedule(findCode, scheduleUpdateRequestDto);
-    }
-
-
-    @Override
     public ScheduleReadOneResponseDto readOne(Integer scheduleId) {
         Schedule foundSchedule = scheduleRepository.getReferenceById(scheduleId);
         return new ScheduleReadOneResponseDto(foundSchedule);
@@ -100,14 +91,26 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     }
     @Override
-    public void removeSchedule(Integer scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
-        scheduleRepository.delete(schedule);
+    public void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
+        int divisionCodeId = scheduleUpdateRequestDto.getScheduleDivisionCodeId();
+        Code findCode = codeRepository.findById(divisionCodeId).orElseThrow(IllegalArgumentException::new);
+        Schedule findSchedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
+        findSchedule.updateSchedule(findCode, scheduleUpdateRequestDto);
     }
+
+    /** 할일 완료 여부 */
     @Override
     public void isFinishedSchedule(int scheduleId, boolean isFinish) {
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(IllegalAccessError::new);
         findSchedule.isFinished(isFinish);
     }
+
+    @Override
+    public void removeSchedule(Integer scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
+        scheduleRepository.delete(schedule);
+    }
+
+
 }
