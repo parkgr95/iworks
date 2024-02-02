@@ -26,7 +26,7 @@ public class OpenViduUtil {
         SECRET_KEY = secretKeyUtil.getOpenViduSecretKey();
     }
 
-    public int getSessionClientsNumber(String sessionId) throws JsonProcessingException {
+    public int getSessionClientsNumber(String sessionId) {
         System.out.println(SECRET_KEY);
         URI uri = UriComponentsBuilder
                 .fromUriString(OPENVIDU_SERVER_URL)
@@ -40,9 +40,12 @@ public class OpenViduUtil {
         headers.set("Authorization",SECRET_KEY);
 
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET,httpEntity,String.class);
-        JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
-        return jsonNode.get("numberOfElements").asInt();
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, String.class);
+            JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
+            return jsonNode.get("numberOfElements").asInt();
+        }catch (JsonProcessingException e){
+            return 0;
+        }
     }
 }
