@@ -2,6 +2,7 @@ package com.example.iworks.domain.schedule.controller;
 
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.dto.schedule.ScheduleCreateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateIsFinishRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.service.ScheduleService;
 import com.example.iworks.global.model.Response;
@@ -23,24 +24,30 @@ public class ScheduleController {
     @PostMapping("/create")
     public ResponseEntity<?> createSchedule(@RequestBody ScheduleCreateRequestDto schedule){
         scheduleService.createSchedule(schedule);
-        return response.handleSuccess("할일 등록 완료");
+        return response.handleSuccess("할일 등록 성공");
     }
 
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<?> getSchedule(@PathVariable int scheduleId){
+    public ResponseEntity<?> getSchedule(@PathVariable(name = "scheduleId") Integer scheduleId){
         return response.handleSuccess(scheduleService.readOne(scheduleId));
     }
 
     @PostMapping("/{scheduleId}/update")
     public ResponseEntity<?> updateSchedule(@PathVariable(name = "scheduleId") int scheduleId, @RequestBody ScheduleUpdateRequestDto scheduleUpdateRequestDto){
         scheduleService.updateSchedule(scheduleId, scheduleUpdateRequestDto);
-        return response.handleSuccess("할일 수정 완료");
+        return response.handleSuccess("할일 수정 성공");
     }
 
-    @PostMapping("/{scheduleId}")
-    public ResponseEntity<?> updateSchedule(@PathVariable int scheduleId){
+    @PostMapping("/{scheduleId}/isFinish")
+    public ResponseEntity<?> updateIsFinishStatus(@PathVariable(name = "scheduleId") int scheduleId, @RequestBody boolean isFinish){
+        scheduleService.isFinishedSchedule(scheduleId, isFinish);
+        return response.handleSuccess("할일 완료 여부 업데이트 성공");
+    }
+
+    @PostMapping("/{scheduleId}/delete")
+    public ResponseEntity<?> deleteSchedule(@PathVariable(name = "scheduleId") int scheduleId){
         scheduleService.removeSchedule(scheduleId);
-        return response.handleSuccess("할일 삭제 완료");
+        return response.handleSuccess("할일 삭제 성공");
     }
 
 }
