@@ -24,6 +24,6 @@ public class SecretKeyUtil {
 
     @Bean
     public String getOpenViduSecretKey(){
-        return Base64.getEncoder().encodeToString(("OPENVIDUAPP:"+OPEN_VIDU_SECRET_KEY).getBytes());
+        return "Basic "+Base64.getEncoder().encodeToString(("OPENVIDUAPP:"+OPEN_VIDU_SECRET_KEY).getBytes());
     }
 }
