@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.List;
 
@@ -20,11 +21,14 @@ public class JwtProvider {
     long refreshExpTime;
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final JwtSecretKey key;
+    private final SecretKeyUtil secretKeyUtil;
 
-    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, JwtSecretKey key) {
+    private final SecretKey SECRET_KEY;
+
+    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, SecretKeyUtil secretKeyUtil) {
         this.redisTemplate = redisTemplate;
-        this.key = key;
+        this.secretKeyUtil = secretKeyUtil;
+        this.SECRET_KEY = secretKeyUtil.getJwtsecretKey();
     }
 
     public String createAccessToken(String eid, List<String> role) {
@@ -33,14 +37,14 @@ public class JwtProvider {
                 .claim("type","access")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
-                .signWith(key.secretKey())
+                .signWith(SECRET_KEY)
                 .compact();
         return accessToken;
     }
 
     public String reCreateAccessToken(String refreshToken) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
@@ -56,7 +60,7 @@ public class JwtProvider {
                 .claim("type","refresh")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
-                .signWith(key.secretKey())
+                .signWith(SECRET_KEY)
                 .compact();
 /*        redisTemplate.opsForValue().set(
                 refreshToken, //key
@@ -72,7 +76,7 @@ public class JwtProvider {
         System.out.println("access check");
         accessToken = accessToken.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody();
@@ -85,7 +89,7 @@ public class JwtProvider {
         System.out.println("refresh check");
         refreshToken = refreshToken.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
@@ -105,7 +109,7 @@ public class JwtProvider {
     public String getUserEid(String jwt) {
         jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
@@ -115,7 +119,7 @@ public class JwtProvider {
     public List<String> getUserRole(String jwt) {
         jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
