@@ -17,11 +17,6 @@ public class AddressApiController {
     private final AddressService addressService;
     private final OpenViduUtil openViduUtil;
 
-    @GetMapping("/")
-    public ResponseEntity<String> test(){
-
-        return openViduUtil.getSessionClientsNumber("edith-montserrat-crimson-anaconda");
-    }
     @GetMapping("/org-chart")
     public ResponseEntity<Map<String,Object>> getOrganizationChart(){
 

@@ -1,13 +1,16 @@
 package com.example.iworks.global.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.http.HttpHeaders;
 
 import java.net.URI;
 
@@ -23,7 +26,7 @@ public class OpenViduUtil {
         SECRET_KEY = secretKeyUtil.getOpenViduSecretKey();
     }
 
-    public ResponseEntity<String> getSessionClientsNumber(String sessionId){
+    public int getSessionClientsNumber(String sessionId) throws JsonProcessingException {
         System.out.println(SECRET_KEY);
         URI uri = UriComponentsBuilder
                 .fromUriString(OPENVIDU_SERVER_URL)
@@ -39,6 +42,7 @@ public class OpenViduUtil {
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET,httpEntity,String.class);
-        return response;
+        JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
+        return jsonNode.get("numberOfElements").asInt();
     }
 }
