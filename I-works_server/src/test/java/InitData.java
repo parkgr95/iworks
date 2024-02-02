@@ -1,5 +1,3 @@
-package com.example.iworks;
-
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
@@ -11,9 +9,8 @@ import com.example.iworks.global.util.RandomPasswordUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//@Profile("local")
+@Profile("test")
 @Component
-@RequiredArgsConstructor
 public class InitData {
 
     private final InitDataService initDataService;
     private final static RandomPasswordUtil randomPasswordUtil  = new RandomPasswordUtil();
+
+    public InitData(InitDataService initDataService) {
+        this.initDataService = initDataService;
+    }
 
     @PostConstruct
     public void init(){
