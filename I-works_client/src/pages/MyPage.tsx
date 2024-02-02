@@ -68,45 +68,78 @@ function MyPage() {
 
   return (
     <div className="p-16">
-      <h1 className="text-2xl m-4">마이페이지</h1>
-      <p>사번 : {userDetail.userEid}</p>
-      <p>이름 : {userDetail.userNameFirst}</p>
-      <p>성 : {userDetail.userNameLast}</p>
-      <p>이메일 : {userDetail.userEmail}</p>
-      <p>부서 : {userDetail.departmentName}</p>
-      <p>직급 : {userDetail.userPosition}</p>
-      <p>성별 : {userDetail.userGender}</p>
-      <Form onSubmit={handleSubmit}>
-        <Label htmlFor="userTel">전화번호</Label>
-        <TextInput
-          id="userTel"
-          type="text"
-          name="userTel"
-          onChange={(e) => handleInfoChange('userTel', e.target.value)}
-          value={userDetail.userTel}
-        />
-        <Label htmlFor="userAddress">주소</Label>
-        <TextInput
-          id="userAddress"
-          type="text"
-          name="userAddress"
-          onChange={(e) => handleInfoChange('userAddress', e.target.value)}
-          value={userDetail.userAddress}
-        />
-        <Label htmlFor="userPassword">비밀번호</Label>
-        <TextInput
-          id="userPassword"
-          type="password"
-          name="userPassword"
-          onChange={(e) => handleInfoChange('userPassword', e.target.value)}
-        />
-        <Label htmlFor="userPasswordCheck">비밀번호 확인</Label>
-        <TextInput
-          id="userPasswordCheck"
-          type="password"
-          name="userPasswordCheck"
-        />
-        <Button className="my-8" type="submit">
+      <h1 className="text-2xl">마이페이지</h1>
+      <div className="grid md:grid-cols-2 my-12 gap-3">
+        <div className="grid grid-cols-2">
+          <div className="text-center">사번</div>
+          <div>{userDetail.userEid}</div>
+        </div>
+        <div className="grid grid-cols-2">
+          <div className="text-center">이름</div>
+          <div>{userDetail.userNameFirst}</div>
+        </div>
+        <div className="grid grid-cols-2">
+          <div className="text-center">성</div>
+          <div>{userDetail.userNameLast}</div>
+        </div>
+        <div className="grid grid-cols-2">
+          <div className="text-center">이메일</div>
+          <div>{userDetail.userEmail}</div>
+        </div>
+        <div className="grid grid-cols-2">
+          <div className="text-center">부서</div>
+          <div>{userDetail.departmentName}</div>
+        </div>
+        <div className="grid grid-cols-2">
+          <div className="text-center">직급</div>
+          <div>{userDetail.userPosition}</div>
+        </div>
+        <div className="grid grid-cols-2">
+          <div className="text-center">성별</div>
+          <div>{userDetail.userGender}</div>
+        </div>
+      </div>
+      <Form className="grid justify-stretch" onSubmit={handleSubmit}>
+        <div className="grid md:grid-cols-2 my-12 gap-8">
+          <div>
+            <Label htmlFor="userTel">전화번호</Label>
+            <TextInput
+              id="userTel"
+              type="text"
+              name="userTel"
+              onChange={(e) => handleInfoChange('userTel', e.target.value)}
+              value={userDetail.userTel}
+            />
+          </div>
+          <div>
+            <Label htmlFor="userAddress">주소</Label>
+            <TextInput
+              id="userAddress"
+              type="text"
+              name="userAddress"
+              onChange={(e) => handleInfoChange('userAddress', e.target.value)}
+              value={userDetail.userAddress}
+            />
+          </div>
+          <div>
+            <Label htmlFor="userPassword">비밀번호</Label>
+            <TextInput
+              id="userPassword"
+              type="password"
+              name="userPassword"
+              onChange={(e) => handleInfoChange('userPassword', e.target.value)}
+            />
+          </div>
+          <div>
+            <Label htmlFor="userPasswordCheck">비밀번호 확인</Label>
+            <TextInput
+              id="userPasswordCheck"
+              type="password"
+              name="userPasswordCheck"
+            />
+          </div>
+        </div>
+        <Button className="justify-self-end" type="submit">
           수정
         </Button>
       </Form>
@@ -129,7 +162,6 @@ async function myPageLoader() {
         },
       },
     )
-    console.log(response.data.data)
     return response.data.data
   } catch (error) {
     console.error(error)
