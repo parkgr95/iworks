@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.example.iworks.domain.board.domain.QBoard.board;
+import static com.example.iworks.domain.board.domain.QBookmark.bookmark;
 import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
@@ -43,6 +44,7 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 .collect(toList());
     }
 
+    @Override
     public BoardGetResponseDto findByCategory(int boardId, Code boardCategoryCode, int boardOwnerId) {
         Board findBoard = queryFactory
                 .selectFrom(board)
@@ -54,6 +56,22 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 )
                 .fetchOne();
         return findBoard != null ? new BoardGetResponseDto(findBoard) : null;
+    }
+
+    @Override
+    public List<BoardGetResponseDto> findAllByCreator(Pageable pageable, int boardCreatorId) {
+        return queryFactory
+                .selectFrom(board)
+                .where(
+                        eqBoardCreatorId(boardCreatorId)
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch()
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .collect(toList());
     }
 
     @Override

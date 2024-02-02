@@ -8,7 +8,6 @@ import com.example.iworks.global.model.entity.Code;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +36,7 @@ public class User {
     private Department userDepartment; //부서
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_position_code_id", referencedColumnName = "code_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_position_code_id", referencedColumnName = "code_id")
     private Code userPositionCode; //직급 코드 아이디
 
     @Builder.Default
