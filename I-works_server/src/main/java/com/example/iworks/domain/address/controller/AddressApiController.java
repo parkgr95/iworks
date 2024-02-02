@@ -14,10 +14,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AddressApiController {
     private final AddressService addressService;
-    @GetMapping("/search")
+
+
+    @GetMapping("/org-chart")
+    public ResponseEntity<Map<String,Object>> getOrganizationChart(){
+        return addressService.selectDepartmentAll();
+    }
+
+    @GetMapping("/search/all")
     public ResponseEntity<Map<String,Object>> getAddressAll(){
         return addressService.selectAddressAll();
     }
+
+
 
 
 }
