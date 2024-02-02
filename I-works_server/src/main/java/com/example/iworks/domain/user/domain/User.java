@@ -2,6 +2,7 @@ package com.example.iworks.domain.user.domain;
 
 
 import com.example.iworks.domain.department.domain.Department;
+import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
 import com.example.iworks.global.model.entity.Code;
@@ -93,6 +94,8 @@ public class User {
     @Column(name = "user_status")
     private Status userStatus; // 상태
 
+    @OneToMany(mappedBy = "teamUserUser")
+    private List<TeamUser> userTeamUsers = new ArrayList<>(); // 맴버별 팀유저
 
     public User(UserJoinRequestDto dto){
          this.userEid = dto.getUserEid();
