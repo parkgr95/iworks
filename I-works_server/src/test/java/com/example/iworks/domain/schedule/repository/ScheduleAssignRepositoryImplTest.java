@@ -3,8 +3,12 @@ package com.example.iworks.domain.schedule.repository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
-import com.example.iworks.domain.schedule.dto.ScheduleAssignRequestDto;
-import com.example.iworks.domain.schedule.dto.ScheduleAssignResponseDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignFindBySearchParameterResponseDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignSearchParameterDto;
+import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
+import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
+import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignRepositoryCustom;
+import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepositoryImpl;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.entity.Code;
@@ -12,7 +16,6 @@ import com.example.iworks.global.model.entity.CodeGroup;
 import com.example.iworks.global.model.repository.CodeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -77,18 +80,18 @@ class ScheduleAssignRepositoryImplTest {
 
 
       //when
-      List<ScheduleAssignRequestDto> requestDtoList = new ArrayList<>();
-      requestDtoList.add(ScheduleAssignRequestDto.builder()
+      List<ScheduleAssignSearchParameterDto> requestDtoList = new ArrayList<>();
+      requestDtoList.add(ScheduleAssignSearchParameterDto.builder()
               .scheduleAssigneeId(user.getUserId())
               .scheduleCategoryCodeId(categoryCode.getCodeId())
               .build());
 
-      List<ScheduleAssignResponseDto> responseDtoList = scheduleAssignRepositoryCustom.findScheduleAssignees(requestDtoList);
+      List<ScheduleAssignFindBySearchParameterResponseDto> responseDtoList = scheduleAssignRepositoryCustom.findScheduleAssignsBySearchParameter(requestDtoList);
 
       //then
       assertEquals(2, responseDtoList.size());
 
-      for (ScheduleAssignResponseDto responseDto : responseDtoList){
+      for (ScheduleAssignFindBySearchParameterResponseDto responseDto : responseDtoList){
          System.out.println(responseDto);
       }
 

@@ -4,7 +4,10 @@ import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
-import com.example.iworks.domain.schedule.dto.ScheduleAssignRequestDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignFindBySearchParameterResponseDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignSearchParameterDto;
+import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
+import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.entity.Code;
@@ -161,20 +164,20 @@ class ScheduleAssignRepositoryTest {
               .schedule(schedule2)
               .build());
 
-      List<ScheduleAssignRequestDto> requestDtoList = new ArrayList<>();
+      List<ScheduleAssignSearchParameterDto> requestDtoList = new ArrayList<>();
 
-      requestDtoList.add(ScheduleAssignRequestDto.builder()
+      requestDtoList.add(ScheduleAssignSearchParameterDto.builder()
               .scheduleAssigneeId(user.getUserId())
               .scheduleCategoryCodeId(categoryCode.getCodeId())
               .build());
 
-      requestDtoList.add(ScheduleAssignRequestDto.builder()
+      requestDtoList.add(ScheduleAssignSearchParameterDto.builder()
               .scheduleAssigneeId(department.getDepartmentId())
               .scheduleCategoryCodeId(categoryCode2.getCodeId())
               .build());
 
       System.out.println("requestDtoList 준비 완료!");
-      for (ScheduleAssignRequestDto requestDto : requestDtoList){
+      for (ScheduleAssignSearchParameterDto requestDto : requestDtoList){
          System.out.println(requestDto);
       }
 
@@ -182,13 +185,13 @@ class ScheduleAssignRepositoryTest {
       System.out.println("할일 배정 데이터 전체 = " + scheduleAssignRepository.findAll());
 
       //when
-      List<ScheduleAssignResponseDto> responseDtoList = scheduleAssignRepository.findScheduleAssignees(requestDtoList);
+      List<ScheduleAssignFindBySearchParameterResponseDto> responseDtoList = scheduleAssignRepository.findScheduleAssignsBySearchParameter(requestDtoList);
 
       //then
 //      assertNull(responseDtoList);
       assertEquals(2, responseDtoList.size());
 
-      for (ScheduleAssignResponseDto responseDto : responseDtoList){
+      for (ScheduleAssignFindBySearchParameterResponseDto responseDto : responseDtoList){
          System.out.println(responseDto);
       }
 
