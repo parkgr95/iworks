@@ -3,11 +3,10 @@ import { FormEvent, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 
 import { Button } from "flowbite-react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faStar } from "@fortawesome/free-regular-svg-icons"
+
 
 function BoardDetail() {
-  const { boardId } = useParams()
+  const { boardId = '' } = useParams<{boardId: string}>()
   const [boardDetail, setBoardDetail] = useState<{ title: string, body: string }>({
     title: '',
     body: ''
@@ -15,7 +14,7 @@ function BoardDetail() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function getBoardDetail(boardId) {
+    async function getBoardDetail(boardId: string) {
       try {
         const res = await axios.get(`https://dummyjson.com/posts/${boardId}`)
         const boardDetailData = res.data
@@ -60,7 +59,6 @@ function BoardDetail() {
       <div className="flex justify-between items-center mb-4">
         <p className="text-3xl font-semibold">{boardDetail.title}</p>
         {/* 로직 추가필요 */}
-        <FontAwesomeIcon icon={faStar} size="xl" style={{color: "#1F4068",}} />
       </div>
       <div className="mb-4">
         <div className="flex items-center">
@@ -85,7 +83,7 @@ function BoardDetail() {
         <form>
           <div className="w-full mb-4 border border-gray-200 rounded-sm bg-gray-50">
             <div className="px-4 py-2 bg-white rounded-t-sm">
-              <textarea id="comment" rows="4" className="w-full px-0 text-sm text-gray-900 bg-white border-0" placeholder="댓글을 입력하세요" required></textarea>
+              <textarea id="comment" rows={4} className="w-full px-0 text-sm text-gray-900 bg-white border-0" placeholder="댓글을 입력하세요" required></textarea>
             </div>
             <div className="flex items-center justify-end px-3 py-2 border-t">
               <button type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-mainGreen rounded-lg hover:bg-blue-800">

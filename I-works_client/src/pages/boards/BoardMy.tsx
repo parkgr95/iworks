@@ -1,14 +1,14 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
-import PostType from "./interface/BoardType"
+import PostType from "../../interface/BoardType"
 import { Link, useParams } from "react-router-dom"
 
 function BoardBookMark() {
-  const { boardCreatorId } = useParams()
+  const { boardCreatorId='' } = useParams<{boardCreatorId: string}>()
   const [myBoardList, setmyBoardList] = useState<PostType[]>([])
   
   useEffect(() => {
-    async function getBoardList(boardCreatorId) {
+    async function getBoardList(boardCreatorId: string) {
       try {
         const res = await axios.get(`${boardCreatorId}`)
         const myBoardListData = res.data

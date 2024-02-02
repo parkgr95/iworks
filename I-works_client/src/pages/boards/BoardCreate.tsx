@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react"
 import axios from "axios"
 import { useNavigate, Form } from "react-router-dom"
-import BoardModal from "../../components/BoardModal"
+// import BoardModal from "../../components/BoardModal"
 
 import { Button } from "flowbite-react"
 import ReactQuill from "react-quill"
@@ -12,8 +12,8 @@ function BoardCreate() {
 
   const [boardTitle, setBoardTitle] = useState<string>('')
   const [boardContent, setBoardContent] = useState<string>()
-  const [boardCategoryCodeId, setCategoryCodeId] = useState<number>(1)
-  const [boardOwnerId, setBoardOwnerId] = useState<number>(1)
+  // const [boardCategoryCodeId, setCategoryCodeId] = useState<number>(1)
+  // const [boardOwnerId, setBoardOwnerId] = useState<number>(1)
   
   const onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setBoardTitle(event.target.value)
@@ -31,8 +31,8 @@ function BoardCreate() {
         "boardContent": boardContent,
         "boardCreatorId": '1234',
         "boardIsDeleted": '0',
-        "boardCategoryCodeId": boardCategoryCodeId,
-        "boardOwnerId": boardOwnerId,
+        // "boardCategoryCodeId": boardCategoryCodeId,
+        // "boardOwnerId": boardOwnerId,
       })
       .then((res) => {
         navigate("../")
