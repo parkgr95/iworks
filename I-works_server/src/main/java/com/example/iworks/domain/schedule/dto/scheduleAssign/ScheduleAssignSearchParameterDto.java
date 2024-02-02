@@ -1,14 +1,13 @@
 package com.example.iworks.domain.schedule.dto.scheduleAssign;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
-//@NoArgsConstructor
+@NoArgsConstructor
 @Getter
 @Builder
-@ToString
+@EqualsAndHashCode
+//@ToString
 public class ScheduleAssignSearchParameterDto {
 
    private int scheduleCategoryCodeId;

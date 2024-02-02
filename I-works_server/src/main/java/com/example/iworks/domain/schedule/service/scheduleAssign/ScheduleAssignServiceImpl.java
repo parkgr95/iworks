@@ -1,10 +1,9 @@
 package com.example.iworks.domain.schedule.service.scheduleAssign;
 
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignResponseDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignFindBySearchParameterResponseDto;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignSearchParameterDto;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.team.domain.TeamUser;
-import com.example.iworks.domain.team.repository.team.TeamRepository;
 import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
@@ -33,14 +32,14 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
 
     /** 유저의 모든 소속에 대하여 할일 배정 및 할일 조회 */
     @Override
-    public List<ScheduleAssignResponseDto> findScheduleAssignsByUser(List<ScheduleAssignSearchParameterDto> requestDtoList) {
-        return null;
+    public List<ScheduleAssignFindBySearchParameterResponseDto> findScheduleAssignsByUser(int userId) {
+        return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId));
     }
 
     /** 할일 생성에서 선택된 소속의 할일 배정 및 할일 조회 */
     @Override
-    public List<ScheduleAssignResponseDto> findScheduleAssignBySelectedAssignees(List<ScheduleAssignSearchParameterDto> requestDtoList) {
-        return null;
+    public List<ScheduleAssignFindBySearchParameterResponseDto> findScheduleAssignBySelectedAssignees(List<ScheduleAssignSearchParameterDto> requestDtoList) {
+        return findScheduleAssignsBySearchParameter(requestDtoList);
     }
 
     /** 유저의 모든 소속에 대한 할일 배정 검색 조건 조회*/
@@ -61,8 +60,8 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
 
     /** 할일 배정 검색 조건에 대한 할일 배정 및 할일 조회 */
     @Override
-    public List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList) {
-        return null;
+    public List<ScheduleAssignFindBySearchParameterResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> searchParameterList) {
+        return scheduleAssignRepository.findScheduleAssignsBySearchParameter(searchParameterList);
     }
 
 
