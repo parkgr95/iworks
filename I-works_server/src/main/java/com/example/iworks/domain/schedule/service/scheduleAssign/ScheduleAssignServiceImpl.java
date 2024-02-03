@@ -1,12 +1,13 @@
 package com.example.iworks.domain.schedule.service.scheduleAssign;
 
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignFindBySearchParameterResponseDto;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignSearchParameterDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.response.ScheduleAssignResponseDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterDto;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
+import com.example.iworks.global.dto.SearchConditionDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,16 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
 
     /** 유저의 모든 소속에 대하여 할일 배정 및 할일 조회 */
     @Override
-    public List<ScheduleAssignFindBySearchParameterResponseDto> findScheduleAssignsByUser(int userId) {
-        return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId));
+    public List<ScheduleAssignResponseDto> findByUser(int userId, SearchConditionDate searchConditionDate) {
+        if (searchConditionDate == null) return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId));
+        return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId), searchConditionDate);
     }
 
     /** 할일 생성에서 선택된 소속의 할일 배정 및 할일 조회 */
     @Override
-    public List<ScheduleAssignFindBySearchParameterResponseDto> findScheduleAssignBySelectedAssignees(List<ScheduleAssignSearchParameterDto> requestDtoList) {
-        return findScheduleAssignsBySearchParameter(requestDtoList);
+    public List<ScheduleAssignResponseDto> findByAssignees(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate) {
+        if (searchConditionDate == null) return findScheduleAssignsBySearchParameter(requestDtoList);
+        return findScheduleAssignsBySearchParameter(requestDtoList, searchConditionDate);
     }
 
     /** 유저의 모든 소속에 대한 할일 배정 검색 조건 조회*/
@@ -60,8 +63,13 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
 
     /** 할일 배정 검색 조건에 대한 할일 배정 및 할일 조회 */
     @Override
-    public List<ScheduleAssignFindBySearchParameterResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> searchParameterList) {
+    public List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> searchParameterList) {
         return scheduleAssignRepository.findScheduleAssignsBySearchParameter(searchParameterList);
+    }
+
+    @Override
+    public List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate) {
+        return scheduleAssignRepository.findScheduleAssignsBySearchParameter(requestDtoList, searchConditionDate);
     }
 
 
