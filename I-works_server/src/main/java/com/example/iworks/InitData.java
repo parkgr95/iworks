@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ import java.util.List;
 @Profile("local")
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InitData {
 
     private final InitDataService initDataService;
@@ -32,6 +34,7 @@ public class InitData {
 
     @PostConstruct
     public void init(){
+        log.info("initDate {} ", " profile: local ");
         initDataService.init();
     }
 
@@ -67,6 +70,9 @@ public class InitData {
             Code codeDepartment = null;
             Code codeUser = null;
             Code codeTeam = null;
+            Code ScheduleDivisionTask = null; //할일 분류 : 업무
+            Code ScheduleDivisionVacation = null; //할일 분류 : 휴가
+            Code ScheduleDivisionSick = null; //할일 분류 : 병가
             List<User> userList = new ArrayList<>();
             List<Team> teamList = new ArrayList<>();
             List<Department> departmentList = new ArrayList<>();
@@ -95,36 +101,25 @@ public class InitData {
             codeTeam.setCodeGroup(codeGroup1);
             em.persist(codeTeam);
 
-//            em.persist(Code.builder()
-//                    .codeCodeGroup(codeGroup1)
-//                    .codeName("유저"));
-//            em.persist(Code.builder()
-//                    .codeCodeGroup(codeGroup1)
-//                    .codeName("부서"));
-//            em.persist(Code.builder()
-//                    .codeCodeGroup(codeGroup1)
-//                    .codeName("팀"));
-
-//            codeUser = em.find(Code.class, 1);
-//            codeDepartment = em.find(Code.class, 2);
-//            codeTeam = em.find(Code.class, 3);
-
             CodeGroup codeGroup2 = em.find(CodeGroup.class, 2);
 
-            em.persist(Code.builder()
+            ScheduleDivisionTask = Code.builder()
                     .codeName("업무")
                     .codeCodeGroup(codeGroup2)
-                    .build());
+                    .build();
+            em.persist(ScheduleDivisionTask);
 
-            em.persist(Code.builder()
+            ScheduleDivisionVacation = Code.builder()
                     .codeName("개인일정(휴가)")
                     .codeCodeGroup(codeGroup2)
-                    .build());
+                    .build();
+            em.persist(ScheduleDivisionVacation);
 
-            em.persist(Code.builder()
+            ScheduleDivisionSick = Code.builder()
                     .codeName("개인일정(병가)")
                     .codeCodeGroup(codeGroup2)
-                    .build());
+                    .build();
+            em.persist(ScheduleDivisionSick);
 
             //부서별 유저 데이터
             for (int i = 1; i <= 5; i++){
@@ -172,7 +167,7 @@ public class InitData {
             //할 일 3개 생성
             for (int i = 0; i <= 3; i++){
                 Schedule schedule = Schedule.builder()
-                        .scheduleDivision(codeUser)
+                        .scheduleDivision((i & 1)==1?ScheduleDivisionTask: ScheduleDivisionVacation)
                         .scheduleTitle("할일"+ scheduleSeq)
                         .scheduleEndDate(LocalDateTime.now())
                         .scheduleCreator(user1)
