@@ -2,7 +2,7 @@ package com.example.iworks.domain.schedule.repository.scheduleAssign;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.response.ScheduleAssignResponseDto;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterDto;
-import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignRepositoryCustom;
+import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignGetRepository;
 import com.example.iworks.global.dto.SearchConditionDate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -19,7 +19,7 @@ import static com.example.iworks.global.common.CategoryCodeDef.CATEGORY_SCHEDULE
 
 
 @Repository
-public class ScheduleAssignRepositoryImpl implements ScheduleAssignRepositoryCustom {
+public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository {
 
    private final JPAQueryFactory jpaQueryFactory;
 
