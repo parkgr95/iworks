@@ -1,4 +1,4 @@
-package com.example.iworks.domain.schedule.dto.schedule;
+package com.example.iworks.domain.schedule.dto.schedule.response;
 
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.meeting.dto.MeetingDto;

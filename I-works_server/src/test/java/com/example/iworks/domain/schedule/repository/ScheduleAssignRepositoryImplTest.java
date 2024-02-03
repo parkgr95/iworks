@@ -3,8 +3,8 @@ package com.example.iworks.domain.schedule.repository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignFindBySearchParameterResponseDto;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignSearchParameterDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.response.ScheduleAssignResponseDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterDto;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignRepositoryCustom;
@@ -86,12 +86,12 @@ class ScheduleAssignRepositoryImplTest {
               .scheduleCategoryCodeId(categoryCode.getCodeId())
               .build());
 
-      List<ScheduleAssignFindBySearchParameterResponseDto> responseDtoList = scheduleAssignRepositoryCustom.findScheduleAssignsBySearchParameter(requestDtoList);
+      List<ScheduleAssignResponseDto> responseDtoList = scheduleAssignRepositoryCustom.findScheduleAssignsBySearchParameter(requestDtoList);
 
       //then
       assertEquals(2, responseDtoList.size());
 
-      for (ScheduleAssignFindBySearchParameterResponseDto responseDto : responseDtoList){
+      for (ScheduleAssignResponseDto responseDto : responseDtoList){
          System.out.println(responseDto);
       }
 

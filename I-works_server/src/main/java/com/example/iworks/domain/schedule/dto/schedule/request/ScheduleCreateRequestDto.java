@@ -1,4 +1,4 @@
-package com.example.iworks.domain.schedule.dto.schedule;
+package com.example.iworks.domain.schedule.dto.schedule.request;
 
 import com.example.iworks.domain.meeting.domain.Meeting;
 import lombok.AllArgsConstructor;

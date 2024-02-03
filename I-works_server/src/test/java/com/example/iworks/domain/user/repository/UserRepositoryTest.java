@@ -1,6 +1,6 @@
 package com.example.iworks.domain.user.repository;
 
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignSearchParameterDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterDto;
 import com.example.iworks.domain.team.repository.team.TeamRepository;
 import com.example.iworks.domain.user.domain.User;
 import org.junit.jupiter.api.Test;

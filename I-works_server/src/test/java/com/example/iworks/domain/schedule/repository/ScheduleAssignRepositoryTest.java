@@ -4,8 +4,8 @@ import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignFindBySearchParameterResponseDto;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.ScheduleAssignSearchParameterDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.response.ScheduleAssignResponseDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterDto;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.user.domain.User;
@@ -185,13 +185,13 @@ class ScheduleAssignRepositoryTest {
       System.out.println("할일 배정 데이터 전체 = " + scheduleAssignRepository.findAll());
 
       //when
-      List<ScheduleAssignFindBySearchParameterResponseDto> responseDtoList = scheduleAssignRepository.findScheduleAssignsBySearchParameter(requestDtoList);
+      List<ScheduleAssignResponseDto> responseDtoList = scheduleAssignRepository.findScheduleAssignsBySearchParameter(requestDtoList);
 
       //then
 //      assertNull(responseDtoList);
       assertEquals(2, responseDtoList.size());
 
-      for (ScheduleAssignFindBySearchParameterResponseDto responseDto : responseDtoList){
+      for (ScheduleAssignResponseDto responseDto : responseDtoList){
          System.out.println(responseDto);
       }
 

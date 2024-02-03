@@ -1,18 +1,16 @@
-package com.example.iworks.domain.schedule.dto.scheduleAssign;
+package com.example.iworks.domain.schedule.dto.scheduleAssign.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
 @EqualsAndHashCode
-public class ScheduleAssignFindBySearchParameterResponseDto {
+public class ScheduleAssignResponseDto {
 
    private Integer scheduleId; // 할 일 아이디
    private Integer scheduleAssigneeId; //할일 담당장 아이디
@@ -25,7 +23,7 @@ public class ScheduleAssignFindBySearchParameterResponseDto {
 //   private List<ScheduleAssign> scheduleAssigns; //할 일 배정자
 
    @QueryProjection
-   public ScheduleAssignFindBySearchParameterResponseDto(Integer scheduleId, String scheduleDivisionName, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
+   public ScheduleAssignResponseDto(Integer scheduleId, String scheduleDivisionName, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
       this.scheduleId = scheduleId;
       this.scheduleDivisionName = scheduleDivisionName;
       this.scheduleTitle = scheduleTitle;
@@ -34,7 +32,7 @@ public class ScheduleAssignFindBySearchParameterResponseDto {
    }
 
    @QueryProjection
-   public ScheduleAssignFindBySearchParameterResponseDto(Integer scheduleId, Integer scheduleAssigneeId, Integer scheduleAssigneeCategoryId, String scheduleAssigneeCategoryName, String scheduleDivisionName, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
+   public ScheduleAssignResponseDto(Integer scheduleId, Integer scheduleAssigneeId, Integer scheduleAssigneeCategoryId, String scheduleAssigneeCategoryName, String scheduleDivisionName, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
       this.scheduleId = scheduleId;
       this.scheduleAssigneeId = scheduleAssigneeId;
       this.scheduleAssigneeCategoryId = scheduleAssigneeCategoryId;

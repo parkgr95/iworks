@@ -1,4 +1,4 @@
-package com.example.iworks.domain.schedule.dto.scheduleAssign;
+package com.example.iworks.domain.schedule.dto.scheduleAssign.request;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;

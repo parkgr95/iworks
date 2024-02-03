@@ -1,10 +1,9 @@
 package com.example.iworks.domain.schedule.service.schedule;
 
 
-import com.example.iworks.domain.schedule.domain.Schedule;
-import com.example.iworks.domain.schedule.dto.schedule.ScheduleCreateRequestDto;
-import com.example.iworks.domain.schedule.dto.schedule.ScheduleReadOneResponseDto;
-import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleReadOneResponseDto;
+import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 
 public interface ScheduleService {
     void createSchedule(ScheduleCreateRequestDto scheduleDto);
