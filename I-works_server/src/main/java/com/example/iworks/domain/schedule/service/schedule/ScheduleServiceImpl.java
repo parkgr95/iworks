@@ -4,7 +4,7 @@ import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.meeting.repository.MeetingRepository;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
-import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleReadOneResponseDto;
+import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,9 +60,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleReadOneResponseDto readOne(Integer scheduleId) {
+    public ScheduleResponseDto getSchedule(Integer scheduleId) {
         Schedule foundSchedule = scheduleRepository.getReferenceById(scheduleId);
-        return new ScheduleReadOneResponseDto(foundSchedule);
+        return new ScheduleResponseDto(foundSchedule);
+    }
+
+    @Override
+    public List<ScheduleResponseDto> searchByKeyword(String keyword) {
+        return scheduleRepository.findByKeyword(keyword);
     }
 
     @Override

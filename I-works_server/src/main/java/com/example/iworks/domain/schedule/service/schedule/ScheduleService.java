@@ -2,15 +2,19 @@ package com.example.iworks.domain.schedule.service.schedule;
 
 
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
-import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleReadOneResponseDto;
+import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
+
+import java.util.List;
 
 public interface ScheduleService {
     void createSchedule(ScheduleCreateRequestDto scheduleDto);
 
     void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto);
 
-    ScheduleReadOneResponseDto readOne(Integer scheduleId);
+    ScheduleResponseDto getSchedule(Integer scheduleId);
+
+    List<ScheduleResponseDto> searchByKeyword(String keyword);
 
     void removeSchedule(Integer scheduleId);
 
