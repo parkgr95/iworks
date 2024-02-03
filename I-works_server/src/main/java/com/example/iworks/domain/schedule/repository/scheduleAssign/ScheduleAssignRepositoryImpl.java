@@ -5,6 +5,7 @@ import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAss
 import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignRepositoryCustom;
 import com.example.iworks.global.dto.SearchConditionDate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import static com.example.iworks.domain.schedule.domain.QSchedule.schedule;
 import static com.example.iworks.domain.schedule.domain.QScheduleAssign.scheduleAssign;
+import static com.example.iworks.global.common.CategoryCodeDef.CATEGORY_SCHEDULE_DIVISION_TASK_CODE_ID;
 
 
 @Repository
@@ -45,7 +47,7 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignRepositoryCus
 
    }
    @Override
-   public List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate) {
+   public List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate, boolean onlyTask) {
       Set<ScheduleAssign> foundScheduleAssignList = new HashSet<>();
 
       for (ScheduleAssignSearchParameterDto requestDto : requestDtoList){
@@ -54,19 +56,27 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignRepositoryCus
                          .selectFrom(scheduleAssign)
                          .join(scheduleAssign.schedule, schedule).fetchJoin()
                          .where(eqCategoryCodeId(requestDto.getScheduleCategoryCodeId())
-                                 .and(eqAssigneeId(requestDto.getScheduleAssigneeId())).and(withInDate(searchConditionDate)))
+                                 .and(eqAssigneeId(requestDto.getScheduleAssigneeId())).and(withInDate(searchConditionDate))
+                                 ,filterTask(onlyTask)
+                         )
                          .distinct()
                          .fetch();
 
          foundScheduleAssignList.addAll(foundScheduleAssign);
       }
 
-      System.out.println("------------------------");
+      System.out.println("findScheduleAssignsBySearchParameter");
       for (ScheduleAssign scheduleAssign:foundScheduleAssignList){
          System.out.println(scheduleAssign);
       }
       return mapToScheduleAssignResponseDto(foundScheduleAssignList);
 
+   }
+   private BooleanExpression filterTask(boolean onlyTask){
+      if (onlyTask){
+         return scheduleAssign.schedule.scheduleDivision.codeId.eq(CATEGORY_SCHEDULE_DIVISION_TASK_CODE_ID);
+      }
+      return Expressions.TRUE;
    }
    private BooleanExpression eqCategoryCodeId (int categoryCodeId){
       return scheduleAssign.scheduleAssigneeCategory.codeId.eq(categoryCodeId);
@@ -96,7 +106,6 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignRepositoryCus
       }
       return new ArrayList<>(foundScheduleAssignResponseDtoList);
    }
-
 
 
 }

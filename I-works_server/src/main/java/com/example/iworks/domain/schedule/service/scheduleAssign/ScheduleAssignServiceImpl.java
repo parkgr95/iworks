@@ -31,18 +31,23 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
     TeamUserRepository teamUserRepository;
 
 
+    @Override
+    public List<ScheduleAssignResponseDto> findTaskByUser(int userId, SearchConditionDate searchConditionDate) {
+        return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId), searchConditionDate, true);
+    }
+
     /** 유저의 모든 소속에 대하여 할일 배정 및 할일 조회 */
     @Override
     public List<ScheduleAssignResponseDto> findByUser(int userId, SearchConditionDate searchConditionDate) {
         if (searchConditionDate == null) return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId));
-        return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId), searchConditionDate);
+        return findScheduleAssignsBySearchParameter(getScheduleAssignSearchParameterDtoByUser(userId), searchConditionDate, false);
     }
 
     /** 할일 생성에서 선택된 소속의 할일 배정 및 할일 조회 */
     @Override
     public List<ScheduleAssignResponseDto> findByAssignees(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate) {
         if (searchConditionDate == null) return findScheduleAssignsBySearchParameter(requestDtoList);
-        return findScheduleAssignsBySearchParameter(requestDtoList, searchConditionDate);
+        return findScheduleAssignsBySearchParameter(requestDtoList, searchConditionDate, false);
     }
 
     /** 유저의 모든 소속에 대한 할일 배정 검색 조건 조회*/
@@ -68,8 +73,8 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
     }
 
     @Override
-    public List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate) {
-        return scheduleAssignRepository.findScheduleAssignsBySearchParameter(requestDtoList, searchConditionDate);
+    public List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate, boolean onlyTask) {
+        return scheduleAssignRepository.findScheduleAssignsBySearchParameter(requestDtoList, searchConditionDate, onlyTask);
     }
 
 

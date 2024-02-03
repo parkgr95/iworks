@@ -8,10 +8,13 @@ import java.util.List;
 
 public interface ScheduleAssignService {
 
-    /** 유저의 모든 소속에 대하여 할일 배정 및 할일 조회 */
+    /** 캘린더 : 유저의 모든 소속에 대하여 업무배정 조회 */
+    List<ScheduleAssignResponseDto> findTaskByUser(int userId, SearchConditionDate searchConditionDate);
+
+    /** 할일 : 유저의 모든 소속에 대하여 할일 배정 조회 */
     List<ScheduleAssignResponseDto> findByUser(int userId, SearchConditionDate searchConditionDate);
 
-    /** 할일 생성에서 선택된 소속의 할일 배정 및 할일 조회 */
+    /** 할일 생성에서 담당자 할일 배정 조회 */
     List<ScheduleAssignResponseDto> findByAssignees(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate);
 
     /** 유저의 모든 소속에 대한 할일 배정 검색 조건 조회*/
@@ -19,7 +22,6 @@ public interface ScheduleAssignService {
 
     /** 할일 배정 검색 조건에 대한 할일 배정 및 할일 조회 */
     List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList);
-    List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate);
-
+    List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate, boolean onlyTask);
 
 }

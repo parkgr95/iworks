@@ -27,14 +27,14 @@ public class ScheduleAssignController {
     public ResponseEntity<?> getAllByAssigneesAndDate(@RequestBody ScheduleAssignSearchParameterAndDateRequestDto searchParameterAndDate){
         return response.handleSuccess(scheduleAssignService.findByAssignees(searchParameterAndDate.getSearchParameterDto(), searchParameterAndDate.getSearchConditionDate()));
     }
-    @GetMapping("/{userId}/assignees")
+    @GetMapping("/{userId}")
     public ResponseEntity<?> getAllByUser(@PathVariable(name = "userId") int userId){
         return response.handleSuccess(scheduleAssignService.findByUser(userId, null));
     }
 
-    @GetMapping("/{userId}/assignees-and-date")
+    /** 할일 : 유저의 모든 업무(할일) */
+    @GetMapping("/{userId}/task/date")
     public ResponseEntity<?> getAllByUserAndDate(@PathVariable(name = "userId") int userId, @RequestBody SearchConditionDate searchConditionDate){
-        return response.handleSuccess(scheduleAssignService.findByUser(userId, searchConditionDate));
+        return response.handleSuccess(scheduleAssignService.findTaskByUser(userId, searchConditionDate));
     }
-
 }
