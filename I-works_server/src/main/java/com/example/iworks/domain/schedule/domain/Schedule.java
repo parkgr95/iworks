@@ -86,6 +86,10 @@ public class Schedule {
     private LocalDateTime scheduleModifiedAt; //할일의 수정일시
 
     @Builder.Default
+    @Column(name = "schedule_is_deleted", nullable = false)
+    private Boolean scheduleIsDeleted = false;
+
+    @Builder.Default
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
     private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할일 배정자
 
