@@ -13,6 +13,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -31,11 +32,13 @@ public class InitData {
 
     private final InitDataService initDataService;
     private final static RandomPasswordUtil randomPasswordUtil  = new RandomPasswordUtil();
+    @Value("${initdata.enabled}")
+    private boolean initDataEnabled;
 
-    @PostConstruct
+//    @PostConstruct
     public void init(){
         log.info("initDate {} ", " profile: local ");
-        initDataService.init();
+        if (initDataEnabled) initDataService.init();
     }
 
     private static String makeRandomPassword(){
