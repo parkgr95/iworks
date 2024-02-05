@@ -4,11 +4,11 @@ import com.example.iworks.domain.department.domain.Department;
 import lombok.Getter;
 
 @Getter
-public class AddressOrgChartResonseDto {
+public class AddressDepartmentResonseDto {
     private final String departmentName;
     private final Integer departmentId;
 
-    public AddressOrgChartResonseDto(Department department){
+    public AddressDepartmentResonseDto(Department department){
         this.departmentId=department.getDepartmentId();
         this.departmentName=department.getDepartmentName();
     }

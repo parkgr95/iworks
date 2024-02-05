@@ -16,12 +16,17 @@ public class AddressApiController {
     private final AddressService addressService;
 
 
-    @GetMapping("/org-chart")
-    public ResponseEntity<Map<String,Object>> getOrganizationChart(){
+    @GetMapping("/department/all")
+    public ResponseEntity<Map<String,Object>> getDepartmentAll(){
         return addressService.selectDepartmentAll();
     }
 
-    @GetMapping("/search/all")
+    @GetMapping("/group/all")
+    public ResponseEntity<Map<String,Object>> getTeamAll(){
+        return addressService.selectDepartmentAll();
+    }
+
+    @GetMapping("/address/all")
     public ResponseEntity<Map<String,Object>> getAddressAll(){
         return addressService.selectAddressAll();
     }
