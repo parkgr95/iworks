@@ -23,7 +23,7 @@ public class AddressApiController {
 
     @GetMapping("/team/all")
     public ResponseEntity<Map<String,Object>> getTeamAll(){
-        return addressService.selectDepartmentAll();
+        return addressService.selectTeamAll();
     }
 
     @GetMapping("/user/all")
