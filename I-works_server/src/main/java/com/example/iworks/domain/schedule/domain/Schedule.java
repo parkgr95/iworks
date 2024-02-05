@@ -1,7 +1,7 @@
 package com.example.iworks.domain.schedule.domain;
 
 import com.example.iworks.domain.meeting.domain.Meeting;
-import com.example.iworks.domain.schedule.dto.schedule.ScheduleUpdateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.model.entity.Code;
 
@@ -10,9 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+//@ToString
 public class Schedule {
 
     @Id @GeneratedValue
@@ -89,6 +86,10 @@ public class Schedule {
     private LocalDateTime scheduleModifiedAt; //할일의 수정일시
 
     @Builder.Default
+    @Column(name = "schedule_is_deleted", nullable = false)
+    private Boolean scheduleIsDeleted = false;
+
+    @Builder.Default
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
     private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할일 배정자
 
@@ -115,7 +116,7 @@ public class Schedule {
         this.scheduleStartDate = scheduleUpdateRequestDto.getScheduleStartDate();
         this.scheduleEndDate = scheduleUpdateRequestDto.getScheduleEndDate();
         this.schedulePlace = scheduleUpdateRequestDto.getSchedulePlace();
-        this.scheduleMeeting.updateMeeting(scheduleUpdateRequestDto.getMeetingDate(), scheduleUpdateRequestDto.getMeetingCode());
+        if (scheduleMeeting != null) this.scheduleMeeting.updateMeeting(scheduleUpdateRequestDto.getMeetingDate(), scheduleUpdateRequestDto.getMeetingCode());
     }
 
 }
