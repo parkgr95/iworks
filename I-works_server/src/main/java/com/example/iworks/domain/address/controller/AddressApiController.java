@@ -26,7 +26,7 @@ public class AddressApiController {
         return addressService.selectDepartmentAll();
     }
 
-    @GetMapping("/address/all")
+    @GetMapping("/user/all")
     public ResponseEntity<Map<String,Object>> getAddressAll(){
         return addressService.selectAddressAll();
     }
