@@ -7,6 +7,9 @@ import com.example.iworks.global.model.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,8 +21,9 @@ public class ScheduleController {
 
     /** 할일 생성 */
     @PostMapping("/create")
-    public ResponseEntity<?> createSchedule(@RequestBody ScheduleCreateRequestDto schedule){
-        scheduleService.createSchedule(schedule);
+    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
+        String jwtToken = authorizationHeader.substring("Bearer ".length());
+        scheduleService.createSchedule(jwtToken, scheduleCreateRequestDto);
         return response.handleSuccess("할일 등록 성공");
     }
 
