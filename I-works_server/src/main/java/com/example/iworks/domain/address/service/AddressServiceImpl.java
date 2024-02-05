@@ -1,9 +1,6 @@
 package com.example.iworks.domain.address.service;
 
-import com.example.iworks.domain.address.dto.AddressDepartmentResonseDto;
-import com.example.iworks.domain.address.dto.AddressDto;
-import com.example.iworks.domain.address.dto.AddressTeamResponseDto;
-import com.example.iworks.domain.address.dto.AddressUserResponseDto;
+import com.example.iworks.domain.address.dto.*;
 import com.example.iworks.domain.address.respository.AddressRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
@@ -40,6 +37,17 @@ public class AddressServiceImpl implements AddressService {
                 .filter(item-> !item.getUser().getUserIsDeleted()).map(AddressUserResponseDto::new);
 
         return response.handleSuccess(result);
+    }
+
+    @Override
+    public ResponseEntity<Map<String,Object>> createTeam(AddressTeamCreateRequestDto requestDto)
+    {
+        try {
+
+            return response.handleSuccess("생성 성공");
+        }catch (Exception e){
+            return response.handleFail("생성 실패");
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.iworks.domain.team.domain;
 
+import com.example.iworks.domain.address.dto.AddressTeamCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,10 +47,18 @@ public class Team {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean teamIsDeleted = false;
 
+    public Team(AddressTeamCreateRequestDto requestDto){
+        this.teamName = requestDto.getTeamName();
+        this.teamCreator = requestDto.getTeamCreator();
+        this.teamLeader = requestDto.getTeamLeader();
+        this.teamDescription = requestDto.getTeamDescription();
+    }
+
     public void addTeamUser(TeamUser teamUser) {
         teamUsers.add(teamUser);
 //        teamUser.setTeamUserTeam(this);
     }
+
 
     public void removeTeamUser(TeamUser teamUser) {
         teamUsers.remove(teamUser);

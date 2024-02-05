@@ -1,11 +1,11 @@
 package com.example.iworks.domain.address.controller;
 
+import com.example.iworks.domain.address.dto.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.service.AddressService;
+import com.example.iworks.domain.team.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -31,7 +31,10 @@ public class AddressApiController {
         return addressService.selectAddressAll();
     }
 
-
+    @PostMapping("/team/create")
+    public ResponseEntity<Map<String,Object>> createTeam(@RequestBody AddressTeamCreateRequestDto requestDto){
+        return addressService.createTeam(requestDto);
+    }
 
 
 }
