@@ -83,7 +83,7 @@ public class User {
 
     @Builder.Default
     @Column(name = "user_is_deleted", nullable = false)
-    private Boolean userIsDeleted; //탈퇴여부
+    private Boolean userIsDeleted = false; //탈퇴여부
 
     @Builder.Default
     @Column(name = "user_role", nullable = false)
