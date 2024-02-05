@@ -32,13 +32,11 @@ public class InitData {
 
     private final InitDataService initDataService;
     private final static RandomPasswordUtil randomPasswordUtil  = new RandomPasswordUtil();
-    @Value("${initdata.enabled}")
-    private boolean initDataEnabled;
 
-//    @PostConstruct
+    @PostConstruct
     public void init(){
         log.info("initDate {} ", " profile: local ");
-        if (initDataEnabled) initDataService.init();
+        initDataService.init();
     }
 
     private static String makeRandomPassword(){
@@ -132,7 +130,6 @@ public class InitData {
                         .build();
                 em.persist(department);
                 departmentList.add(department);
-
 
                 //부서 별 유저 데이터
                 for (int j = 1; j <= 20; j++){

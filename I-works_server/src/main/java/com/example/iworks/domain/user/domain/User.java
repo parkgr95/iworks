@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Entity
-@Access(AccessType.FIELD)
 @Getter
 @Table(name = "users")
 @AllArgsConstructor
@@ -30,7 +29,7 @@ public class User {
 
     @Id
     @GeneratedValue
-    @Column(name = "user_id", nullable = false) // 생략시 primitive type의 경우 not null로 생성
+    @Column(name = "user_id")
     private int userId; //유저 아이디
 
     @ManyToOne(fetch = FetchType.LAZY)
