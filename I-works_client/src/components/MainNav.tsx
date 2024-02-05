@@ -21,6 +21,9 @@ function MainNav() {
           <Link to="/schedule" className="block py-2 px-4">캘린더</Link>
         </li>
         <li>
+          <Link to="/schedule" className="block py-2 px-4">할 일</Link>
+        </li>
+        <li>
           <Link to="/user/mypage" className="block py-2 px-4">마이페이지</Link>
         </li>
       </ul>

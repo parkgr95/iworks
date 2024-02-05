@@ -11,6 +11,7 @@ import BoardCreate from './pages/boards/BoardCreate';
 import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
+import SchedulePage from './pages/SchedulePage';
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       //   path: 'schedule',
       //   element: <SchedulePage />
       // },
+      {
+        path: 'schedule',
+        element: <SchedulePage />
+      }
     ]
   },
 ]);
