@@ -81,7 +81,8 @@ public class User {
     @Column(name = "user_deleted_at")
     private LocalDateTime userDeletedAt; // 탈퇴일시
 
-    @Column(name = "user_is_deleted")
+    @Builder.Default
+    @Column(name = "user_is_deleted", nullable = false)
     private Boolean userIsDeleted; //탈퇴여부
 
     @Builder.Default
