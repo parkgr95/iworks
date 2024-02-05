@@ -21,7 +21,7 @@ public class AddressApiController {
         return addressService.selectDepartmentAll();
     }
 
-    @GetMapping("/group/all")
+    @GetMapping("/team/all")
     public ResponseEntity<Map<String,Object>> getTeamAll(){
         return addressService.selectDepartmentAll();
     }
