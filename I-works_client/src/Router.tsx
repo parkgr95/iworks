@@ -11,6 +11,10 @@ import BoardCreate from './pages/boards/BoardCreate';
 import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
+import AddressIndex from './pages/addresses/AddressIndex';
+import GroupCreate from './pages/addresses/GroupCreate';
+
+import AddressSelect from './components/AddressSelect';
 
 const router = createBrowserRouter([
   {
@@ -30,7 +34,7 @@ const router = createBrowserRouter([
             action: logoutAction,
           },
           {
-            path:'mypage',
+            path: 'mypage',
             element: <MyPage />,
             loader: myPageLoader,
           },
@@ -39,7 +43,17 @@ const router = createBrowserRouter([
       // 주소록 라우터
       {
         path: 'address',
-        element: <AddressPage />
+        element: <AddressPage />,
+        children: [
+          {
+            path: '',
+            element: <AddressIndex />
+          },
+          {
+            path: 'create',
+            element: <GroupCreate />
+          },
+        ]
       },
       // 게시판 라우터
       {
@@ -73,11 +87,12 @@ const router = createBrowserRouter([
         ]
       },
       // 캘린더 라우터
-      // {
-      //   path: 'schedule',
-      //   element: <SchedulePage />
-      // },
     ]
+  },
+  // 공통 라우터
+  {
+    path: '/popup/address/select',
+    element: <AddressSelect />
   },
 ]);
 
