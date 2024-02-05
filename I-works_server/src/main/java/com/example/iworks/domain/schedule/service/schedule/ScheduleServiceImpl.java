@@ -11,6 +11,7 @@ import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.entity.Code;
 import com.example.iworks.global.model.repository.CodeRepository;
+import com.example.iworks.global.util.JwtProvider;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,15 +29,15 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
     private final MeetingRepository meetingRepository;
+    private final JwtProvider jwtProvider;
 
     @Override
-    public void createSchedule(ScheduleCreateRequestDto scheduleDto) {
+    public void createSchedule(String token, ScheduleCreateRequestDto scheduleDto) {
         Code scheduleDivision = codeRepository.findById(scheduleDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
-        User scheduleCreator = userRepository.findById(scheduleDto.getScheduleCreatorId())
-                .orElseThrow(() -> new EntityNotFoundException("Schedule Creator not found"));
-
+        String userEid = jwtProvider.getUserEid(token);
+        User scheduleCreator = userRepository.findByUserEid(userEid);
 
         Meeting scheduleMeeting = Meeting.builder()
                 .meetingDate(scheduleDto.getMeetingDate())
