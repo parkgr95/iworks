@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class AddressResponseDto {
+    private final String userEid;
     private final String userNameFirst;
     private final String userNameLast;
     private final String departmentName;
@@ -14,6 +15,7 @@ public class AddressResponseDto {
     private final String userEmail;
 
     public AddressResponseDto(AddressDto dto) {
+        this.userEid = dto.getUser().getUserEid();
         this.userNameFirst=dto.getUser().getUserNameFirst();
         this.userNameLast =dto.getUser().getUserNameLast();
         this.departmentName = dto.getDepartment()==null? null:dto.getDepartment().getDepartmentName();
