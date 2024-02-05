@@ -3,7 +3,7 @@ package com.example.iworks.domain.address.dto;
 import lombok.Getter;
 
 @Getter
-public class AddressResponseDto {
+public class AddressUserResponseDto {
     private final String userEid;
     private final String userNameFirst;
     private final String userNameLast;
@@ -14,7 +14,7 @@ public class AddressResponseDto {
     private final String userTel;
     private final String userEmail;
 
-    public AddressResponseDto(AddressDto dto) {
+    public AddressUserResponseDto(AddressDto dto) {
         this.userEid = dto.getUser().getUserEid();
         this.userNameFirst=dto.getUser().getUserNameFirst();
         this.userNameLast =dto.getUser().getUserNameLast();

@@ -3,6 +3,7 @@ package com.example.iworks.domain.address.service;
 import com.example.iworks.domain.address.dto.AddressDepartmentResonseDto;
 import com.example.iworks.domain.address.dto.AddressDto;
 import com.example.iworks.domain.address.dto.AddressTeamResponseDto;
+import com.example.iworks.domain.address.dto.AddressUserResponseDto;
 import com.example.iworks.domain.address.respository.AddressRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
@@ -30,10 +31,14 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public ResponseEntity<Map<String,Object>> selectAddressAll()
     {
-        List<AddressDto> result =  addressRepository.selectAddressAll();
-        if(result.isEmpty()){
+        List<AddressDto> list =  addressRepository.selectAddressAll();
+        if(list.isEmpty()){
             return response.handleFail("조회 내용 없음.");
         }
+
+        Stream<AddressUserResponseDto> result = list.stream()
+                .filter(item-> !item.getUser().getUserIsDeleted()).map(AddressUserResponseDto::new);
+
         return response.handleSuccess(result);
     }
 
