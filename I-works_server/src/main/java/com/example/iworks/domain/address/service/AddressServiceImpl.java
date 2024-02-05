@@ -37,7 +37,7 @@ public class AddressServiceImpl implements AddressService {
         }
 
         Stream<AddressUserResponseDto> result = list.stream()
-                .filter(item-> !item.getUser().getUserIsDeleted()).map(AddressUserResponseDto::new);
+                .filter(item-> item.getUser().getUserIsDeleted()!=null).map(AddressUserResponseDto::new);
 
         return response.handleSuccess(result);
     }
