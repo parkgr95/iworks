@@ -1,4 +1,4 @@
-package com.example.iworks.global.util;
+package com.example.iworks.global.config;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,10 +7,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 
 @Configuration
-public class SecretKeyUtil {
+public class SecretKeyConfig {
     @Value("${jwt.secret}")
     private String SECURTY_SECRET_KEY;
 
@@ -24,6 +23,6 @@ public class SecretKeyUtil {
 
     @Bean
     public String getOpenViduSecretKey(){
-        return "Basic "+Base64.getEncoder().encodeToString(("OPENVIDUAPP:"+OPEN_VIDU_SECRET_KEY).getBytes());
+        return OPEN_VIDU_SECRET_KEY;
     }
 }

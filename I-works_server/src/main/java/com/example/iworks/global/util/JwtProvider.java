@@ -1,5 +1,6 @@
 package com.example.iworks.global.util;
 
+import com.example.iworks.global.config.SecretKeyConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,14 +22,14 @@ public class JwtProvider {
     long refreshExpTime;
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final SecretKeyUtil secretKeyUtil;
+    private final SecretKeyConfig secretKeyConfig;
 
     private final SecretKey SECRET_KEY;
 
-    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, SecretKeyUtil secretKeyUtil) {
+    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, SecretKeyConfig secretKeyConfig) {
         this.redisTemplate = redisTemplate;
-        this.secretKeyUtil = secretKeyUtil;
-        this.SECRET_KEY = secretKeyUtil.getJwtsecretKey();
+        this.secretKeyConfig = secretKeyConfig;
+        this.SECRET_KEY = secretKeyConfig.getJwtsecretKey();
     }
 
     public String createAccessToken(String eid, List<String> role) {

@@ -1,7 +1,6 @@
 package com.example.iworks.domain.address.controller;
 
 import com.example.iworks.domain.address.service.AddressService;
-import com.example.iworks.global.util.OpenViduUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +14,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AddressApiController {
     private final AddressService addressService;
-    private final OpenViduUtil openViduUtil;
 
     @GetMapping("/org-chart")
     public ResponseEntity<Map<String,Object>> getOrganizationChart(){
