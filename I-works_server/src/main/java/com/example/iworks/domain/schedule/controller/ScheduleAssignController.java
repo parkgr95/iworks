@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/schedule-assign")
+@RequestMapping("/api/schedule-assign")
 public class ScheduleAssignController {
 
     private final ScheduleAssignService scheduleAssignService;
