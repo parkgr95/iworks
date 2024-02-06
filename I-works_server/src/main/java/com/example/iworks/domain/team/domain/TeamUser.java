@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class TeamUser {
 
     @Id @GeneratedValue
-    @Column(name = "teeam_user_id")
+    @Column(name = "team_user_id")
     private Integer teamUserId;
 
     @ManyToOne
