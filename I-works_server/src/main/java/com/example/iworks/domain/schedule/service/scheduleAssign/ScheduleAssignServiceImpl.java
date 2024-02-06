@@ -61,7 +61,7 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
         searchParameterDtoList.add(new ScheduleAssignSearchParameterDto(CATEGORY_DEPARTMENT_CODE_ID, user.getUserDepartment().getDepartmentId()));
         List<TeamUser> teamUsersByUser = teamUserRepository.findTeamUserByUserId(userId);
         for (TeamUser teamUser: teamUsersByUser){
-            searchParameterDtoList.add(new ScheduleAssignSearchParameterDto(CATEGORY_TEAM_CODE_ID, teamUser.getTeamUserTeam().getTeamId()));
+            searchParameterDtoList.add(new ScheduleAssignSearchParameterDto(CATEGORY_TEAM_CODE_ID, teamUser.getTeamUserTeamId().getTeamId()));
         }
         return searchParameterDtoList;
     }

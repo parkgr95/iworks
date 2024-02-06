@@ -5,8 +5,13 @@ import com.example.iworks.domain.address.respository.AddressRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.team.domain.Team;
+import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.team.repository.team.TeamRepository;
+import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
+import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -24,7 +30,10 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
     private final DepartmentRepository departmentRepository;
     private final TeamRepository teamRepository;
+    private final TeamUserRepository teamUserRepository;
+    private final UserRepository userRepository;
     private final Response response;
+    private final JwtProvider jwtProvider;
 
     @Override
     public ResponseEntity<Map<String,Object>> selectAddressAll()
@@ -74,4 +83,80 @@ public class AddressServiceImpl implements AddressService {
                 .filter(Team::getTeamIsDeleted).map(AddressTeamResponseDto::new);
         return response.handleSuccess(result);
     }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Object>> deleteTeam(int teamId, String token) {
+        int userId = jwtProvider.getUserId(token);
+        Team team = teamRepository.findByTeamId(teamId);
+
+        if(team == null){
+            return  response.handleFail("팀을 찾을 수 없습니다.",null);
+        }
+
+        if(team.getTeamLeader() != userId){
+            return response.handleFail("팀의 리더가 아닙니다.",null);
+        }
+        teamRepository.delete(team);
+        return response.handleSuccess("삭제되었습니다.");
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, int targetId) {
+            int userId = jwtProvider.getUserId(token);
+            User user = userRepository.findByUserId(userId);
+            Team team = teamRepository.findByTeamId(teamId);
+
+            if (user == null) {
+                return response.handleFail("유저를 찾을 수 없습니다.", null);
+            }
+
+            if (team == null) {
+                return response.handleFail("팀을 찾을 수 없습니다.", null);
+            }
+
+            if (team.getTeamLeader() != userId) {
+                return response.handleFail("팀의 리더가 아닙니다.", null);
+            }
+            TeamUser teamUser = TeamUser.builder().teamUserUser(user).build();
+
+            for(TeamUser tm : team.getTeamUsers()){
+                if(tm.getTeamUserUser().getUserId() == userId){
+                    return response.handleFail("이미 존재하는 팀원입니다.", null);
+                }
+            }
+            team.addTeamUser(teamUser);
+            teamUserRepository.save(teamUser);
+            return response.handleSuccess("팀원이 추가 되었습니다.");
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Map<String, Object>> removeTeamUser(int teamId, String token, int targetId) {
+        int userId = jwtProvider.getUserId(token);
+        User user = userRepository.findByUserId(userId);
+        Team team = teamRepository.findByTeamId(teamId);
+
+        if (user == null) {
+            return response.handleFail("유저를 찾을 수 없습니다.", null);
+        }
+
+        if (team == null) {
+            return response.handleFail("팀을 찾을 수 없습니다.", null);
+        }
+
+        if (team.getTeamLeader() != userId) {
+            return response.handleFail("팀의 리더가 아닙니다.", null);
+        }
+        Optional<TeamUser> teamUser = team.getTeamUsers().stream().filter(tu->tu.getTeamUserUser().getUserId() == userId).findFirst();
+        try {
+            team.removeTeamUser(teamUser.get());
+            teamUserRepository.delete(teamUser.get());
+        }catch (Exception e){
+            return  response.handleFail("존재하지 않는 팀원입니다.",null);
+        }
+        return response.handleSuccess("팀원이 삭제 되었습니다.");
+    }
+
 }
