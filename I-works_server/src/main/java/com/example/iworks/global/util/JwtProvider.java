@@ -5,12 +5,10 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtProvider {
@@ -60,12 +58,12 @@ public class JwtProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
                 .signWith(key.secretKey())
                 .compact();
-        redisTemplate.opsForValue().set(
+/*        redisTemplate.opsForValue().set(
                 refreshToken, //key
                 eid, //value
                 refreshExpTime,
                 TimeUnit.MILLISECONDS
-        );
+        );*/
 
         return refreshToken;
     }
@@ -94,11 +92,11 @@ public class JwtProvider {
         String type = (String)claims.get("type");
         if (type.equals("refresh")) {
             System.out.println("create refresh");
-            ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
+/*            ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
             String redisValue = stringValueOperations.get(refreshToken);
-            if (redisValue != null) {
+            if (redisValue != null) {*/
                 return claims.getExpiration().after(new Date());
-            }
+           // }
         }
         System.out.println("failed");
         return false;

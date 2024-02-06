@@ -12,6 +12,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -22,9 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Profile("local")
+//@Profile("local")
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InitData {
 
     private final InitDataService initDataService;
@@ -32,6 +35,7 @@ public class InitData {
 
     @PostConstruct
     public void init(){
+        log.info("initDate {} ", " profile: local ");
         initDataService.init();
     }
 
@@ -67,6 +71,9 @@ public class InitData {
             Code codeDepartment = null;
             Code codeUser = null;
             Code codeTeam = null;
+            Code ScheduleDivisionTask = null; //할일 분류 : 업무
+            Code ScheduleDivisionVacation = null; //할일 분류 : 휴가
+            Code ScheduleDivisionSick = null; //할일 분류 : 병가
             List<User> userList = new ArrayList<>();
             List<Team> teamList = new ArrayList<>();
             List<Department> departmentList = new ArrayList<>();
@@ -88,43 +95,32 @@ public class InitData {
             codeDepartment = new Code();
             codeDepartment.setCodeName("부서");
             codeDepartment.setCodeGroup(codeGroup1);
-            em.persist(codeUser);
+            em.persist(codeDepartment);
 
             codeTeam = new Code();
             codeTeam.setCodeName("팀");
             codeTeam.setCodeGroup(codeGroup1);
             em.persist(codeTeam);
 
-//            em.persist(Code.builder()
-//                    .codeCodeGroup(codeGroup1)
-//                    .codeName("유저"));
-//            em.persist(Code.builder()
-//                    .codeCodeGroup(codeGroup1)
-//                    .codeName("부서"));
-//            em.persist(Code.builder()
-//                    .codeCodeGroup(codeGroup1)
-//                    .codeName("팀"));
-
-//            codeUser = em.find(Code.class, 1);
-//            codeDepartment = em.find(Code.class, 2);
-//            codeTeam = em.find(Code.class, 3);
-
             CodeGroup codeGroup2 = em.find(CodeGroup.class, 2);
-            
-            em.persist(Code.builder()
+
+            ScheduleDivisionTask = Code.builder()
                     .codeName("업무")
                     .codeCodeGroup(codeGroup2)
-                    .build());
-            
-            em.persist(Code.builder()
+                    .build();
+            em.persist(ScheduleDivisionTask);
+
+            ScheduleDivisionVacation = Code.builder()
                     .codeName("개인일정(휴가)")
                     .codeCodeGroup(codeGroup2)
-                    .build());
+                    .build();
+            em.persist(ScheduleDivisionVacation);
 
-            em.persist(Code.builder()
+            ScheduleDivisionSick = Code.builder()
                     .codeName("개인일정(병가)")
                     .codeCodeGroup(codeGroup2)
-                    .build());
+                    .build();
+            em.persist(ScheduleDivisionSick);
 
             //부서별 유저 데이터
             for (int i = 1; i <= 5; i++){
@@ -148,22 +144,46 @@ public class InitData {
                     userList.add(user);
                 }
             }
+            User user1 = em.find(User.class, 1);
+            Department department1 = em.find(Department.class, 1);
+            //부서 1에 할일 생성
+            Schedule scheduleByDepartment = Schedule.builder()
+                    .scheduleDivision(codeUser)
+                    .scheduleTitle("부서의 할일"+ scheduleSeq)
+                    .scheduleEndDate(LocalDateTime.now())
+                    .scheduleCreator(user1)
+                    .build();
+            em.persist(scheduleByDepartment);
+            //부서 1에 할일 배정
+            ScheduleAssign scheduleAssignDept =
+                    ScheduleAssign.builder()
+                            .scheduleAssigneeCategory(codeDepartment)
+                            .scheduleAssigneeId(department1.getDepartmentId())
+                            .build();
+            scheduleByDepartment.addScheduleAssigns(scheduleAssignDept);
 
-            //팀 별 유저
+
+            //팀 데이터
+            for (int i= 1; i < 4; i++){
+                Team team = Team.builder()
+                        .teamName(i+"팀")
+                        .teamCreator(1)
+                        .teamLeader(1)
+                        .build();
+                em.persist(team);
+            }
+
 
             //할 일 3개 생성
-            User user1 = em.find(User.class, 1);
             for (int i = 0; i <= 3; i++){
                 Schedule schedule = Schedule.builder()
-                        .scheduleDivision(codeUser)
+                        .scheduleDivision((i & 1)==1?ScheduleDivisionTask: ScheduleDivisionVacation)
                         .scheduleTitle("할일"+ scheduleSeq)
                         .scheduleEndDate(LocalDateTime.now())
                         .scheduleCreator(user1)
                         .build();
 
                 em.persist(schedule);
-
-//                Schedule scheduleByUser = em.find(Schedule.class, "할일1"+scheduleSeq++);
                 //모든 유저를 할일에 배정
                 for (User user : userList){
 //
@@ -172,7 +192,7 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(user.getUserId())
                                     .build();
-                    em.persist(scheduleAssign);
+                    schedule.addScheduleAssigns(scheduleAssign);
                 }
                 //모든 부서를 할일에 배정
                 for (Department department : departmentList){
@@ -182,11 +202,10 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(department.getDepartmentId())
                                     .build();
-                    em.persist(scheduleAssign);
-                }
-//                em.persist(schedule);
-            }
+                    schedule.addScheduleAssigns(scheduleAssign);
 
+                }
+            }
 
         }
 

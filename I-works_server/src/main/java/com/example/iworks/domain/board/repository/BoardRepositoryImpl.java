@@ -1,114 +1,143 @@
 package com.example.iworks.domain.board.repository;
 
 import com.example.iworks.domain.board.domain.Board;
-import com.example.iworks.domain.board.dto.request.SearchKeyword;
-import com.example.iworks.domain.board.dto.response.ResponseBoard;
+import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
+import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
+import com.example.iworks.domain.board.repository.custom.BoardGetRepository;
+import com.example.iworks.domain.board.repository.custom.BoardSearchRepository;
+import com.example.iworks.global.model.entity.Code;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.iworks.domain.board.domain.QBoard.board;
+import static com.example.iworks.domain.board.domain.QBookmark.bookmark;
+import static java.util.stream.Collectors.*;
 
-@Repository
 @RequiredArgsConstructor
-public class BoardRepositoryImpl implements BoardSearchRepository {
+@Repository
+public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepository {
 
     private final JPAQueryFactory queryFactory;
-    private final EntityManager em;
 
     @Override
-    public List<ResponseBoard> findAllByKeyword(Pageable pageable, SearchKeyword keyword) {
+    public List<BoardGetResponseDto> findAllByCategory(Pageable pageable, Code boardCategoryCode, int boardOwnerId) {
         return queryFactory
                 .selectFrom(board)
-                .where(eqBoardCreatorId(keyword.getBoardCreatorId()),
-                        eqBoardTitle(keyword.getBoardTitle()),
-                        eqBoardContent(keyword.getBoardContent()))
+                .where(
+                        eqBoardCategoryCode(boardCategoryCode)
+                                .and(eqBoardOwnerId(boardOwnerId))
+                                .and(eqDeleted())
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
-                .map(ResponseBoard::new)
-                .collect(Collectors.toList());
+                .map(BoardGetResponseDto::new)
+                .collect(toList());
     }
 
-    private BooleanExpression eqBoardCreatorId(int boardOwnerId) {
+    @Override
+    public BoardGetResponseDto findByCategory(int boardId, Code boardCategoryCode, int boardOwnerId) {
+        Board findBoard = queryFactory
+                .selectFrom(board)
+                .where(
+                        eqBoardCategoryCode(boardCategoryCode)
+                                .and(eqBoardOwnerId(boardOwnerId))
+                                .and(eqBoardId(boardId))
+                                .and(eqDeleted())
+                )
+                .fetchOne();
+        return findBoard != null ? new BoardGetResponseDto(findBoard) : null;
+    }
+
+    @Override
+    public List<BoardGetResponseDto> findAllByCreator(Pageable pageable, int boardCreatorId) {
+        return queryFactory
+                .selectFrom(board)
+                .where(
+                        eqBoardCreatorId(boardCreatorId)
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch()
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .collect(toList());
+    }
+
+    @Override
+    public List<BoardGetResponseDto> findAllByKeyword(Pageable pageable, BoardSearchRequestDto keyword) {
+        return queryFactory
+                .selectFrom(board)
+                .where(
+                        eqBoardCreatorId(keyword.getBoardCreatorId())
+                                .or(eqBoardTitle(keyword.getBoardTitle()))
+                                .or(eqBoardContent(keyword.getBoardContent()))
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch()
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .collect(toList());
+    }
+
+    @Override
+    public List<BoardGetResponseDto> findAllByKeywords(Pageable pageable, String keywords) {
+        return queryFactory
+                .selectFrom(board)
+                .where(
+                        eqBoardAndTitle(keywords, keywords)
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch()
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .collect(toList());
+    }
+
+    private BooleanExpression eqBoardCategoryCode(Code boardCategoryCode) {
+        return board.boardCategoryCode.eq(boardCategoryCode);
+    }
+
+    private BooleanExpression eqBoardOwnerId(int boardOwnerId) {
         return board.boardOwnerId.eq(boardOwnerId);
     }
 
-    private BooleanExpression eqBoardTitle(String boardTitle) {
-        if (!StringUtils.hasText(boardTitle)) {
-            return null;
-        }
-        return board.boardTitle.eq(boardTitle);
+    private Predicate eqBoardId(int boardId) {
+        return board.boardId.eq(boardId);
     }
 
-    private BooleanExpression eqBoardContent(String boardContent) {
-        if (!StringUtils.hasText(boardContent)) {
-            return null;
-        }
-        return board.boardContent.eq(boardContent);
+    private BooleanExpression eqBoardCreatorId(int boardCreatorId) {
+        return board.boardCreatorId.eq(boardCreatorId);
     }
 
-    //QueryDsl로 수정
-    //시작
-    @Override
-    public List<ResponseBoard> findAllByBoardCreatedId(Pageable pageable, int boardOwnerId) {
-        List<Board> boards = em.createQuery("select b from Board b where b.boardOwnerId = :boardOwnerId")
-                .setParameter("boardOwnerId", boardOwnerId)
-                .setFirstResult(pageable.getPageNumber())
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
-
-        return boards.stream()
-                .map(ResponseBoard::new)
-                .collect(Collectors.toList());
+    private BooleanBuilder eqBoardAndTitle(String boardTitle, String boardContent) {
+        return eqBoardTitle(boardTitle).or(eqBoardContent(boardContent));
     }
 
-    @Override
-    public List<ResponseBoard> findAllByBoardTitle(Pageable pageable, String boardTitle) {
-        List<Board> boards = em.createQuery("select b from Board b where b.boardTitle like :boardTitle")
-                .setParameter("boardTitle", "%" + boardTitle + "%")
-                .setFirstResult(pageable.getPageNumber())
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
-
-        return boards.stream()
-                .map(ResponseBoard::new)
-                .collect(Collectors.toList());
+    private BooleanBuilder eqBoardTitle(String boardTitle) {
+        return StringUtils.hasText(boardTitle) ? new BooleanBuilder(board.boardTitle.eq(boardTitle)) : new BooleanBuilder();
     }
 
-    @Override
-    public List<ResponseBoard> findAllByBoardContent(Pageable pageable, String boardContent) {
-        List<Board> boards = em.createQuery("select b from Board b where b.boardContent like :boardContent")
-                .setParameter("boardContent", "%" + boardContent + "%")
-                .setFirstResult(pageable.getPageNumber())
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
-
-        return boards.stream()
-                .map(ResponseBoard::new)
-                .collect(Collectors.toList());
+    private BooleanBuilder eqBoardContent(String boardContent) {
+        return StringUtils.hasText(boardContent) ? new BooleanBuilder(board.boardContent.eq(boardContent)) : new BooleanBuilder();
     }
 
-    @Override
-    public List<ResponseBoard> findAllByBoardTitleOrBoardContent(Pageable pageable, String boardTitle, String boardContent) {
-        List<Board> boards = em.createQuery("select b from Board b where b.boardTitle like :boardTitle or b.boardContent like :boardContent")
-                .setParameter("boardTitle", "%" + boardTitle + "%")
-                .setParameter("boardContent", "%" + boardContent + "%")
-                .setFirstResult(pageable.getPageNumber())
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
-
-        return boards.stream()
-                .map(ResponseBoard::new)
-                .collect(Collectors.toList());
+    private BooleanExpression eqDeleted() {
+        return board.boardIsDeleted.isNull().or(board.boardIsDeleted.eq(Boolean.FALSE));
     }
-    //끝
+
 }
