@@ -107,7 +107,6 @@ public class User {
          this.userIsDeleted = false;
          this.userCreatedAt = LocalDateTime.now();
          this.userUpdatedAt = LocalDateTime.now();
-         this.userIsDeleted = false;
     }
 
     public void setRandomPassword(String password){
