@@ -51,7 +51,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             if (jwtProvider.validateAccessToken(jwtToken)) {
                 //access라면
                 System.out.println("ACCESS TOKEN!!");
-                User userEntity = userRepository.findByUserEid(jwtProvider.getUserEid(jwtToken));
+                User userEntity = userRepository.findByUserId(jwtProvider.getUserId(jwtToken));
                 PrincipalDetails principalDetails = new PrincipalDetails(userEntity);
 
                 //JWT 서명을 통해서 서명이 정상이면 Authentication 객체를 만들어준다.

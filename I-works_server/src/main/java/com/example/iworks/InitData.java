@@ -13,9 +13,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,6 +120,32 @@ public class InitData {
                     .build();
             em.persist(ScheduleDivisionSick);
 
+            CodeGroup codeGroup3 = em.find(CodeGroup.class, 3);
+
+            ScheduleDivisionTask = Code.builder()
+                    .codeName("ROLE_ADMIN")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionTask);
+
+            ScheduleDivisionVacation = Code.builder()
+                    .codeName("ROLE_CEO")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionVacation);
+
+            ScheduleDivisionSick = Code.builder()
+                    .codeName("ROLE_LEADER")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionSick);
+
+            ScheduleDivisionSick = Code.builder()
+                    .codeName("ROLE_EMPLOYEE")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionSick);
+
             //부서별 유저 데이터
             for (int i = 1; i <= 5; i++){
                 String departmentName = "부서" + i;
@@ -162,7 +186,17 @@ public class InitData {
                             .build();
             scheduleByDepartment.addScheduleAssigns(scheduleAssignDept);
 
-            //팀 별 유저
+
+            //팀 데이터
+            for (int i= 1; i < 4; i++){
+                Team team = Team.builder()
+                        .teamName(i+"팀")
+                        .teamCreator(1)
+                        .teamLeader(1)
+                        .build();
+                em.persist(team);
+            }
+
 
             //할 일 3개 생성
             for (int i = 0; i <= 3; i++){
