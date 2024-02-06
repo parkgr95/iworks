@@ -5,11 +5,11 @@ import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateReq
 import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
 import com.example.iworks.global.model.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +20,10 @@ public class ScheduleController {
     private final Response response;
 
     /** 할일 생성 */
+//    @PostMapping("/create")
+//    @ResponseStatus(HttpStatus.OK)
+//    public String createSchedule(@RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
+    /** 할일 생성 */
     @PostMapping("/create")
     public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
         String jwtToken = authorizationHeader.substring("Bearer ".length());
@@ -29,7 +33,7 @@ public class ScheduleController {
 
     /** 할일 상세 조회 */
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<?> getSchedule(@PathVariable(name = "scheduleId") Integer scheduleId){
+    public ResponseEntity<Map<String,Object>> getSchedule(@PathVariable(name = "scheduleId") Integer scheduleId){
         return response.handleSuccess(scheduleService.getSchedule(scheduleId));
     }
     /** 할일 검색 */
