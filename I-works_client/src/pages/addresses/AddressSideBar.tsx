@@ -69,24 +69,24 @@ function AddressSideBar() {
           <ul id="dropdownAll" className={`${allOpen ? '' : 'hidden'} space-y-2`}>
             <li>
               <button onClick={toggleDepartmentOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownDepartment" data-collapse-toggle="dropdownDepartment">
-                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">A208</span>
+                <Link to={`/address`} className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">A208</Link>
               </button>
               <ul id="dropdownDepartment" className={`${departmentOpen ? '' : 'hidden'} space-y-2`}>
                 {departmentList.map((dept) => (
                   <li key={dept.departmentId}>
-                    <Link to={`/board/3/${dept.departmentId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">{dept.departmentName}</Link>
+                    <Link to={`/address/${dept.departmentId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">{dept.departmentName}</Link>
                   </li>
                 ))}
               </ul>
             </li>
             <li>
               <button onClick={toggleTeamOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownTeam" data-collapse-toggle="dropdownTeam">
-                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">그룹게시판</span>
+                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">그룹</span>
               </button>
               <ul id="dropdownTeam" className={`${teamOpen ? '' : 'hidden'} space-y-2`}>
                 {teamList.map((team) => (
                   <li>
-                    <Link to={`/board/4/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
+                    <Link to={`/address/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
                   </li>
                 ))}
               </ul>

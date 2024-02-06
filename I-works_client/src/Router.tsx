@@ -11,10 +11,11 @@ import BoardCreate from './pages/boards/BoardCreate';
 import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
-import AddressIndex from './pages/addresses/AddressIndex';
-import GroupCreate from './pages/addresses/GroupCreate';
 
+import AddressIndex from './pages/addresses/AddressIndex';
 import AddressSelect from './components/AddressSelect';
+import AddressList from './pages/addresses/AddressList';
+import GroupCreate from './pages/addresses/GroupCreate';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
           {
             path: 'create',
             element: <GroupCreate />
+          },
+          {
+            path: ':departmentId',
+            element: <AddressList />
           },
         ]
       },

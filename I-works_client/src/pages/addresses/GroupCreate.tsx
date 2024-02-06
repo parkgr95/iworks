@@ -125,7 +125,7 @@ function GroupCreate() {
             <div className="flex flex-col border-2 h-40 p-4 overflow-auto">
               <ul>
                 {receivedData2.map((user) => (
-                  <li className="bg-mainGray" key={user.userEid} value={user.userEid}>{user.userNameFirst}, </li>
+                  <li className="" key={user.userEid} value={user.userEid}>{user.userNameFirst}, </li>
                 ))}
               </ul>
             </div>
