@@ -160,7 +160,17 @@ public class InitData {
                             .build();
             scheduleByDepartment.addScheduleAssigns(scheduleAssignDept);
 
-            //팀 별 유저
+
+            //팀 데이터
+            for (int i= 1; i < 4; i++){
+                Team team = Team.builder()
+                        .teamName(i+"팀")
+                        .teamCreator(1)
+                        .teamLeader(1)
+                        .build();
+                em.persist(team);
+            }
+
 
             //할 일 3개 생성
             for (int i = 0; i <= 3; i++){
