@@ -93,6 +93,7 @@ public class User {
     @Column(name = "user_status")
     private Status userStatus; // 상태
 
+    @Builder.Default
     @OneToMany(mappedBy = "teamUserUser")
     private List<TeamUser> userTeamUsers = new ArrayList<>(); // 맴버별 팀유저
 
