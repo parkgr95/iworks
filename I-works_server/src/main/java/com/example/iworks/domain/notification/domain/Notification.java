@@ -1,9 +1,12 @@
 package com.example.iworks.domain.notification.domain;
 
+import com.example.iworks.global.enumtype.NotificationType;
 import com.example.iworks.global.model.entity.Code;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "notification")
@@ -30,5 +33,9 @@ public class Notification {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "notification_created_at", nullable = false)
     private LocalDateTime notificationCreatedAt = LocalDateTime.now(); // 알림 생성 일시
+
+    @Builder.Default
+    @OneToMany(mappedBy = "userNotificationNotification")
+    private List<UserNotification> notificationUserNotifications = new ArrayList<>();
 
 }
