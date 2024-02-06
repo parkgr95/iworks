@@ -36,8 +36,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         Code scheduleDivision = codeRepository.findById(scheduleDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
-        String userEid = jwtProvider.getUserEid(token);
-        User scheduleCreator = userRepository.findByUserEid(userEid);
+        int userId = jwtProvider.getUserId(token);
+        User scheduleCreator = userRepository.findByUserId(userId);
 
         Meeting scheduleMeeting = Meeting.builder()
                 .meetingDate(scheduleDto.getMeetingDate())

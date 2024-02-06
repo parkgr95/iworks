@@ -27,7 +27,7 @@ public class JwtProvider {
         this.key = key;
     }
 
-    public String createAccessToken(String id, List<String> role) {
+    public String createAccessToken(int id, List<String> role) {
         String accessToken = Jwts.builder()
                 .claim("id",id)
                 .claim("type","access")
@@ -45,12 +45,12 @@ public class JwtProvider {
                 .parseClaimsJws(refreshToken)
                 .getBody();
 
-        String id = (String) claims.get("id");
+        int id = (int) claims.get("id");
         List<String> role = (List<String>)claims.get("role");
         return createAccessToken(id, role);
     }
 
-    public String createRefreshToken(String id, List<String> role) {
+    public String createRefreshToken(int id, List<String> role) {
         String refreshToken = Jwts.builder()
                 .claim("id",id)
                 .claim("type","refresh")
@@ -77,8 +77,7 @@ public class JwtProvider {
                 .parseClaimsJws(accessToken)
                 .getBody();
         String type = (String)claims.get("type");
-        String id = (String)claims.get("id");
-        return "access".equals(type) && id != null;
+        return "access".equals(type);
     }
 
     public Boolean validateRefreshToken(String refreshToken) {
@@ -102,14 +101,14 @@ public class JwtProvider {
         return false;
     }
 
-    public String getUserId(String jwt) {
+    public int getUserId(String jwt) {
         jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key.secretKey())
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
-        return (String)claims.get("id");
+        return (int)claims.get("id");
     }
 
     public List<String> getUserRole(String jwt) {

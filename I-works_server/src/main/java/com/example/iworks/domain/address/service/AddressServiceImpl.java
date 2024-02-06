@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -30,7 +31,7 @@ public class AddressServiceImpl implements AddressService {
     {
         List<AddressDto> list =  addressRepository.selectAddressAll();
         if(list.isEmpty()){
-            return response.handleFail("조회 내용 없음.");
+            return response.handleFail("조회 내용 없음.",null);
         }
 
         Stream<AddressUserResponseDto> result = list.stream()
@@ -39,14 +40,22 @@ public class AddressServiceImpl implements AddressService {
         return response.handleSuccess(result);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Map<String,Object>> createTeam(AddressTeamCreateRequestDto requestDto)
     {
         try {
-
-            return response.handleSuccess("생성 성공");
+            Team team = new Team(requestDto);
+            if(teamRepository.findByTeamName(team.getTeamName())!= null){
+                return response.handleFail("이미 존재하는 팀 이름입니다.",null);
+            }
+            Team result = teamRepository.save(team);
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("teamId",result.getTeamId());
+            map.put("message","팀이 생성 되었습니다.");
+            return response.handleSuccess(map);
         }catch (Exception e){
-            return response.handleFail("생성 실패");
+            return response.handleFail("생성 실패",e.getMessage());
         }
     }
 
