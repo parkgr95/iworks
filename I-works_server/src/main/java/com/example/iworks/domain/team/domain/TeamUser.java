@@ -13,16 +13,19 @@ import lombok.NoArgsConstructor;
 public class TeamUser {
 
     @Id @GeneratedValue
-    @Column(name = "teeam_user_id")
+    @Column(name = "team_user_id")
     private Integer teamUserId;
 
     @ManyToOne
     @JoinColumn(name = "team_id", updatable = false)
-    private Team teamUserTeam; // 팀 아이디
+    private Team teamUserTeamId; // 팀 아이디
 
     @ManyToOne
     @JoinColumn(name = "team_user_user_id", updatable = false)
     private User teamUserUser; // 유저 아이디
 
+    public void setTeamUserTeamId(Team team){
+        this.teamUserTeamId = team;
+    }
 
 }
