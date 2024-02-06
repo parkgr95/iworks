@@ -13,4 +13,10 @@ public interface AddressService {
     ResponseEntity<Map<String,Object>> selectDepartmentAll();
 
     ResponseEntity<Map<String,Object>> selectTeamAll();
+
+    ResponseEntity<Map<String, Object>> deleteTeam(int teamId, String token);
+
+    ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, int targetId);
+
+    ResponseEntity<Map<String, Object>> removeTeamUser(int teamId, String token, int targetId);
 }
