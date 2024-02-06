@@ -31,8 +31,8 @@ class UserNotificationRepositoryImplTest {
     @Value("${JWT_SECRET_KEY:your_default_secret}")
     private String jwtSecret;
 
-    @Autowired
-    UserNotificationRepository userNotificationRepository;
+//    @Autowired
+//    UserNotificationRepository userNotificationRepository;
 
 //    @Autowired
 //    InitData initData;
