@@ -1,5 +1,7 @@
 package com.example.iworks.domain.schedule.dto.scheduleAssign.response;
 
+import com.example.iworks.domain.schedule.domain.Schedule;
+import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -8,7 +10,6 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
 @EqualsAndHashCode
 public class ScheduleAssignResponseDto {
 
@@ -23,23 +24,14 @@ public class ScheduleAssignResponseDto {
 //   private List<ScheduleAssign> scheduleAssigns; //할 일 배정자
 
    @QueryProjection
-   public ScheduleAssignResponseDto(Integer scheduleId, String scheduleDivisionName, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
-      this.scheduleId = scheduleId;
-      this.scheduleDivisionName = scheduleDivisionName;
-      this.scheduleTitle = scheduleTitle;
-      this.scheduleStartDate = scheduleStartDate;
-      this.scheduleEndDate = scheduleEndDate;
-   }
-
-   @QueryProjection
-   public ScheduleAssignResponseDto(Integer scheduleId, Integer scheduleAssigneeId, Integer scheduleAssigneeCategoryId, String scheduleAssigneeCategoryName, String scheduleDivisionName, String scheduleTitle, LocalDateTime scheduleStartDate, LocalDateTime scheduleEndDate) {
-      this.scheduleId = scheduleId;
-      this.scheduleAssigneeId = scheduleAssigneeId;
-      this.scheduleAssigneeCategoryId = scheduleAssigneeCategoryId;
-      this.scheduleAssigneeCategoryName = scheduleAssigneeCategoryName;
-      this.scheduleDivisionName = scheduleDivisionName;
-      this.scheduleTitle = scheduleTitle;
-      this.scheduleStartDate = scheduleStartDate;
-      this.scheduleEndDate = scheduleEndDate;
+   public ScheduleAssignResponseDto(ScheduleAssign scheduleAssign) {
+      this.scheduleAssigneeId = scheduleAssign.getScheduleAssigneeId();
+      this.scheduleAssigneeCategoryId = scheduleAssign.getScheduleAssigneeCategory().getCodeId();
+      this.scheduleAssigneeCategoryName = scheduleAssign.getScheduleAssigneeCategory().getCodeName();
+      this.scheduleId = scheduleAssign.getSchedule().getScheduleId();
+      this.scheduleDivisionName = scheduleAssign.getSchedule().getScheduleDivision().getCodeName();
+      this.scheduleTitle = scheduleAssign.getSchedule().getScheduleTitle();
+      this.scheduleStartDate = scheduleAssign.getSchedule().getScheduleStartDate();
+      this.scheduleEndDate = scheduleAssign.getSchedule().getScheduleEndDate();
    }
 }
