@@ -1,5 +1,6 @@
 package com.example.iworks.domain.team.domain;
 
+import com.example.iworks.domain.address.dto.AddressTeamCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,12 +9,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "team")
-@Builder @NoArgsConstructor @AllArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Getter
 public class Team {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "team_id")
     private int teamId; // 그룹 아이디
 
@@ -39,21 +43,31 @@ public class Team {
     @Column(name = "team_updated_at", nullable = false)
     private LocalDateTime teamUpdatedAt = LocalDateTime.now(); // 그룹 수정일시
 
-    @OneToMany(mappedBy = "teamUserTeam")
+    @OneToMany(mappedBy = "teamUserTeamId")
     private List<TeamUser> teamUsers;
 
     @Builder.Default
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean teamIsDeleted = false;
 
+    public Team(AddressTeamCreateRequestDto requestDto) {
+        this.teamName = requestDto.getTeamName();
+        this.teamCreator = requestDto.getTeamCreator();
+        this.teamLeader = requestDto.getTeamLeader();
+        this.teamDescription = requestDto.getTeamDescription();
+        this.teamCreatedAt = LocalDateTime.now();
+        this.teamUpdatedAt = LocalDateTime.now();
+        this.teamIsDeleted = false;
+    }
+
     public void addTeamUser(TeamUser teamUser) {
         teamUsers.add(teamUser);
-//        teamUser.setTeamUserTeam(this);
+        teamUser.setTeamUserTeamId(this);
     }
+
 
     public void removeTeamUser(TeamUser teamUser) {
         teamUsers.remove(teamUser);
-//        teamUser.setTeamUserTeam(null);
     }
 
 

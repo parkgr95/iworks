@@ -104,6 +104,7 @@ public class User {
          this.userTel = dto.getUserTel();
          this.userAddress = dto.getUserAddress();
          this.userGender = dto.getUserGender();
+         this.userIsDeleted = false;
          this.userCreatedAt = LocalDateTime.now();
          this.userUpdatedAt = LocalDateTime.now();
          this.userIsDeleted = false;
