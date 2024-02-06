@@ -120,6 +120,32 @@ public class InitData {
                     .build();
             em.persist(ScheduleDivisionSick);
 
+            CodeGroup codeGroup3 = em.find(CodeGroup.class, 3);
+
+            ScheduleDivisionTask = Code.builder()
+                    .codeName("ROLE_ADMIN")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionTask);
+
+            ScheduleDivisionVacation = Code.builder()
+                    .codeName("ROLE_CEO")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionVacation);
+
+            ScheduleDivisionSick = Code.builder()
+                    .codeName("ROLE_LEADER")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionSick);
+
+            ScheduleDivisionSick = Code.builder()
+                    .codeName("ROLE_EMPLOYEE")
+                    .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionSick);
+
             //부서별 유저 데이터
             for (int i = 1; i <= 5; i++){
                 String departmentName = "부서" + i;
