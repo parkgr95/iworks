@@ -7,7 +7,7 @@ import lombok.Getter;
 public class UserGetMyPageResponseDto {
     private int userId; //유저 아이디
 
-    private final String deparmentName; //부서
+    private final String departmentName; //부서
     private final String userPosition; //직급 코드 아이디
     private final String userEid; //사번
     private final String userNameFirst; // 유저 이름
@@ -18,7 +18,7 @@ public class UserGetMyPageResponseDto {
     private final String userGender; // 성별
 
     public UserGetMyPageResponseDto(User user){
-        this.deparmentName = user.getUserDepartment().getDepartmentName();
+        this.departmentName = user.getUserDepartment().getDepartmentName();
         this.userPosition = user.getUserPositionCode().getCodeName();
         this.userEid = user.getUserEid();
         this.userNameFirst = user.getUserNameFirst();

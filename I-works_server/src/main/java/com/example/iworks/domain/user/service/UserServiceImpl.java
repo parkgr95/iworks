@@ -42,11 +42,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<Map<String, Object>> registerUser(UserJoinRequestDto dto) {
         if (userRepository.findByUserEid(dto.getUserEid())!=null){
-            return response.handleFail("이미 존재하는 계정입니다.");
+            return response.handleFail("이미 존재하는 계정입니다.",null);
         }
 
         if(userRepository.findByUserEmail(dto.getUserEmail())!=null){
-            return response.handleFail("이미 존재하는 이메일입니다.");
+            return response.handleFail("이미 존재하는 이메일입니다.",null);
         }
 
         int deptId = dto.getUserDepartmentId();
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService{
         System.out.println(department.getDepartmentId());
         System.out.println(code.getCodeName());
         if(department == null || code == null){
-            return response.handleFail("잘못된 부서,직책 값 입력");
+            return response.handleFail("잘못된 부서,직책 값 입력",null);
         }
         user.setDepartment(department);
         user.setPositionCode(code);
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService{
         } else if(posCodeId==ROLE_EMPLOYEE){
             roleList.add("ROLE_EMPLOYEE");
         }else{
-            return response.handleFail("잘못된 직책 값 입력");
+            return response.handleFail("잘못된 직책 값 입력",null);
         }
         int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
         String password = randomPasswordUtil.getRandomPassword(length);
@@ -87,27 +87,27 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public ResponseEntity<Map<String, Object>> selectUser(String token) {
-        String eid = jwtProvider.getUserEid(token);
-        System.out.println("token eid : "+eid);
-        User user= userRepository.findByUserEid(eid);
+        int id = jwtProvider.getUserId(token);
+        System.out.println("token id : "+id);
+        User user= userRepository.findByUserId(id);
         if(user.getUserEid() != null){
             UserGetMyPageResponseDto dto = new UserGetMyPageResponseDto(user);
             return response.handleSuccess(dto);
         }
-        return response.handleFail("couldn't find user with "+eid);
+        return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> updateUser(String token, UserUpdateMypageRequestDto dto) {
-        String eid = jwtProvider.getUserEid(token);
-        User origin = userRepository.findByUserEid(eid);
+        int id = jwtProvider.getUserId(token);
+        User origin = userRepository.findByUserId(id);
         System.out.println("origin: " + origin);
         if(origin != null){
             origin.update(dto,bCryptPasswordEncoder);
             return response.handleSuccess(new UserGetMyPageResponseDto(origin));
         }
 
-        return response.handleFail("couldn't find user with "+eid);
+        return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
 

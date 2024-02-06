@@ -9,7 +9,6 @@ import com.example.iworks.global.model.entity.Code;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +36,7 @@ public class User {
     private Department userDepartment; //부서
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_position_code_id", referencedColumnName = "code_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_position_code_id", referencedColumnName = "code_id")
     private Code userPositionCode; //직급 코드 아이디
 
     @Builder.Default
@@ -82,8 +81,9 @@ public class User {
     @Column(name = "user_deleted_at")
     private LocalDateTime userDeletedAt; // 탈퇴일시
 
-    @Column(name = "user_is_deleted")
-    private Boolean userIsDeleted; //탈퇴여부
+    @Builder.Default
+    @Column(name = "user_is_deleted", nullable = false)
+    private Boolean userIsDeleted = false; //탈퇴여부
 
     @Builder.Default
     @Column(name = "user_role", nullable = false)
@@ -105,6 +105,7 @@ public class User {
          this.userTel = dto.getUserTel();
          this.userAddress = dto.getUserAddress();
          this.userGender = dto.getUserGender();
+         this.userIsDeleted = false;
          this.userCreatedAt = LocalDateTime.now();
          this.userUpdatedAt = LocalDateTime.now();
     }

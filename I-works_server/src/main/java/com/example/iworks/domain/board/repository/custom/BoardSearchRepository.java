@@ -6,13 +6,12 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-
 public interface BoardSearchRepository {
 
-    //키워드별 게시글 검색
+    //키워드 별 게시글 검색
     List<BoardGetResponseDto> findAllByKeyword(Pageable pageable, BoardSearchRequestDto keyword);
 
-    //통합 키워드별 게시글 검색
+    //통합 키워드 별 게시글 검색
     List<BoardGetResponseDto> findAllByKeywords(Pageable pageable, String keywords);
 
 }

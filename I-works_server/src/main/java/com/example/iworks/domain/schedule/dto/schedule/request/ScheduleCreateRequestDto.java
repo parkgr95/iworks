@@ -21,6 +21,5 @@ public class ScheduleCreateRequestDto {
     private LocalDateTime scheduleEndDate; //할 일의 종료일시
     private String schedulePlace; //할 일의 장소
     private LocalDateTime meetingDate; // 회의 일시
-    private int scheduleCreatorId; // 등록자 아이디
 
 }
