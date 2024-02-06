@@ -43,7 +43,7 @@ public class Team {
     @Column(name = "team_updated_at", nullable = false)
     private LocalDateTime teamUpdatedAt = LocalDateTime.now(); // 그룹 수정일시
 
-    @OneToMany(mappedBy = "teamUserTeamId")
+    @OneToMany(mappedBy = "teamUserTeam")
     private List<TeamUser> teamUsers;
 
     @Builder.Default
