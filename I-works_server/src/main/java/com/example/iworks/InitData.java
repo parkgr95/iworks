@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//@Profile("local")
+@Profile("local")
 @Component
 @RequiredArgsConstructor
 @Slf4j
