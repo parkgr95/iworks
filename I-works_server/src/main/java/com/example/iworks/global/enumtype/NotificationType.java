@@ -1,4 +1,4 @@
-package com.example.iworks.domain.notification.domain;
+package com.example.iworks.global.enumtype;
 
 public enum NotificationType {
     CREATE, MODIFIEDM, DELETE

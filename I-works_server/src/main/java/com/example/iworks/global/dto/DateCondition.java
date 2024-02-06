@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class SearchConditionDate {
+public class DateCondition {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 }

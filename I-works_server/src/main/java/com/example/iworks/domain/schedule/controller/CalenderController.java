@@ -1,9 +1,7 @@
 package com.example.iworks.domain.schedule.controller;
 
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterAndDateRequestDto;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterDto;
 import com.example.iworks.domain.schedule.service.scheduleAssign.ScheduleAssignService;
-import com.example.iworks.global.dto.SearchConditionDate;
+import com.example.iworks.global.dto.DateCondition;
 import com.example.iworks.global.model.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +17,8 @@ public class CalenderController {
 
     /** 캘린더 : 유저의 모든 할일*/
     @GetMapping("/{userId}/date")
-    public ResponseEntity<?> getAllByUserAndDate(@PathVariable(name = "userId") int userId, @RequestBody SearchConditionDate searchConditionDate){
-        return response.handleSuccess(scheduleAssignService.findByUser(userId, searchConditionDate));
+    public ResponseEntity<?> getAllByUserAndDate(@PathVariable(name = "userId") int userId, @RequestBody DateCondition dateCondition){
+        return response.handleSuccess(scheduleAssignService.findByUser(userId, dateCondition));
     }
 
 }
