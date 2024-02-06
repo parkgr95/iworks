@@ -42,6 +42,10 @@ public class Team {
     @OneToMany(mappedBy = "teamUserTeam")
     private List<TeamUser> teamUsers;
 
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean teamIsDeleted = false;
+
     public void addTeamUser(TeamUser teamUser) {
         teamUsers.add(teamUser);
 //        teamUser.setTeamUserTeam(this);

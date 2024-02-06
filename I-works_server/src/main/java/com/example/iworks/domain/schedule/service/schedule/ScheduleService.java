@@ -8,7 +8,7 @@ import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateReq
 import java.util.List;
 
 public interface ScheduleService {
-    void createSchedule(ScheduleCreateRequestDto scheduleDto);
+    void createSchedule(String token, ScheduleCreateRequestDto scheduleDto);
 
     void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto);
 
