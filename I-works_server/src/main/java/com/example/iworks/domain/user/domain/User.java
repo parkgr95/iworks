@@ -106,6 +106,7 @@ public class User {
          this.userGender = dto.getUserGender();
          this.userCreatedAt = LocalDateTime.now();
          this.userUpdatedAt = LocalDateTime.now();
+         this.userIsDeleted = false;
     }
 
     public void setRandomPassword(String password){
