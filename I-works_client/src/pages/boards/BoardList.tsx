@@ -2,6 +2,7 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import PostType from "../../interface/BoardType"
 import { Link, useParams } from "react-router-dom"
+import dateUtils from "../../utils/dateUtils"
 
 interface UserType {
   userId: string
@@ -61,7 +62,7 @@ function BoardList() {
           </div>
           <div className="flex justify-between text-xs w- ml-1">
             <span>{user ? user.userNameLast + user.userNameFirst : 'unKnown'}</span>
-            <span>{article.boardCreatedAt}</span>
+            <span>{dateUtils.formatDate(article.boardCreatedAt)}</span>
           </div>
         </div>
         )})}

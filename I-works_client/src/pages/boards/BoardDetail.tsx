@@ -2,7 +2,7 @@ import axios from "axios"
 import { FormEvent, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 // import CommentCreate from "./BoardCommnetCreate"
-
+import dateUtils from "../../utils/dateUtils"
 import { Button } from "flowbite-react"
 import PostType from "../../interface/BoardType"
 
@@ -72,8 +72,8 @@ function BoardDetail() {
     event.preventDefault()
 
     axios
-      .patch(`https://suhyeon.site/api/board/${boardId}/`, {
-        boardIsDeleted: 1
+      .put(`https://suhyeon.site/api/board/delete/${boardId}`, {
+        'boardIsDeleted': '1'
       })
       .then(() => {
         alert('삭제되었습니다.')
@@ -85,7 +85,6 @@ function BoardDetail() {
   }
 
   // 북마크 기능
-  
 
   return (
     <div className="flex flex-col">
@@ -103,10 +102,10 @@ function BoardDetail() {
           </div>
           <div className="flex flex-col">
             <span>이름: {userName?.userNameFirst}</span>
-            <span>작성일: {boardDetail.boardCreatedAt}</span>
+            <span>작성일: {dateUtils.formatDateTime(boardDetail.boardCreatedAt)}</span>
           </div>
         </div>
-        <p>최근 수정: {boardDetail.boardCreatedAt}</p>
+        <p>최근 수정: {dateUtils.formatDateTime(boardDetail.boardUpdatedAt)}</p>
       </div>
       <div>
         <p>{boardDetail.boardContent}</p>
