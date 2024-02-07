@@ -5,6 +5,7 @@ import com.example.iworks.global.filter.CustomCorsFilter;
 import com.example.iworks.global.filter.JwtAuthenticationFilter;
 import com.example.iworks.global.filter.JwtAuthorizationFilter;
 import com.example.iworks.global.filter.JwtExceptionFilter;
+import com.example.iworks.global.model.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -72,7 +73,7 @@ public class SecurityConfig {
                 .authenticationManager(authenticationManager)
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedPage("/api/user/login"))
                 .addFilterBefore(corsFilter, SecurityContextHolderFilter.class)
-                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider, new Response()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository, jwtProvider))
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class)
                 .build();

@@ -25,10 +25,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JwtProvider tokenProvider;
     private final Response responseClass;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider tokenProvider) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider tokenProvider, Response responseClass) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
-        this.responseClass = new Response();
+        this.responseClass = responseClass;
         setFilterProcessesUrl("/api/user/login");
     }
 
