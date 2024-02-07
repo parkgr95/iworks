@@ -1,9 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from "react"
 import axios from "axios"
 import { useNavigate, Form } from "react-router-dom"
-// import BoardModal from "../../components/BoardModal"
-
-import { Button } from "flowbite-react"
+import BoardModal from "../../components/BoardModal"
+import { Button, } from "flowbite-react"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 
@@ -12,9 +11,9 @@ function BoardCreate() {
 
   const [boardTitle, setBoardTitle] = useState<string>('')
   const [boardContent, setBoardContent] = useState<string>()
-  // const [boardCategoryCodeId, setCategoryCodeId] = useState<number>(1)
-  // const [boardOwnerId, setBoardOwnerId] = useState<number>(1)
-  
+  const [boardOwnerId, setBoardOwnerId] = useState<string>('')
+  const [boardCategoryCodeId, setCategoryCodeId] = useState<string>('')
+
   const onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setBoardTitle(event.target.value)
   }
@@ -24,15 +23,15 @@ function BoardCreate() {
 
   function handleCreate(event: FormEvent) {
     event.preventDefault()
-    // api 추가하기
+    const plainTextContent = (boardContent || '').replace(/<[^>]+>/g, '');
     axios
-      .post("https://suhyeon.site/api/board", {
+      .post("https://suhyeon.site/api/board/", {
         "boardTitle": boardTitle,
-        "boardContent": boardContent,
-        "boardCreatorId": '1234',
+        "boardContent": plainTextContent,
+        "boardCreatorId": '1',
         "boardIsDeleted": '0',
-        // "boardCategoryCodeId": boardCategoryCodeId,
-        // "boardOwnerId": boardOwnerId,
+        "boardCategoryCodeId": boardCategoryCodeId,
+        "boardOwnerId": boardOwnerId,
       })
       .then((res) => {
         navigate("../")
@@ -43,6 +42,24 @@ function BoardCreate() {
       })
   }
 
+  // 모달창 구현
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedBoard, setselectedBoard] = useState<string | null>(null);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const handleSelectBoard = (boardName: string, boardOwnerId: string, boardCategoryCodeId: string) => {
+    setselectedBoard(boardName);
+    setBoardOwnerId(boardOwnerId)
+    setCategoryCodeId(boardCategoryCodeId)
+  };
+
   return (
     <div>
       <div className="h-10 mb-2 border-b-2 text-xl">
@@ -50,14 +67,16 @@ function BoardCreate() {
       </div>
       <Form className="flex flex-col" onSubmit={handleCreate}>
         <div className="flex items-center">
-          <label htmlFor="boards" className="block mb-2 text-sm font-medium text-gray-900">게시판 :</label>
-          <select id="boards" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-auto p-2.5">
-            <option selected>게시판 선택</option>
-            <option value="1">고지게시판</option>
-            <option value="2">자유게시판</option>
-            <option value="3">부서게시판</option>
-            <option value="4">그룹게시판</option>
-          </select>
+          <span>게시판 : </span>
+          <Button className="ml-8 h-8 w-auto bg-mainGray text-black" type="button" onClick={openModal}>
+            게시판 선택
+          </Button>
+          <p className="ml-2">{selectedBoard}</p>
+          <BoardModal
+            show={modalIsOpen}
+            onClose={closeModal}
+            onSelect={handleSelectBoard}
+          />
         </div>
         <div className="flex items-center my-2">
           <label className="mr-14" htmlFor="title">제목 : </label>

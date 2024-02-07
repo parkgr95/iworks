@@ -1,6 +1,14 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState, useEffect } from "react"
 import { Outlet, Link, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
+import axios from "axios"
+
+interface orginizationType {
+  departmentName?: string,
+  departmentId?: string,
+  teamName?: string,
+  teamId?: string,
+}
 
 function BoardSideBar() {
   // 네비게이션
@@ -29,19 +37,22 @@ function BoardSideBar() {
   const toggleTeamOpen = () => setTeamOpen((cur) => !cur)
 
   // 부서, 팀 받아오기
-  // const [departmentList, setDepartmentList] = useState([])
-  // const [teamList, setTeamList] = useState([])
+  const [departmentList, setDepartmentList] = useState<orginizationType[]>([])
+  const [teamList, setTeamList] = useState<orginizationType[]>([])
 
-  // useEffect(() => {
-  //   axios.get(API_URL)
-  //     .then((res) => {
-  //       setDepartmentList(res.data.departments)
-  //       setTeamList(res.data.teams)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }, [])
+  useEffect(() => {
+    axios.all([
+      axios.get('https://suhyeon.site/api/address/department/all'),
+      axios.get('https://suhyeon.site/api/address/team/all'),
+    ])
+      .then(axios.spread((departmentRes, teamRes) => {
+        setDepartmentList(departmentRes.data.data);
+        setTeamList(teamRes.data.data);
+      }))
+      .catch((err) => {
+        console.error(err)
+      });
+  }, []);
 
   return (
     <div className="flex h-full">
@@ -86,11 +97,11 @@ function BoardSideBar() {
                 <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">부서게시판</span>
               </button>
               <ul id="dropdownDepartment" className={`${departmentOpen ? '' : 'hidden'} space-y-2`}>
-                {/* {departmentList.map((dept) => (
-                  <li>
-                    <Link to={`/board/3/${dept.departmentId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
+                {departmentList.map((dept) => (
+                  <li key={dept.departmentId}>
+                    <Link to={`/board/3/${dept.departmentId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">{dept.departmentName}게시판</Link>
                   </li>
-                ))} */}
+                ))}
               </ul>
             </li>
             <li>
@@ -98,11 +109,11 @@ function BoardSideBar() {
                 <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">그룹게시판</span>
               </button>
               <ul id="dropdownTeam" className={`${teamOpen ? '' : 'hidden'} space-y-2`}>
-                {/* {teamList.map((team) => (
-                  <li>
+                {teamList.map((team) => (
+                  <li key={team.teamId}>
                     <Link to={`/board/4/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
                   </li>
-                ))} */}
+                ))}
               </ul>
             </li>
           </ul>

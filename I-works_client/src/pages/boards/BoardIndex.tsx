@@ -3,39 +3,65 @@ import { useState, useEffect } from "react"
 import PostType from "../../interface/BoardType"
 import { Link } from "react-router-dom"
 
-const API_URL = "https://dummyjson.com/posts"
+interface UserType {
+  userId: string
+  userEid: string
+  userNameFirst: string
+  userNameLast: string
+  departmentName: string
+  departmentId: string
+  positionCodeName: null
+  positionCodeId: null
+  userTel: string
+  userEmail: string
+}
 
 function BoardIndex() {
-  const [apiData, setApiData] = useState<PostType[]>([])
+  const [boardList, setBoardList] = useState<PostType[]>([])
+  const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    axios.get(API_URL)
+    axios.get(`https://suhyeon.site/api/board/`)
       .then((res) => {
-        setApiData(res.data.posts)
+        setBoardList(res.data.data)
       })
       .catch((err) => {
         console.log(err)
       })
+
+    async function getUsers() {
+      try {
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        setUsers(res.data.data)
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    getUsers()
   }, [])
+
+
 
   return (
     <div className="">
-      {apiData.map((article) => (
-        <div className="border-b-2 pb-2 mb-2" key={article.id}>
+      {boardList.map((article) => {
+        const user: UserType | undefined = users.find((user) => user.userEid == article.boardCreatorId)
+        
+        return (
+        <div className="border-b-2 pb-2 mb-2" key={article.boardId}>
           <div className="mb-2 text-md font-semibold">
-            <Link to={`/board/${article.id}`}>{article.title}</Link>
+            <Link to={`/board/${article.boardId}`}>{article.boardTitle}</Link>
           </div>
           <div className="text-sm mb-2">
-            <p>{article.body}</p>
+            <p>{article.boardContent}</p>
           </div>
           <div className="flex justify-between text-xs w- ml-1">
-            <p>진창현</p>
-            <p>2024-01-13</p>
+            <span>{user ? user.userNameLast + user.userNameFirst : 'unKnown'}</span>
+            <span>{article.boardCreatedAt}</span>
           </div>
         </div>
-          )
-        )
-      }
+        )})}
     </div>
   )
 }
