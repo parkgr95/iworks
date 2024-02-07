@@ -1,5 +1,6 @@
-package com.example.iworks.domain.address.dto;
+package com.example.iworks.domain.address.dto.response;
 
+import com.example.iworks.domain.address.domain.Address;
 import lombok.Getter;
 
 @Getter
@@ -15,7 +16,7 @@ public class AddressUserResponseDto {
     private final String userTel;
     private final String userEmail;
 
-    public AddressUserResponseDto(AddressDto dto) {
+    public AddressUserResponseDto(Address dto) {
         this.userId = dto.getUser().getUserId();
         this.userEid = dto.getUser().getUserEid();
         this.userNameFirst=dto.getUser().getUserNameFirst();

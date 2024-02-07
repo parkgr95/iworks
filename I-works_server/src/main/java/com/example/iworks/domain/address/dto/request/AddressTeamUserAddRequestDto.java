@@ -1,4 +1,4 @@
-package com.example.iworks.domain.address.dto;
+package com.example.iworks.domain.address.dto.request;
 
 import com.example.iworks.domain.team.domain.TeamUser;
 import lombok.AllArgsConstructor;
