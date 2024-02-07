@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ScheduleCreateRequestDto {
 
-    private int scheduleId;
     private int scheduleDivisionCodeId; //할일 분류 아이디 , 행사 or 업무 or 개인일정(병가) or  개인일정(외출) or  개인일정(휴가)
     private String scheduleTitle; //할 일 이름
     private Character schedulePriority ; //할 일 우선순위 H: high, M:Medium, L:low
