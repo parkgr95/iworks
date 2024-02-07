@@ -11,6 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddressTeamUserAddRequestDto {
-    private int teamId;
     private List<TeamUser> teamUsers;
 }

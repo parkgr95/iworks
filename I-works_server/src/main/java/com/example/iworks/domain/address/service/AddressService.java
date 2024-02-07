@@ -4,6 +4,7 @@ import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AddressService {
@@ -17,7 +18,7 @@ public interface AddressService {
 
     ResponseEntity<Map<String, Object>> deleteTeam(int teamId, String token);
 
-    ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, int targetId);
+    ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, List<Integer> requestDto);
 
     ResponseEntity<Map<String, Object>> removeTeamUser(int teamId, String token, int targetId);
 
