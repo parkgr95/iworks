@@ -14,7 +14,7 @@ import java.util.List;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class Notification {
 
-    @Id @Generated
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id" )
     private Integer notificationId; //알림 아이디
 
