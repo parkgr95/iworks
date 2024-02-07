@@ -35,7 +35,14 @@ public class Notification {
     private LocalDateTime notificationCreatedAt = LocalDateTime.now(); // 알림 생성 일시
 
     @Builder.Default
+    @Column(name = "notification_is_deleted", nullable = false)
+    private Boolean notificationIsDeleted = false; // 알림 삭제 여부
+
+    @Builder.Default
     @OneToMany(mappedBy = "userNotificationNotification")
     private List<UserNotification> notificationUserNotifications = new ArrayList<>();
 
+    public void delete() {
+        this.notificationIsDeleted = true;
+    }
 }

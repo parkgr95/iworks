@@ -4,4 +4,5 @@ import com.example.iworks.domain.notification.dto.notification.NotificationCreat
 
 public interface NotificationService {
     void createNotification(NotificationCreateRequestDto notificationDto);
+    void deleteNotification(int notificationId);
 }

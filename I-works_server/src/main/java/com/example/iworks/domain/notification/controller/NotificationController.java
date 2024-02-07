@@ -25,4 +25,10 @@ public class NotificationController {
         return response.handleSuccess("알림 생성 완료");
     }
 
+    @GetMapping("/{notificationId}/delete")
+    public ResponseEntity<Map<String, Object>> deleteNotification(@PathVariable("notificationId") int notificationId) {
+        notificationService.deleteNotification(notificationId);
+        return response.handleSuccess("알림 삭제 완료");
+    }
+
 }
