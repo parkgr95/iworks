@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class AddressUserResponseDto {
+    private final int userId;
     private final String userEid;
     private final String userNameFirst;
     private final String userNameLast;
@@ -15,6 +16,7 @@ public class AddressUserResponseDto {
     private final String userEmail;
 
     public AddressUserResponseDto(AddressDto dto) {
+        this.userId = dto.getUser().getUserId();
         this.userEid = dto.getUser().getUserEid();
         this.userNameFirst=dto.getUser().getUserNameFirst();
         this.userNameLast =dto.getUser().getUserNameLast();
