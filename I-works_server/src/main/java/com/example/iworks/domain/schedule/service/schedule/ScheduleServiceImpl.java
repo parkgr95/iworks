@@ -29,15 +29,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
     private final MeetingRepository meetingRepository;
-    private final JwtProvider jwtProvider;
 
     @Override
-    public void createSchedule(String token, ScheduleCreateRequestDto scheduleDto) {
+    public void createSchedule(int userId, ScheduleCreateRequestDto scheduleDto) {
+        System.out.println("userId = " + userId);
         Code scheduleDivision = codeRepository.findById(scheduleDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
-        int userId = jwtProvider.getUserId(token);
-        User scheduleCreator = userRepository.findByUserId(userId);
+        User creator = userRepository.findByUserId(userId);
 
         Meeting scheduleMeeting = Meeting.builder()
                 .meetingDate(scheduleDto.getMeetingDate())
@@ -53,7 +52,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .scheduleEndDate(scheduleDto.getScheduleEndDate())
                 .schedulePlace(scheduleDto.getSchedulePlace())
                 .scheduleMeeting(scheduleMeeting)
-                .scheduleCreator(scheduleCreator)
+                .scheduleCreator(creator)
                 .scheduleCreatedAt(LocalDateTime.now())
                 .build();
 
