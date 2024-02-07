@@ -1,7 +1,7 @@
 package com.example.iworks.domain.team.domain;
 
-import com.example.iworks.domain.address.dto.AddressTeamCreateRequestDto;
-import com.example.iworks.domain.address.dto.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 

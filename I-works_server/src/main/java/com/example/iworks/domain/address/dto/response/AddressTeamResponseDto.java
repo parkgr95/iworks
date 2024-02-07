@@ -1,4 +1,4 @@
-package com.example.iworks.domain.address.dto;
+package com.example.iworks.domain.address.dto.response;
 
 import com.example.iworks.domain.team.domain.Team;
 import lombok.Getter;

@@ -1,6 +1,12 @@
 package com.example.iworks.domain.address.service;
 
-import com.example.iworks.domain.address.dto.*;
+import com.example.iworks.domain.address.domain.Address;
+import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.response.AddressDepartmentResonseDto;
+import com.example.iworks.domain.address.dto.response.AddressTeamInfoResponseDto;
+import com.example.iworks.domain.address.dto.response.AddressTeamResponseDto;
+import com.example.iworks.domain.address.dto.response.AddressUserResponseDto;
 import com.example.iworks.domain.address.respository.AddressRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
@@ -40,7 +46,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public ResponseEntity<Map<String,Object>> selectAddressAll()
     {
-        List<AddressDto> list =  addressRepository.selectAddressAll();
+        List<Address> list =  addressRepository.selectAddressAll();
         if(list.isEmpty()){
             return response.handleFail("조회 내용 없음.",null);
         }
@@ -53,7 +59,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional
     @Override
-    public ResponseEntity<Map<String,Object>> createTeam(String token,AddressTeamCreateRequestDto requestDto)
+    public ResponseEntity<Map<String,Object>> createTeam(String token, AddressTeamCreateRequestDto requestDto)
     {
         try {
             int userId = jwtProvider.getUserId(token);
@@ -182,6 +188,15 @@ public class AddressServiceImpl implements AddressService {
         }
         team.update(requestDto);
         return response.handleSuccess("변경 완료");
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> getTeamInfo(int teamId) {
+        Team team = teamRepository.findByTeamId(teamId);
+        if(team != null && !team.getTeamIsDeleted()){
+            return response.handleSuccess(new AddressTeamInfoResponseDto(team));
+        }
+        return response.handleFail("팀을 찾을 수 없습니다.", null);
     }
 
 }
