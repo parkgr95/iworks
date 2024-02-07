@@ -1,15 +1,14 @@
-package com.example.iworks.domain.address.dto;
+package com.example.iworks.domain.address.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class AddressTeamEditRequestDto {
+@AllArgsConstructor
+public class AddressTeamCreateRequestDto {
     private String teamName;
+    private int teamLeader;
     private String teamDescription;
-    private int teamLeaderId;
-
 }
