@@ -73,7 +73,7 @@ public class SecurityConfig {
                 .authenticationManager(authenticationManager)
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedPage("/api/user/login"))
                 .addFilterBefore(corsFilter, SecurityContextHolderFilter.class)
-                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider, new Response()))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository, jwtProvider))
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class)
                 .build();
