@@ -19,12 +19,10 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final Response response;
 
-    /** 할일 생성 */
-//    @PostMapping("/create")
 //    @ResponseStatus(HttpStatus.OK)
 //    public String createSchedule(@RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
     /** 할일 생성 */
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
         String jwtToken = authorizationHeader.substring("Bearer ".length());
         scheduleService.createSchedule(jwtToken, scheduleCreateRequestDto);
