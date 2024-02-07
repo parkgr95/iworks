@@ -25,6 +25,9 @@ public class AddressTeamInfoResponseDto {
         this.teamCreator = team.getTeamCreator();
         this.teamCreatedAt = team.getTeamCreatedAt();
         this.teamUpdatedAt = team.getTeamUpdatedAt();
-        this.teamUsers = team.getTeamUsers().stream().map(teamUser -> new AddressTeamUserResponseDto(teamUser.getTeamUserId(),teamUser.getTeamUserUser()));
+        this.teamUsers = team.getTeamUsers()
+                .stream()
+                .filter(teamUser -> !teamUser.getTeamUserUser().getUserIsDeleted())
+                .map(teamUser -> new AddressTeamUserResponseDto(teamUser.getTeamUserId(),teamUser.getTeamUserUser()));
     }
 }
