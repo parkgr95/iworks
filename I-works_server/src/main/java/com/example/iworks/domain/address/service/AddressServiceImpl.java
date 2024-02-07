@@ -83,7 +83,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public ResponseEntity<Map<String, Object>> selectTeamAll() {
         Stream<AddressTeamResponseDto> result = teamRepository.findAll().stream()
-                .filter(Team::getTeamIsDeleted).map(AddressTeamResponseDto::new);
+                .filter(team -> !team.getTeamIsDeleted()).map(AddressTeamResponseDto::new);
         return response.handleSuccess(result);
     }
 
