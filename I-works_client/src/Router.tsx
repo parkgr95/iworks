@@ -80,7 +80,8 @@ const router = createBrowserRouter([
       // },
       {
         path: 'schedule',
-        element: <SchedulePage />
+        element: <SchedulePage />,
+        // loader: scheduleLoader
       }
     ]
   },
