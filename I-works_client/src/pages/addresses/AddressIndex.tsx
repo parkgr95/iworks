@@ -2,6 +2,7 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 
 interface UserData {
+  userId: string,
   userEid: string,
   userNameFirst: string,
   userNameLast: string,
@@ -20,13 +21,13 @@ function AddressIndex() {
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/address/user/all`)
       .then((res) => {
+        console.log(res.data.data)
         setUserAll(res.data.data)
       })
       .catch((err) => {
         console.log(err)
       })
   }, [])
-
   return (
     <div className="">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

@@ -33,22 +33,15 @@ function AddressSideBar() {
   const [departmentOpen, setDepartmentOpen] = useState(true);
   const toggleDepartmentOpen = () => setDepartmentOpen((cur) => !cur)
 
-  const [teamOpen, setTeamOpen] = useState(true);
-  const toggleTeamOpen = () => setTeamOpen((cur) => !cur)
-
   // // 부서, 팀 받아오기
   const [departmentList, setDepartmentList] = useState<orginizationType[]>([])
-  const [teamList, setTeamList] = useState<orginizationType[]>([])
+
 
   useEffect(() => {
-    axios.all([
-      axios.get('https://suhyeon.site/api/address/department/all'),
-      axios.get('https://suhyeon.site/api/address/team/all'),
-    ])
-      .then(axios.spread((departmentRes, teamRes) => {
-        setDepartmentList(departmentRes.data.data);
-        setTeamList(teamRes.data.data);
-      }))
+      axios.get('https://suhyeon.site/api/address/department/all')
+      .then((res) => {
+        setDepartmentList(res.data.data);
+      })
       .catch((err) => {
         console.error(err)
       });
@@ -57,7 +50,7 @@ function AddressSideBar() {
   return (
     <div className="flex h-full">
       <div className="flex flex-col items-center border-r-2 m-0 px-3 position-absolute w-72 flex-shrink-0">
-        <div className="flex justify-center items-center w-full h-20">
+        <div className="flex justify-center items-center w-full h-20 border-b-2">
           <Button onClick={moveToCreate} className="h-12 w-full bg-mainBlue text-white">
             <span>그룹 추가</span>
           </Button>
@@ -80,16 +73,7 @@ function AddressSideBar() {
               </ul>
             </li>
             <li>
-              <button onClick={toggleTeamOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownTeam" data-collapse-toggle="dropdownTeam">
-                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">그룹</span>
-              </button>
-              <ul id="dropdownTeam" className={`${teamOpen ? '' : 'hidden'} space-y-2`}>
-                {teamList.map((team) => (
-                  <li>
-                    <Link to={`/address/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
-                  </li>
-                ))}
-              </ul>
+              <Link to={`/address/group`} className="ms-3 pl-8">그룹</Link>
             </li>
           </ul>
         </div>

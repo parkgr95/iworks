@@ -3,8 +3,10 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 import { Form, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserData {
+  userId: number,
   userEid: string,
   userNameFirst: string,
   userNameLast: string,
@@ -33,21 +35,33 @@ function GroupCreate() {
 
   // api 요청
   function handleCreate(event: FormEvent) {
-    event.preventDefault() 
+    event.preventDefault()
+    
+    const teamLeader = teamLeaderData[0].userId
+    const targetIdArray = teamMemberData.map(user => user.userId);
 
     axios
       .post("https://suhyeon.site/api/address/team/create", {
         "teamName": teamName,
-        "teamLeader": '101',
-        "teamDescription": teamDescription,
+        "teamLeader": teamLeader,
+        "teamDescription": teamDescription
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
       })
       .then((res) => {
-        const teamId = res.data.teamId
+        const teamId = res.data.data.teamId
         if (!teamId) {
-          throw new Error("팀 ID를 가져오는 데 문제가 있습니다.");
+          console.log(res)
         }
-        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`, {
-          targetId: '101',
+        // 그룹리더가 아니면 동작 안함 ==> 리더 선택 창은 작성자가 되어야한다
+        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`, targetIdArray,       
+        {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
         });
       })
       .then((res) => {

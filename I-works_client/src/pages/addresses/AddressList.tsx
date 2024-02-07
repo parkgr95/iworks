@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useParams } from "react-router"
 
 interface UserData {
+  userId: string,
   userEid: string,
   userNameFirst: string,
   userNameLast: string,
@@ -23,10 +24,7 @@ function AddressList() {
     axios.get(`https://suhyeon.site/api/address/user/all`)
       .then((res) => {
         const data = res.data.data
-        const filteredData = departmentId
-        ? data.filter((user: UserData) => user.departmentId == departmentId)
-        : data
-        
+        const filteredData = departmentId? data.filter((user: UserData) => user.departmentId == departmentId): data
         setUserAll(filteredData)
       })
       .catch((err) => {

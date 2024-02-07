@@ -10,6 +10,7 @@ interface orginizationType {
 }
 
 interface UserData {
+  userId: string,
   userEid: string,
   userNameFirst: string,
   userNameLast: string,

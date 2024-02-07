@@ -16,6 +16,8 @@ import AddressIndex from './pages/addresses/AddressIndex';
 import AddressSelect from './components/AddressSelect';
 import AddressList from './pages/addresses/AddressList';
 import GroupCreate from './pages/addresses/GroupCreate';
+import GroupList from './pages/addresses/GroupList';
+import GroupDetail from './pages/addresses/GroupDetail';
 
 const router = createBrowserRouter([
   {
@@ -51,12 +53,24 @@ const router = createBrowserRouter([
             element: <AddressIndex />
           },
           {
+            path: ':departmentId',
+            element: <AddressList />
+          },
+          {
             path: 'create',
             element: <GroupCreate />
           },
           {
-            path: ':departmentId',
-            element: <AddressList />
+            path: 'group',
+            element: <GroupList />
+          },
+          {
+            path: 'group/:groupId',
+            element: <GroupDetail />
+          },
+          {
+            path: 'group/update/:groupId',
+            element: <GroupDetail />
           },
         ]
       },
