@@ -162,6 +162,7 @@ public class AddressServiceImpl implements AddressService {
         return response.handleSuccess("팀원이 삭제 되었습니다.");
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> editTeam(int teamId, String token, AddressTeamEditRequestDto requestDto) {
         int userId = jwtProvider.getUserId(token);
