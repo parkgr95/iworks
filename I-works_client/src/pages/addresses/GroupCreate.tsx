@@ -1,6 +1,7 @@
-import { ChangeEvent, useEffect, useState } from "react"
+import axios from "axios"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
-import { Form } from "react-router-dom"
+import { Form, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
 
 interface UserData {
@@ -16,6 +17,7 @@ interface UserData {
 }
 
 function GroupCreate() {
+  const navigate = useNavigate()
   const [teamName, setTeamName] = useState<string>('')
   const [teamDescription, setTeamDescription] = useState<string>()
 
@@ -26,55 +28,90 @@ function GroupCreate() {
     setTeamDescription(event.target.value)
   }
 
-  const [receivedData1, setreceivedData1] = useState<UserData[]>([]);
-  const [receivedData2, setreceivedData2] = useState<UserData[]>([]);
+  const [teamLeaderData, setteamLeaderData] = useState<UserData[]>([]);
+  const [teamMemberData, setteamMemberData] = useState<UserData[]>([]);
 
-  const openPopup1 = () => {
-    const popup = window.open('/popup/address/select', '유저 선택', 'width=800,height=700,top=100');
+  // api 요청
+  function handleCreate(event: FormEvent) {
+    event.preventDefault() 
 
-    // 부모 창으로 데이터를 전송
-    window.postMessage({ type: 'OPEN_POPUP', payload: {} }, window.location.href);
+    axios
+      .post("https://suhyeon.site/api/address/team/create", {
+        "teamName": teamName,
+        "teamLeader": '101',
+        "teamDescription": teamDescription,
+      })
+      .then((res) => {
+        const teamId = res.data.teamId
+        if (!teamId) {
+          throw new Error("팀 ID를 가져오는 데 문제가 있습니다.");
+        }
+        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`, {
+          targetId: '101',
+        });
+      })
+      .then((res) => {
+        navigate("../")
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
-    // 부모 창에서 메시지 수신하여 선택된 유저 정보 업데이트
-    window.addEventListener('message', handleMessage1);
+  // 팝업창 로직
+  function openPopup1() {
+    const popup: Window | null = window.open('/popup/address/select', '유저 선택', 'width=800,height=700,top=100');
 
-    // 팝업 창이 닫힐 때 이벤트 리스너 제거
-    popup.addEventListener('beforeunload', () => {
-      window.removeEventListener('message', handleMessage1);
-    });
-  };
+    if (popup) {
+      // 팝업 창이 닫힐 때 이벤트 리스너 제거
+      popup.addEventListener('beforeunload', () => {
+        window.removeEventListener('message', handleMessage1);
+      })
+  
+      // 부모 창으로 데이터를 전송
+      window.postMessage({ type: 'OPEN_POPUP', payload: {} }, window.location.href);
+  
+      // 부모 창에서 메시지 수신하여 선택된 유저 정보 업데이트
+      window.addEventListener('message', handleMessage1);
+    } else {
+      console.error('팝업을 열 수 없습니다.')
+    }
+  }
 
   const handleMessage1 = (event: MessageEvent) => {
     const { type, payload } = event.data;
-
-
     if (type === 'SEND_DATA') {
       // 부모 창에서 전달받은 데이터 처리
-      setreceivedData1(payload.selectedUsers);
+      setteamLeaderData(payload.selectedUsers);
     }
   };
 
-  const openPopup2 = () => {
-    const popup = window.open('/popup/address/select', '유저 선택', 'width=800,height=700,top=100');
+  function openPopup2() {
+    const popup: Window | null = window.open('/popup/address/select', '유저 선택', 'width=800,height=700,top=100');
 
-    // 부모 창으로 데이터를 전송
-    window.postMessage({ type: 'OPEN_POPUP', payload: {} }, window.location.href);
-
-    // 부모 창에서 메시지 수신하여 선택된 유저 정보 업데이트
-    window.addEventListener('message', handleMessage2);
-
-    // 팝업 창이 닫힐 때 이벤트 리스너 제거
-    popup.addEventListener('beforeunload', () => {
-      window.removeEventListener('message', handleMessage2);
-    });
-  };
+    if (popup) {
+      // 팝업 창이 닫힐 때 이벤트 리스너 제거
+      popup.addEventListener('beforeunload', () => {
+        window.removeEventListener('message', handleMessage2);
+      })
+  
+      // 부모 창으로 데이터를 전송
+      window.postMessage({ type: 'OPEN_POPUP', payload: {} }, window.location.href);
+  
+      // 부모 창에서 메시지 수신하여 선택된 유저 정보 업데이트
+      window.addEventListener('message', handleMessage2);
+    } else {
+      console.error('팝업을 열 수 없습니다.')
+    }
+  }
 
   const handleMessage2 = (event: MessageEvent) => {
     const { type, payload } = event.data;
 
     if (type === 'SEND_DATA') {
       // 부모 창에서 전달받은 데이터 처리
-      setreceivedData2(payload.selectedUsers);
+      setteamMemberData(payload.selectedUsers)
     }
   };
 
@@ -85,6 +122,8 @@ function GroupCreate() {
       window.removeEventListener('message', handleMessage2);
     };
   }, []);
+
+
 
   return (
     <div>
@@ -104,11 +143,11 @@ function GroupCreate() {
             <h3>그룹 리더</h3>
             <Button className="bg-mainGreen" onClick={openPopup1}>주소록</Button>
           </div>
-          {receivedData1.length > 0 ? (
+          {teamLeaderData.length > 0 ? (
             <div className="flex flex-col border-2 h-40 p-4 overflow-auto">
               <ul>
-                {receivedData1.map((user) => (
-                  <li key={user.userEid} value={user.userEid}>{user.userNameFirst}</li>
+                {teamLeaderData.map((user) => (
+                  <li key={user.userEid}>{user.userNameLast}{user.userNameFirst}</li>
                 ))}
               </ul>
             </div>
@@ -121,11 +160,11 @@ function GroupCreate() {
             <h3>그룹 멤버</h3>
             <Button className="bg-mainGreen" onClick={openPopup2}>주소록</Button>
           </div>
-          {receivedData2.length > 0 ? (
+          {teamMemberData.length > 0 ? (
             <div className="flex flex-col border-2 h-40 p-4 overflow-auto">
               <ul>
-                {receivedData2.map((user) => (
-                  <li className="" key={user.userEid} value={user.userEid}>{user.userNameFirst}, </li>
+                {teamMemberData.map((user) => (
+                  <li className="" key={user.userEid}>{user.userNameLast}{user.userNameFirst} </li>
                 ))}
               </ul>
             </div>
@@ -135,7 +174,7 @@ function GroupCreate() {
         </div>
         <div className="flex justify-end mt-4">
           <Button className="bg-mainBlue mr-2">취소</Button>
-          <Button className="bg-mainGreen" type="submit">추가</Button>
+          <Button onClick={handleCreate} className="bg-mainGreen" type="submit">추가</Button>
         </div>
       </Form>
     </div>
