@@ -12,6 +12,9 @@ import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
 
+import CalendarPage from './pages/CalendarPage';
+import CalendarIndex from './pages/calendars/CalendarIndex';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -72,11 +75,16 @@ const router = createBrowserRouter([
           },
         ]
       },
-      // 캘린더 라우터
-      // {
-      //   path: 'schedule',
-      //   element: <SchedulePage />
-      // },
+      {
+        path: 'calendar',
+        element: <CalendarPage />,
+        children: [
+          {
+            path: '',
+            element: <CalendarIndex />
+          },
+        ]
+      },
     ]
   },
 ]);
