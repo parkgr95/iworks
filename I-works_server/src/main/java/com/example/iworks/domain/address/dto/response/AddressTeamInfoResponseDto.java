@@ -1,11 +1,10 @@
 package com.example.iworks.domain.address.dto.response;
 
 import com.example.iworks.domain.team.domain.Team;
-import com.example.iworks.domain.team.domain.TeamUser;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.stream.Stream;
 
 @Getter
 public class AddressTeamInfoResponseDto {
@@ -16,7 +15,7 @@ public class AddressTeamInfoResponseDto {
     private int teamCreator; // 그룹 생성자
     private LocalDateTime teamCreatedAt = LocalDateTime.now(); // 그룹 생성일시
     private LocalDateTime teamUpdatedAt = LocalDateTime.now(); // 그룹 수정일시
-    private List<TeamUser> teamUsers;
+    private Stream<AddressTeamUserResponseDto> teamUsers;
 
     public AddressTeamInfoResponseDto(Team team){
         this.teamId=team.getTeamId();
@@ -26,6 +25,6 @@ public class AddressTeamInfoResponseDto {
         this.teamCreator = team.getTeamCreator();
         this.teamCreatedAt = team.getTeamCreatedAt();
         this.teamUpdatedAt = team.getTeamUpdatedAt();
-        this.teamUsers = team.getTeamUsers();
+        this.teamUsers = team.getTeamUsers().stream().map(teamUser -> new AddressTeamUserResponseDto(teamUser.getTeamUserId(),teamUser.getTeamUserUser()));
     }
 }
