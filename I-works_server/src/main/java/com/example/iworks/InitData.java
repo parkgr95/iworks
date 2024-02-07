@@ -154,7 +154,6 @@ public class InitData {
                         .build();
                 em.persist(department);
                 departmentList.add(department);
-
                 //부서 별 유저 데이터
                 for (int j = 1; j <= 20; j++){
                     User user = User.builder()
@@ -196,7 +195,6 @@ public class InitData {
                         .build();
                 em.persist(team);
             }
-
 
             //할 일 3개 생성
             for (int i = 0; i <= 3; i++){
