@@ -3,10 +3,13 @@ package com.example.iworks.domain.schedule.service.schedule;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.meeting.repository.MeetingRepository;
 import com.example.iworks.domain.schedule.domain.Schedule;
+import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeBelong;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
+import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.model.entity.Code;
@@ -29,33 +32,44 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
     private final MeetingRepository meetingRepository;
+    private final ScheduleAssignRepository scheduleAssignRepository;
 
     @Override
-    public void createSchedule(int userId, ScheduleCreateRequestDto scheduleDto) {
+    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
         System.out.println("userId = " + userId);
-        Code scheduleDivision = codeRepository.findById(scheduleDto.getScheduleDivisionCodeId())
+        Code scheduleDivision = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
         User creator = userRepository.findByUserId(userId);
 
         Meeting scheduleMeeting = Meeting.builder()
-                .meetingDate(scheduleDto.getMeetingDate())
+                .meetingDate(createRequestDto.getMeetingDate())
                 .meetingCode("sampleMeetingCode")
                 .build();
 
         Schedule schedule = Schedule.builder()
                 .scheduleDivision(scheduleDivision)
-                .scheduleTitle(scheduleDto.getScheduleTitle())
-                .schedulePriority(scheduleDto.getSchedulePriority())
-                .scheduleContent(scheduleDto.getScheduleContent())
-                .scheduleStartDate(scheduleDto.getScheduleStartDate())
-                .scheduleEndDate(scheduleDto.getScheduleEndDate())
-                .schedulePlace(scheduleDto.getSchedulePlace())
+                .scheduleTitle(createRequestDto.getScheduleTitle())
+                .schedulePriority(createRequestDto.getSchedulePriority())
+                .scheduleContent(createRequestDto.getScheduleContent())
+                .scheduleStartDate(createRequestDto.getScheduleStartDate())
+                .scheduleEndDate(createRequestDto.getScheduleEndDate())
+                .schedulePlace(createRequestDto.getSchedulePlace())
                 .scheduleMeeting(scheduleMeeting)
                 .scheduleCreator(creator)
                 .scheduleCreatedAt(LocalDateTime.now())
                 .build();
 
+        /** need to refactoring */
+        for (AssigneeBelong assigneeBelong : createRequestDto.getAssigneeBelongs()) {
+
+            Code belongCategory = codeRepository.findById(assigneeBelong.getCategoryCodeId())
+                    .orElseThrow(() -> new EntityNotFoundException("Assignee Category not found"));
+
+            schedule.addScheduleAssigns(ScheduleAssign.builder()
+                            .scheduleAssigneeCategory(belongCategory)
+                    .scheduleAssigneeId(assigneeBelong.getAssigneeId()).build());
+        }
         scheduleRepository.save(schedule);
     }
 
