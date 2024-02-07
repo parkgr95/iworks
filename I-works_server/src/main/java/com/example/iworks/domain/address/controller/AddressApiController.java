@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/api/address")
@@ -52,8 +53,8 @@ public class AddressApiController {
         return addressService.deleteTeam(teamId,token);
     }
     @PostMapping("/team/user/{teamId}")
-    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody Map<String,Object> map){
-        return addressService.addTeamUser(teamId,token,(int)map.get("targetId"));
+    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody List<Integer> requestDto){
+        return addressService.addTeamUser(teamId,token,requestDto);
     }
 
     @DeleteMapping("/team/user/{teamId}")
