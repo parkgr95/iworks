@@ -7,6 +7,7 @@ import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.team.repository.team.TeamRepository;
+import com.example.iworks.domain.team.repository.team.TeamSearchRepository;
 import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
@@ -34,6 +35,7 @@ public class AddressServiceImpl implements AddressService {
     private final UserRepository userRepository;
     private final Response response;
     private final JwtProvider jwtProvider;
+    private final TeamSearchRepository teamSearchRepository;
 
     @Override
     public ResponseEntity<Map<String,Object>> selectAddressAll()
@@ -51,11 +53,12 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional
     @Override
-    public ResponseEntity<Map<String,Object>> createTeam(AddressTeamCreateRequestDto requestDto)
+    public ResponseEntity<Map<String,Object>> createTeam(String token,AddressTeamCreateRequestDto requestDto)
     {
         try {
-            Team team = new Team(requestDto);
-            if(teamRepository.findByTeamName(team.getTeamName())!= null){
+            int userId = jwtProvider.getUserId(token);
+            Team team = new Team(requestDto,userId);
+            if(teamSearchRepository.findAvailableTeamByTeamName(team.getTeamName())!=null){
                 return response.handleFail("이미 존재하는 팀 이름입니다.",null);
             }
             Team result = teamRepository.save(team);
@@ -90,14 +93,14 @@ public class AddressServiceImpl implements AddressService {
         int userId = jwtProvider.getUserId(token);
         Team team = teamRepository.findByTeamId(teamId);
 
-        if(team == null){
+        if(team == null || team.getTeamIsDeleted()){
             return  response.handleFail("팀을 찾을 수 없습니다.",null);
         }
 
         if(team.getTeamLeader() != userId){
             return response.handleFail("팀의 리더가 아닙니다.",null);
         }
-        teamRepository.delete(team);
+        team.delete();
         return response.handleSuccess("삭제되었습니다.");
     }
 
@@ -105,16 +108,16 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, int targetId) {
             int userId = jwtProvider.getUserId(token);
-            User user = userRepository.findByUserId(userId);
+            User user = userRepository.findByUserId(targetId);
             Team team = teamRepository.findByTeamId(teamId);
 
-            if (user == null) {
-                return response.handleFail("유저를 찾을 수 없습니다.", null);
-            }
+        if (user == null || user.getUserIsDeleted()) {
+            return response.handleFail("유저를 찾을 수 없습니다.", null);
+        }
 
-            if (team == null) {
-                return response.handleFail("팀을 찾을 수 없습니다.", null);
-            }
+        if (team == null || team.getTeamIsDeleted()) {
+            return response.handleFail("팀을 찾을 수 없습니다.", null);
+        }
 
             if (team.getTeamLeader() != userId) {
                 return response.handleFail("팀의 리더가 아닙니다.", null);
@@ -122,7 +125,7 @@ public class AddressServiceImpl implements AddressService {
             TeamUser teamUser = TeamUser.builder().teamUserUser(user).build();
 
             for(TeamUser tm : team.getTeamUsers()){
-                if(tm.getTeamUserUser().getUserId() == userId){
+                if(tm.getTeamUserUser().getUserId() == targetId){
                     return response.handleFail("이미 존재하는 팀원입니다.", null);
                 }
             }
@@ -138,11 +141,11 @@ public class AddressServiceImpl implements AddressService {
         User user = userRepository.findByUserId(userId);
         Team team = teamRepository.findByTeamId(teamId);
 
-        if (user == null) {
+        if (user == null || user.getUserIsDeleted()) {
             return response.handleFail("유저를 찾을 수 없습니다.", null);
         }
 
-        if (team == null) {
+        if (team == null || team.getTeamIsDeleted()) {
             return response.handleFail("팀을 찾을 수 없습니다.", null);
         }
 
@@ -157,6 +160,27 @@ public class AddressServiceImpl implements AddressService {
             return  response.handleFail("존재하지 않는 팀원입니다.",null);
         }
         return response.handleSuccess("팀원이 삭제 되었습니다.");
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> editTeam(int teamId, String token, AddressTeamEditRequestDto requestDto) {
+        int userId = jwtProvider.getUserId(token);
+        User user = userRepository.findByUserId(userId);
+        Team team = teamRepository.findByTeamId(teamId);
+
+        if (user == null || user.getUserIsDeleted()) {
+            return response.handleFail("유저를 찾을 수 없습니다.", null);
+        }
+
+        if (team == null || team.getTeamIsDeleted()) {
+            return response.handleFail("팀을 찾을 수 없습니다.", null);
+        }
+
+        if (team.getTeamLeader() != userId) {
+            return response.handleFail("팀의 리더가 아닙니다.", null);
+        }
+        team.update(requestDto);
+        return response.handleSuccess("변경 완료");
     }
 
 }

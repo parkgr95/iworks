@@ -11,4 +11,6 @@ public interface AddressRepository extends JpaRepository<User,Integer> {
 
     @Query("select u as user, d as department, c as code from User u left join fetch u.userDepartment d left join u.userPositionCode c")
     List<AddressDto> selectAddressAll();
+
+
 }
