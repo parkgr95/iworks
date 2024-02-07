@@ -4,6 +4,7 @@ import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateReq
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
 import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,15 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final Response response;
+    private final JwtProvider jwtProvider;
 
 //    @ResponseStatus(HttpStatus.OK)
 //    public String createSchedule(@RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
     /** 할일 생성 */
-    @PostMapping("/")
-    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
-        String jwtToken = authorizationHeader.substring("Bearer ".length());
-        scheduleService.createSchedule(jwtToken, scheduleCreateRequestDto);
+    @PostMapping
+    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
+        int userId = jwtProvider.getUserId(authorizationToken);
+        scheduleService.createSchedule(userId, scheduleCreateRequestDto);
         return response.handleSuccess("할일 등록 성공");
     }
 
