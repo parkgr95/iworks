@@ -16,7 +16,7 @@ public interface ScheduleService {
 
     List<ScheduleResponseDto> searchByKeyword(String keyword);
 
-    void removeSchedule(Integer scheduleId);
+    void deleteSchedule(Integer scheduleId);
 
     void isFinishedSchedule(int scheduleId, boolean isFinish);
 

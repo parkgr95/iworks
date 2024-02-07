@@ -5,7 +5,6 @@ import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateReq
 import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
 import com.example.iworks.global.model.Response;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +18,10 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final Response response;
 
-    /** 할일 생성 */
-//    @PostMapping("/create")
 //    @ResponseStatus(HttpStatus.OK)
 //    public String createSchedule(@RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
     /** 할일 생성 */
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
         String jwtToken = authorizationHeader.substring("Bearer ".length());
         scheduleService.createSchedule(jwtToken, scheduleCreateRequestDto);
@@ -58,7 +55,7 @@ public class ScheduleController {
     /** 할일 삭제 */
     @PostMapping("/{scheduleId}/delete")
     public ResponseEntity<?> deleteSchedule(@PathVariable(name = "scheduleId") int scheduleId){
-        scheduleService.removeSchedule(scheduleId);
+        scheduleService.deleteSchedule(scheduleId);
         return response.handleSuccess("할일 삭제 성공");
     }
 
