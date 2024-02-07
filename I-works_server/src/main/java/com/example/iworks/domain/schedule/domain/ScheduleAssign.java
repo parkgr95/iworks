@@ -9,12 +9,11 @@ import lombok.*;
 @Table(name = "schedule_assign")
 @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
-@ToString
 public class ScheduleAssign {
 
     @Id
     @GeneratedValue
-    @Column(name = "schedule_assign_id", nullable = false)
+    @Column(name = "schedule_assign_id")
     private int scheduleAssignId;
 
     @ManyToOne(fetch = FetchType.LAZY)

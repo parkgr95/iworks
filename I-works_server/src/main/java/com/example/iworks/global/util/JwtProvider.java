@@ -32,9 +32,9 @@ public class JwtProvider {
         this.SECRET_KEY = secretKeyConfig.getJwtsecretKey();
     }
 
-    public String createAccessToken(String eid, List<String> role) {
+    public String createAccessToken(int id, List<String> role) {
         String accessToken = Jwts.builder()
-                .claim("eid",eid)
+                .claim("id",id)
                 .claim("type","access")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
@@ -50,14 +50,14 @@ public class JwtProvider {
                 .parseClaimsJws(refreshToken)
                 .getBody();
 
-        String eid = (String) claims.get("eid");
+        int id = (int) claims.get("id");
         List<String> role = (List<String>)claims.get("role");
-        return createAccessToken(eid, role);
+        return createAccessToken(id, role);
     }
 
-    public String createRefreshToken(String eid, List<String> role) {
+    public String createRefreshToken(int id, List<String> role) {
         String refreshToken = Jwts.builder()
-                .claim("eid",eid)
+                .claim("id",id)
                 .claim("type","refresh")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
@@ -65,7 +65,7 @@ public class JwtProvider {
                 .compact();
 /*        redisTemplate.opsForValue().set(
                 refreshToken, //key
-                eid, //value
+                id, //value
                 refreshExpTime,
                 TimeUnit.MILLISECONDS
         );*/
@@ -82,8 +82,7 @@ public class JwtProvider {
                 .parseClaimsJws(accessToken)
                 .getBody();
         String type = (String)claims.get("type");
-        String eid = (String)claims.get("eid");
-        return "access".equals(type) && eid != null;
+        return "access".equals(type);
     }
 
     public Boolean validateRefreshToken(String refreshToken) {
@@ -107,14 +106,14 @@ public class JwtProvider {
         return false;
     }
 
-    public String getUserEid(String jwt) {
+    public int getUserId(String jwt) {
         jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
-        return (String)claims.get("eid");
+        return (int)claims.get("id");
     }
 
     public List<String> getUserRole(String jwt) {
