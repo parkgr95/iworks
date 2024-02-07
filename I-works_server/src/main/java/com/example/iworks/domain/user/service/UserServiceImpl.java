@@ -55,8 +55,6 @@ public class UserServiceImpl implements UserService{
         User user = new User(dto);
         Department department = departmentRepository.findByDepartmentId(deptId);
         Code code = codeRepository.findCodeByCodeId(posCodeId);
-        System.out.println(department.getDepartmentId());
-        System.out.println(code.getCodeName());
         if(department == null || code == null){
             return response.handleFail("잘못된 부서,직책 값 입력",null);
         }

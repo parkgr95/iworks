@@ -23,10 +23,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider tokenProvider;
+    private final Response responseClass;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+        this.responseClass = new Response();
         setFilterProcessesUrl("/api/user/login");
     }
 
@@ -76,7 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 
         JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(refreshToken).build();
-        response.getWriter().write(new Response().getSuccessString(token));
+        response.getWriter().write(responseClass.getSuccessString(token));
     }
 
     @Override
@@ -85,6 +87,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.getWriter().write(new Response().getFailString("ID/PW를 확인해주세요",null));
+        response.getWriter().write(responseClass.getFailString("ID/PW를 확인해주세요",null));
     }
 }
