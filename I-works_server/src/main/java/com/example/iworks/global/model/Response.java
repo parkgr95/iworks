@@ -2,6 +2,7 @@ package com.example.iworks.global.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -11,25 +12,29 @@ import java.util.Map;
 
 @Component
 public class Response {
+
+    @Autowired
+    ObjectMapper objectMapper;
+
     public String getSuccessString(Object data) throws JsonProcessingException {
         Map<String,Object> result = new HashMap<>();
         result.put("result","success");
         result.put("data",data);
-        return new ObjectMapper().writeValueAsString(result);
+        return objectMapper.writeValueAsString(result);
     }
     public String getFailString(String message,Object data) throws JsonProcessingException {
         Map<String,Object> result = new HashMap<>();
         result.put("result","failed");
         result.put("message",message);
         result.put("data",data);
-        return new ObjectMapper().writeValueAsString(result);
+        return objectMapper.writeValueAsString(result);
     }
 
     public String getCustomResponseString(String resultString, Object data) throws JsonProcessingException {
         Map<String,Object> result = new HashMap<>();
         result.put("result",resultString);
         result.put("data",data);
-        return new ObjectMapper().writeValueAsString(result);
+        return objectMapper.writeValueAsString(result);
     }
 
     public ResponseEntity<Map<String,Object>> handleSuccess(Object data){
