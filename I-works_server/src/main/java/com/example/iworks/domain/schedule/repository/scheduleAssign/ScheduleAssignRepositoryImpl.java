@@ -36,6 +36,7 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
                          .join(scheduleAssign.schedule, schedule).fetchJoin()
                          .where(eqCategoryCodeId(requestDto.getCategoryCodeId())
                                  .and(eqAssigneeId(requestDto.getAssigneeId()))
+                                 ,schedule.scheduleIsFinish.eq(false)
                                  ,withInDate(dateCondition)
                                  ,filterTask(onlyTask)
                          )
@@ -58,7 +59,8 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    }
    private BooleanExpression withInDate (DateCondition dateCondition){
       if (dateCondition == null) return Expressions.TRUE;
-      return schedule.scheduleStartDate.between(dateCondition.getStartDate(), dateCondition.getEndDate());
+      return schedule.scheduleStartDate.loe(dateCondition.getEndDate())
+              .and(schedule.scheduleEndDate.goe(dateCondition.getStartDate()));
    }
 
 }

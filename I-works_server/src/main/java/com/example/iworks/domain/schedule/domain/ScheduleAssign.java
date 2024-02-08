@@ -9,6 +9,7 @@ import lombok.*;
 @Table(name = "schedule_assign")
 @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
+@EqualsAndHashCode
 public class ScheduleAssign {
 
     @Id
