@@ -5,11 +5,10 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.config.auth.PrincipalDetails;
+import com.example.iworks.global.model.Response;
+import com.example.iworks.global.model.entity.JWToken;
 import com.example.iworks.global.util.JwtProvider;
-import com.example.iworks.global.util.Response;
-import com.example.iworks.global.entity.JWToken;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,6 +63,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             } else if (jwtProvider.validateRefreshToken(jwtToken)) {
                 //refresh라면
                 System.out.println("REFRESH TOKEN!!");
+                jwtToken = jwtToken.replace("Bearer ","");
                 String accessToken = jwtProvider.reCreateAccessToken(jwtToken);
                 JWToken token = JWToken.builder().grantType("Bearer ").accessToken(accessToken).refreshToken(jwtToken).build();
                 response.getWriter().write(new Response().getSuccessString(token));
@@ -74,9 +74,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
         catch (ExpiredJwtException e){
             throw new ExpiredJwtException(null,null,e.getMessage());
-        }
-        catch (JwtException e){
-            throw new JwtException(e.getMessage());
         }
 
     }
