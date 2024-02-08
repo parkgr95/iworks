@@ -1,6 +1,6 @@
 package com.example.iworks.domain.address.service;
 
-import com.example.iworks.domain.address.domain.Address;
+import com.example.iworks.domain.address.entity.Address;
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
 import com.example.iworks.domain.address.dto.response.AddressDepartmentResonseDto;

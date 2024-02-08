@@ -1,6 +1,6 @@
 package com.example.iworks.domain.file.domain;
 
-import com.example.iworks.global.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

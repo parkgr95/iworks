@@ -1,7 +1,7 @@
 package com.example.iworks.domain.board.repository.custom;
 
 import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
-import com.example.iworks.global.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

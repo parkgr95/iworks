@@ -12,8 +12,8 @@ import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository
 import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.global.entity.Code;
-import com.example.iworks.global.repository.CodeRepository;
+import com.example.iworks.domain.code.entity.Code;
+import com.example.iworks.domain.code.repository.CodeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

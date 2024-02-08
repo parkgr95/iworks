@@ -1,7 +1,7 @@
 package com.example.iworks.domain.board.dto.request;
 
 import com.example.iworks.domain.board.domain.Board;
-import com.example.iworks.global.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

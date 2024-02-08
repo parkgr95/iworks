@@ -1,12 +1,12 @@
 package com.example.iworks;
 
+import com.example.iworks.domain.code.entity.Code;
+import com.example.iworks.domain.code.entity.CodeGroup;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.global.entity.Code;
-import com.example.iworks.global.entity.CodeGroup;
 import com.example.iworks.global.util.RandomPasswordUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;

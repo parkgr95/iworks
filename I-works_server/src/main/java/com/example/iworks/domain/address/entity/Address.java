@@ -1,8 +1,8 @@
-package com.example.iworks.domain.address.domain;
+package com.example.iworks.domain.address.entity;
 
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.global.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 
 
 public interface Address {

@@ -2,7 +2,7 @@ package com.example.iworks.domain.notification.dto.notification;
 
 import com.example.iworks.domain.notification.domain.Notification;
 import com.example.iworks.global.enumtype.NotificationType;
-import com.example.iworks.global.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
