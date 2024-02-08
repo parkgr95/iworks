@@ -1,12 +1,7 @@
 package com.example.iworks.global.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "code")
@@ -16,8 +11,12 @@ import lombok.Setter;
 public class Code {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code_id", nullable = false)
     private Integer codeId; // 코드 아이디
+
+    @Column(name="code_code",nullable = false,unique = true)
+    private Integer codeCode;
 
     @Column(name = "code_name", length = 30, nullable = false)
     private String codeName; // 코드명
