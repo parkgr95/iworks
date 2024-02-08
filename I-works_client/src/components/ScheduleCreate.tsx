@@ -15,7 +15,7 @@ import axios from 'axios'
 import { UserType } from '../interface/UserType'
 import { getAccessToken } from '../utils/auth'
 
-const API_URL = 'https://suhyeon.site/api/schedule/'
+const API_URL = 'https://suhyeon.site/api/schedule'
 const API_DEPT = 'https://suhyeon.site/api/address/department/all'
 const API_USR = 'https://suhyeon.site/api/address/user/all'
 
@@ -86,7 +86,7 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
     event?.preventDefault()
 
     const scheduleFormData = new FormData(event.currentTarget)
-    const scheduleAssigneeCategoryCodeId = assignDepartment ? '1' : '2'
+    const scheduleAssigneeCategoryCodeId = assignDepartment ? '2' : '1'
     scheduleFormData.append(
       'scheduleAssigneeCategoryCodeId',
       scheduleAssigneeCategoryCodeId,
@@ -99,7 +99,7 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
     // scheduleFormData.set('departmentId', testl.departmentId)
 
     const scheduleRequestData = formDataToRequestData(scheduleFormData)
-
+    
     axios
       .post(API_URL, scheduleRequestData, {
         headers: {
@@ -181,8 +181,8 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
                   {userList?.map((value) => {
                     return (
                       <option
-                        key={value.userEid}
-                        value={value.userEid}
+                        key={value.userId}
+                        value={value.userId}
                         label={value.userNameLast + value.userNameFirst}
                       />
                     )

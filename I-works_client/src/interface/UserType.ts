@@ -1,4 +1,5 @@
 export interface UserType {
+  userId:number
   userEid: string
   userNameFirst: string
   userNameLast: string
