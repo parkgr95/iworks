@@ -16,7 +16,6 @@ import lombok.Setter;
 public class Code {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code_id", nullable = false)
     private Integer codeId; // 코드 아이디
 
