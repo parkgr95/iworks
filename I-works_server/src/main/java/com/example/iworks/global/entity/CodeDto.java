@@ -1,4 +1,4 @@
-package com.example.iworks.global.model.entity;
+package com.example.iworks.global.entity;
 
 public class CodeDto {
     private Integer codeId;

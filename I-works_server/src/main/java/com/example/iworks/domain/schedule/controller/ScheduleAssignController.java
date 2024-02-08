@@ -4,7 +4,7 @@ import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAss
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeBelong;
 import com.example.iworks.domain.schedule.service.scheduleAssign.ScheduleAssignService;
 import com.example.iworks.global.dto.DateCondition;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

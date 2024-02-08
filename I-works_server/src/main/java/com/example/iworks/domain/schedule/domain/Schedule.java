@@ -3,7 +3,7 @@ package com.example.iworks.domain.schedule.domain;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.global.entity.Code;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

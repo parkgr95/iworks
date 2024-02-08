@@ -5,8 +5,8 @@ import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.global.model.entity.Code;
-import com.example.iworks.global.model.entity.CodeGroup;
+import com.example.iworks.global.entity.Code;
+import com.example.iworks.global.entity.CodeGroup;
 import com.example.iworks.global.util.RandomPasswordUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -66,83 +66,107 @@ public class InitData {
             int scheduleSeq = 1;
             int userSeq = 1;
             int userEmailSeq = 1;
+            Code codeCategorySchedule = null;
+            Code codeCategoryBoard = null;
+            Code codeCategoryMeeting = null;
+            Code codeAll = null;
             Code codeDepartment = null;
             Code codeUser = null;
             Code codeTeam = null;
-            Code ScheduleDivisionTask = null; //할일 분류 : 업무
-            Code ScheduleDivisionVacation = null; //할일 분류 : 휴가
-            Code ScheduleDivisionSick = null; //할일 분류 : 병가
+            Code statusOnline = null; //할일 분류 : 업무
+            Code statusOut = null; //할일 분류 : 휴가
+            Code statusVaction = null; //할일 분류 : 병가
+            Code statusOffline = null; //할일 분류 : 병가
             List<User> userList = new ArrayList<>();
             List<Team> teamList = new ArrayList<>();
             List<Department> departmentList = new ArrayList<>();
-
+            String [] codeNameList = {"카테고리","타겟","상태","직급"};
             //코드 그룹, 코드 데이터
-            for (int i =1; i <= 3; i++){
+            for (int i =0; i < 4; i++){
                 em.persist(CodeGroup.builder()
-                        .codeGroupName("코드그룹"+ i)
+                        .codeGroupName(codeNameList[i])
                         .build());
             }
             CodeGroup codeGroup1 = em.find(CodeGroup.class, 1);
-            System.out.println(codeGroup1);
 
-            codeUser = new Code();
-            codeUser.setCodeName("유저");
-            codeUser.setCodeGroup(codeGroup1);
-            em.persist(codeUser);
-
-            codeDepartment = new Code();
-            codeDepartment.setCodeName("부서");
-            codeDepartment.setCodeGroup(codeGroup1);
-            em.persist(codeDepartment);
-
-            codeTeam = new Code();
-            codeTeam.setCodeName("팀");
-            codeTeam.setCodeGroup(codeGroup1);
-            em.persist(codeTeam);
+            codeCategory = new Code();
 
             CodeGroup codeGroup2 = em.find(CodeGroup.class, 2);
 
-            ScheduleDivisionTask = Code.builder()
-                    .codeName("업무")
-                    .codeCodeGroup(codeGroup2)
-                    .build();
-            em.persist(ScheduleDivisionTask);
+            codeUser = new Code();
+            codeUser.setCodeId(100);
+            codeUser.setCodeName("전체");
+            codeUser.setCodeGroup(codeGroup2);
+            em.persist(codeUser);
 
-            ScheduleDivisionVacation = Code.builder()
-                    .codeName("개인일정(휴가)")
-                    .codeCodeGroup(codeGroup2)
-                    .build();
-            em.persist(ScheduleDivisionVacation);
+            codeUser = new Code();
+            codeUser.setCodeId(101);
+            codeUser.setCodeName("유저");
+            codeUser.setCodeGroup(codeGroup2);
+            em.persist(codeUser);
 
-            ScheduleDivisionSick = Code.builder()
-                    .codeName("개인일정(병가)")
-                    .codeCodeGroup(codeGroup2)
-                    .build();
-            em.persist(ScheduleDivisionSick);
+            codeDepartment = new Code();
+            codeDepartment.setCodeId(102);
+            codeDepartment.setCodeName("부서");
+            codeDepartment.setCodeGroup(codeGroup2);
+            em.persist(codeDepartment);
+
+            codeTeam = new Code();
+            codeTeam.setCodeId(103);
+            codeTeam.setCodeName("팀");
+            codeTeam.setCodeGroup(codeGroup2);
+            em.persist(codeTeam);
+
 
             CodeGroup codeGroup3 = em.find(CodeGroup.class, 3);
 
             ScheduleDivisionTask = Code.builder()
-                    .codeName("ROLE_ADMIN")
+                    .codeName("온라인")
                     .codeCodeGroup(codeGroup3)
                     .build();
             em.persist(ScheduleDivisionTask);
 
             ScheduleDivisionVacation = Code.builder()
-                    .codeName("ROLE_CEO")
+                    .codeName("부재중")
                     .codeCodeGroup(codeGroup3)
                     .build();
             em.persist(ScheduleDivisionVacation);
 
             ScheduleDivisionSick = Code.builder()
-                    .codeName("ROLE_LEADER")
+                    .codeName("휴가중")
                     .codeCodeGroup(codeGroup3)
                     .build();
             em.persist(ScheduleDivisionSick);
 
             ScheduleDivisionSick = Code.builder()
-                    .codeName("ROLE_EMPLOYEE")
+                    .codeName("오프라인")
                     .codeCodeGroup(codeGroup3)
+                    .build();
+            em.persist(ScheduleDivisionSick);
+
+            CodeGroup codeGroup4 = em.find(CodeGroup.class, 4);
+
+            ScheduleDivisionTask = Code.builder()
+                    .codeName("ROLE_EMOLPYEE")
+                    .codeCodeGroup(codeGroup4)
+                    .build();
+            em.persist(ScheduleDivisionTask);
+
+            ScheduleDivisionVacation = Code.builder()
+                    .codeName("ROLE_LEADER")
+                    .codeCodeGroup(codeGroup4)
+                    .build();
+            em.persist(ScheduleDivisionVacation);
+
+            ScheduleDivisionSick = Code.builder()
+                    .codeName("ROLE_CEO")
+                    .codeCodeGroup(codeGroup4)
+                    .build();
+            em.persist(ScheduleDivisionSick);
+
+            ScheduleDivisionSick = Code.builder()
+                    .codeName("ROLE_ADMIN")
+                    .codeCodeGroup(codeGroup4)
                     .build();
             em.persist(ScheduleDivisionSick);
 

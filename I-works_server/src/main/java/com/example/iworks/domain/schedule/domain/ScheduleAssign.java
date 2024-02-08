@@ -1,7 +1,6 @@
 package com.example.iworks.domain.schedule.domain;
 
-import com.example.iworks.domain.schedule.domain.Schedule;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.global.entity.Code;
 import jakarta.persistence.*;
 import lombok.*;
 

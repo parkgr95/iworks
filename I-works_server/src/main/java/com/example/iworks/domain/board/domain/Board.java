@@ -1,7 +1,7 @@
 package com.example.iworks.domain.board.domain;
 
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.global.entity.Code;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

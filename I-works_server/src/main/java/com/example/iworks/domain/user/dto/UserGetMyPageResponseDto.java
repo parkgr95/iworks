@@ -18,6 +18,7 @@ public class UserGetMyPageResponseDto {
     private final String userGender; // 성별
 
     public UserGetMyPageResponseDto(User user){
+        this.userId = user.getUserId();
         this.departmentName = user.getUserDepartment().getDepartmentName();
         this.userPosition = user.getUserPositionCode().getCodeName();
         this.userEid = user.getUserEid();

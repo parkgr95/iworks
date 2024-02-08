@@ -5,7 +5,7 @@ import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
 import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
 import com.example.iworks.domain.board.repository.custom.BoardGetRepository;
 import com.example.iworks.domain.board.repository.custom.BoardSearchRepository;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.global.entity.Code;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.example.iworks.domain.board.domain.QBoard.board;
-import static com.example.iworks.domain.board.domain.QBookmark.bookmark;
 import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor

@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.iworks.global.common.CategoryCodeDef.*;
+import static com.example.iworks.global.common.CodeDef.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -61,12 +61,12 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
         List<AssigneeBelong> searchParameterDtoList = new ArrayList<>();
         User user = userRepository.findById(userId).orElseThrow(IllegalAccessError::new);
 
-        searchParameterDtoList.add(new AssigneeBelong(CATEGORY_USER_CODE_ID, userId));
-        searchParameterDtoList.add(new AssigneeBelong(CATEGORY_DEPARTMENT_CODE_ID, user.getUserDepartment().getDepartmentId()));
+        searchParameterDtoList.add(new AssigneeBelong(TARGET_USER_CODE_ID, userId));
+        searchParameterDtoList.add(new AssigneeBelong(TARGET_DEPARTMENT_CODE_ID, user.getUserDepartment().getDepartmentId()));
 
         List<TeamUser> teamUsersByUser = teamUserRepository.findTeamUserByUserId(userId);
         for (TeamUser teamUser: teamUsersByUser){
-            searchParameterDtoList.add(new AssigneeBelong(CATEGORY_TEAM_CODE_ID, teamUser.getTeamUserTeam().getTeamId()));
+            searchParameterDtoList.add(new AssigneeBelong(TARGET_TEAM_CODE_ID, teamUser.getTeamUserTeam().getTeamId()));
         }
         return searchParameterDtoList;
     }

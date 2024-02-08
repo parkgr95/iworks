@@ -1,9 +1,8 @@
-package com.example.iworks.global.model.entity;
+package com.example.iworks.global.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,7 @@
 package com.example.iworks.domain.notification.domain;
 
 import com.example.iworks.global.enumtype.NotificationType;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.global.entity.Code;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;

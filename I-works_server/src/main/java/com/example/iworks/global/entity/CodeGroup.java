@@ -1,4 +1,4 @@
-package com.example.iworks.global.model.entity;
+package com.example.iworks.global.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
