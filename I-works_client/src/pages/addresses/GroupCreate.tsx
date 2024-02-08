@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { Form, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
 import { getAccessToken } from "../../utils/auth"
+import { useUser } from "../../utils/userInfo"
 
 interface UserData {
   userId: number,
@@ -19,6 +20,7 @@ interface UserData {
 }
 
 function GroupCreate() {
+  const loginedUser = useUser()
   const navigate = useNavigate()
   const [teamName, setTeamName] = useState<string>('')
   const [teamDescription, setTeamDescription] = useState<string>()
@@ -36,10 +38,18 @@ function GroupCreate() {
   // api 요청
   function handleCreate(event: FormEvent) {
     event.preventDefault()
-    
+    console.log(loginedUser)
     const teamLeader = teamLeaderData[0].userId
     const targetIdArray = teamMemberData.map(user => user.userId);
+    if (!loginedUser) {
+      // 유저 정보가 없을 경우에 대한 처리
+      return <div>Loading...</div>;
+    }
 
+    if (teamLeader !== loginedUser.userId) {
+      alert("그룹 리더가 로그인한 사용자와 일치하지 않습니다.");
+      return;
+    }
     axios
       .post("https://suhyeon.site/api/address/team/create", {
         "teamName": teamName,

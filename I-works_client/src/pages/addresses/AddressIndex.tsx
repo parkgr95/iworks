@@ -21,7 +21,6 @@ function AddressIndex() {
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/address/user/all`)
       .then((res) => {
-        console.log(res.data.data)
         setUserAll(res.data.data)
       })
       .catch((err) => {
