@@ -7,6 +7,7 @@ import com.example.iworks.domain.meeting.repository.MeetingRepository;
 import com.example.iworks.domain.notification.domain.Notification;
 import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
+import com.example.iworks.domain.notification.dto.usernotification.response.UserNotificationGetAllByUserResponseDto;
 import com.example.iworks.domain.notification.repository.usernotification.UserNotificationRepository;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
@@ -15,6 +16,8 @@ import com.example.iworks.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +60,13 @@ public class UserNotificationServiceImpl implements UserNotificationService {
         UserNotification foundUserNotification = userNotificationRepository.findById(userNotificationId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 알림이 없습니다. id=" + userNotificationId));
         foundUserNotification.delete();
+    }
+
+    @Override
+    public List<UserNotificationGetAllByUserResponseDto> getAllUserNotificationsByUserId(int userId) {
+        return userNotificationRepository.findUserNotificationsByUserId(userId)
+                .stream()
+                .map(UserNotificationGetAllByUserResponseDto::new)
+                .toList();
     }
 }
