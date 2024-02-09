@@ -1,13 +1,8 @@
 package com.example.iworks.domain.notification.repository.usernotification;
 
-import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.notification.repository.usernotification.custom.UserNotificationSearchRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public class UserNotificationRepositoryImpl implements UserNotificationSearchRepository {
-    @Override
-    public List<UserNotification> findByUserEid(String userEid) {
-        return null;
-    }
 }
