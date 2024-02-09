@@ -5,6 +5,7 @@ import com.example.iworks.domain.board.repository.BoardRepository;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.meeting.repository.MeetingRepository;
 import com.example.iworks.domain.notification.domain.Notification;
+import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
 import com.example.iworks.domain.notification.repository.usernotification.UserNotificationRepository;
 import com.example.iworks.domain.schedule.domain.Schedule;
@@ -28,7 +29,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Transactional
     @Override
-    public void createNotification(UserNotificationCreateRequestDto createRequestDto) {
+    public void createUserNotification(UserNotificationCreateRequestDto createRequestDto) {
         User receiver = userRepository.findById(createRequestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + createRequestDto.getUserId()));
 
@@ -52,9 +53,9 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Transactional
     @Override
-    public void deleteNotification(int notificationId) {
-//        Notification foundNotification = userNotificationRepository.findById(notificationId)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 알림이 없습니다. id=" + notificationId));
-//        foundNotification.delete();
+    public void deleteUserNotification(int userNotificationId) {
+        UserNotification foundUserNotification = userNotificationRepository.findById(userNotificationId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 알림이 없습니다. id=" + userNotificationId));
+        foundUserNotification.delete();
     }
 }
