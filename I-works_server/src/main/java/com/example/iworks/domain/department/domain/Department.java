@@ -42,7 +42,7 @@ public class Department {
 
     @Builder.Default
     @Column(name = "department_is_used", nullable = false)
-    private Boolean departmentIsUsed = true; // 사용 여부
+    private boolean departmentIsUsed = true; // 사용 여부
 
     @Builder.Default
     @Temporal(TemporalType.TIMESTAMP)
