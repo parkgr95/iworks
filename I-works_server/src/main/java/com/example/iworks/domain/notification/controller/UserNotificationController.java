@@ -18,14 +18,14 @@ public class UserNotificationController {
     private final UserNotificationService userNotificationService;
     private final Response response;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Map<String, Object>> createNotification(@RequestBody UserNotificationCreateRequestDto userNotificationCreateRequestDto) {
         userNotificationService.createNotification(userNotificationCreateRequestDto);
         return response.handleSuccess("알림 생성 완료");
     }
 
-    @GetMapping("/{notificationId}/delete")
-    public ResponseEntity<Map<String, Object>> deleteNotification(@PathVariable("notificationId") int notificationId) {
+    @GetMapping("/{userNotificationId}/delete")
+    public ResponseEntity<Map<String, Object>> deleteNotification(@PathVariable("userNotificationId") int notificationId) {
         userNotificationService.deleteNotification(notificationId);
         return response.handleSuccess("알림 삭제 완료");
     }
