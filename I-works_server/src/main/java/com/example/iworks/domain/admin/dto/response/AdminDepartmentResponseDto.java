@@ -26,7 +26,7 @@ public class AdminDepartmentResponseDto {
         this.departmentTelFirst = department.getDepartmentTelFirst();
         this.departmentTelMiddle = department.getDepartmentTelMiddle();
         this.departmentTelLast = department.getDepartmentTelLast();
-        this.departmentIsUsed = department.getDepartmentIsUsed();
+        this.departmentIsUsed = department.isDepartmentIsUsed();
         this.departmentCreatedAt = department.getDepartmentCreatedAt();
         this.departmentUpdatedAt = department.getDepartmentUpdatedAt();
     }
