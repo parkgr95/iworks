@@ -19,9 +19,8 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
 
     private final JPAQueryFactory queryFactory;
 
-    /** 정렬 */
     @Override
-    public List<UserNotification> findUserNotificationsByUserId(int userId) {
+    public List<UserNotification> findByUserId(int userId) {
         return queryFactory
                 .selectFrom(userNotification)
                 .where( eqReceiverId(userId).and(isNotDeleted()))
@@ -29,6 +28,42 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
                 .fetch();
     }
 
+    @Override
+    public List<UserNotification> findCategoryBoardByUserId(int userId) {
+        return queryFactory
+                .selectFrom(userNotification)
+                .where( eqReceiverId(userId).and(isBoard()).and(isNotDeleted()))
+                .orderBy(userNotification.userNotificationCreatedAt.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<UserNotification> findCategoryScheduleByUserId(int userId) {
+        return queryFactory
+                .selectFrom(userNotification)
+                .where( eqReceiverId(userId).and(isSchedule()).and(isNotDeleted()))
+                .orderBy(userNotification.userNotificationCreatedAt.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<UserNotification> findCategoryMeetingByUserId(int userId) {
+        return queryFactory
+                .selectFrom(userNotification)
+                .where( eqReceiverId(userId).and(isMeeting()).and(isNotDeleted()))
+                .orderBy(userNotification.userNotificationCreatedAt.asc())
+                .fetch();
+    }
+
+    private BooleanExpression isBoard() {
+        return userNotification.userNotificationBoard.isNotNull();
+    }
+    private BooleanExpression isSchedule() {
+        return userNotification.userNotificationSchedule.isNotNull();
+    }
+    private BooleanExpression isMeeting() {
+        return userNotification.userNotificationMeeting.isNotNull();
+    }
     private BooleanExpression eqReceiverId(int userId) {
         return userNotification.userNotificationReceiver.userId.eq(userId);
     }

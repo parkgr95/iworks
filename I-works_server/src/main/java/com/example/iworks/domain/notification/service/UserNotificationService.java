@@ -7,9 +7,13 @@ import java.util.List;
 
 public interface UserNotificationService {
 
-    void createUserNotification(UserNotificationCreateRequestDto createRequestDto);
+    void create(UserNotificationCreateRequestDto createRequestDto);
 
-    void deleteUserNotification(int userNotificationId);
+    void delete(int userNotificationId);
 
-    List<UserNotificationGetAllByUserResponseDto> getAllUserNotificationsByUserId(int userId);
+    List<UserNotificationGetAllByUserResponseDto> getAllByUserId(int userId);
+
+    List<UserNotificationGetAllByUserResponseDto> getAllAboutBoardByUserId(int userId);
+    List<UserNotificationGetAllByUserResponseDto> getAllAboutScheduleByUserId(int userId);
+    List<UserNotificationGetAllByUserResponseDto> getAllAboutMeetingByUserId(int userId);
 }

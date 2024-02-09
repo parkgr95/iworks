@@ -4,7 +4,6 @@ import com.example.iworks.domain.board.domain.Board;
 import com.example.iworks.domain.board.repository.BoardRepository;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.meeting.repository.MeetingRepository;
-import com.example.iworks.domain.notification.domain.Notification;
 import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
 import com.example.iworks.domain.notification.dto.usernotification.response.UserNotificationGetAllByUserResponseDto;
@@ -32,7 +31,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Transactional
     @Override
-    public void createUserNotification(UserNotificationCreateRequestDto createRequestDto) {
+    public void create(UserNotificationCreateRequestDto createRequestDto) {
         User receiver = userRepository.findById(createRequestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + createRequestDto.getUserId()));
 
@@ -56,17 +55,35 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Transactional
     @Override
-    public void deleteUserNotification(int userNotificationId) {
+    public void delete(int userNotificationId) {
         UserNotification foundUserNotification = userNotificationRepository.findById(userNotificationId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 알림이 없습니다. id=" + userNotificationId));
         foundUserNotification.delete();
     }
 
     @Override
-    public List<UserNotificationGetAllByUserResponseDto> getAllUserNotificationsByUserId(int userId) {
-        return userNotificationRepository.findUserNotificationsByUserId(userId)
+    public List<UserNotificationGetAllByUserResponseDto> getAllByUserId(int userId) {
+        return userNotificationRepository.findByUserId(userId)
                 .stream()
                 .map(UserNotificationGetAllByUserResponseDto::new)
                 .toList();
+    }
+
+    @Override
+    public List<UserNotificationGetAllByUserResponseDto> getAllAboutBoardByUserId(int userId) {
+        return userNotificationRepository.findCategoryBoardByUserId(userId)
+                .stream()
+                .map(UserNotificationGetAllByUserResponseDto::new)
+                .toList();
+    }
+
+    @Override
+    public List<UserNotificationGetAllByUserResponseDto> getAllAboutScheduleByUserId(int userId) {
+        return null;
+    }
+
+    @Override
+    public List<UserNotificationGetAllByUserResponseDto> getAllAboutMeetingByUserId(int userId) {
+        return null;
     }
 }
