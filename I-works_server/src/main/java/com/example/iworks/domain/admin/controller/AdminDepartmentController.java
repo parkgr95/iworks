@@ -8,30 +8,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/department")
 @RestController
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminDepartmentController {
 
     private final AdminService adminService;
     private final Response response;
 
     // 부서 등록
-    @PostMapping("/department")
+    @PostMapping("/")
     public ResponseEntity<?> createDepartment(@RequestBody AdminDepartmentCreateRequestDto requestDto) {
         adminService.createDepartment(requestDto);
         return response.handleSuccess("부서 등록 완료");
     }
 
     // 부서 수정
-    @PutMapping("/department/{departmentId}")
+    @PutMapping("/{departmentId}")
     public ResponseEntity<?> updateDepartment(@PathVariable(name = "departmentId") int departmentId, @RequestBody AdminDepartmentUpdateRequestDto requestDto) {
         adminService.updateDepartment(departmentId, requestDto);
         return response.handleSuccess("부서 수정 완료");
     }
 
     // 부서 전체 조회
-    @GetMapping("/department")
+    @GetMapping("/")
     public ResponseEntity<?> getDepartmentAll() {
         return response.handleSuccess(adminService.getDepartmentAll());
     }
