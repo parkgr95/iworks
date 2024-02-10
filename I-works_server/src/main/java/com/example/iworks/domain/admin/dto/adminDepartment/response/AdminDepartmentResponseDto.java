@@ -1,4 +1,4 @@
-package com.example.iworks.domain.admin.dto.response;
+package com.example.iworks.domain.admin.dto.adminDepartment.response;
 
 import com.example.iworks.domain.department.domain.Department;
 import lombok.Getter;
