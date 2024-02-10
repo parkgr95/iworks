@@ -79,12 +79,18 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllAboutScheduleByUserId(int userId) {
-        return null;
+        return userNotificationRepository.findAllCategoryScheduleByUserId(userId)
+                .stream()
+                .map(UserNotificationGetAllByUserResponseDto::new)
+                .toList();
     }
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllAboutMeetingByUserId(int userId) {
-        return null;
+        return userNotificationRepository.findAllCategoryMeetingByUserId(userId)
+                .stream()
+                .map(UserNotificationGetAllByUserResponseDto::new)
+                .toList();
     }
 
     @Override
