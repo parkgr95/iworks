@@ -2,6 +2,7 @@ package com.example.iworks.domain.user.domain;
 
 
 import com.example.iworks.domain.department.domain.Department;
+import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
@@ -96,6 +97,9 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "teamUserUser")
     private List<TeamUser> userTeamUsers = new ArrayList<>(); // 맴버별 팀유저
+
+    @OneToMany(mappedBy = "userNotificationReceiver")
+    private List<UserNotification> userNotifications = new ArrayList<>(); // 유저별 알림
 
     public User(UserJoinRequestDto dto){
          this.userEid = dto.getUserEid();
