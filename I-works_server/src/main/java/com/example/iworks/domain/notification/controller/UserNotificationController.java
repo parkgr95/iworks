@@ -3,7 +3,7 @@ package com.example.iworks.domain.notification.controller;
 
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
 import com.example.iworks.domain.notification.service.UserNotificationService;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
