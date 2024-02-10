@@ -63,7 +63,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllByUserId(int userId) {
-        return userNotificationRepository.findByUserId(userId)
+        return userNotificationRepository.findAllByUserId(userId)
                 .stream()
                 .map(UserNotificationGetAllByUserResponseDto::new)
                 .toList();
@@ -71,7 +71,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllAboutBoardByUserId(int userId) {
-        return userNotificationRepository.findCategoryBoardByUserId(userId)
+        return userNotificationRepository.findAllCategoryBoardByUserId(userId)
                 .stream()
                 .map(UserNotificationGetAllByUserResponseDto::new)
                 .toList();
@@ -85,5 +85,19 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllAboutMeetingByUserId(int userId) {
         return null;
+    }
+
+    @Override
+    public long getCountIsNotSent(int userId) {
+        return userNotificationRepository.countOfIsNotSent(userId);
+    }
+
+    @Transactional
+    @Override
+    public String getOneMessage(int userId) {
+        List<UserNotification> userNotificationListByUserId = userNotificationRepository.findAllByUserId(userId);//영속성 컨텍스트에 있음
+        String message = userNotificationListByUserId.get(0).getUserNotificationContent();
+        userNotificationListByUserId.get(0).delete();
+        return message;
     }
 }

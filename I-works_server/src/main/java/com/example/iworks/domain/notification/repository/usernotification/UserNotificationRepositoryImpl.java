@@ -20,7 +20,7 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<UserNotification> findByUserId(int userId) {
+    public List<UserNotification> findAllByUserId(int userId) {
         return queryFactory
                 .selectFrom(userNotification)
                 .where( eqReceiverId(userId).and(isNotDeleted()))
@@ -29,7 +29,7 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
     }
 
     @Override
-    public List<UserNotification> findCategoryBoardByUserId(int userId) {
+    public List<UserNotification> findAllCategoryBoardByUserId(int userId) {
         return queryFactory
                 .selectFrom(userNotification)
                 .where( eqReceiverId(userId).and(isBoard()).and(isNotDeleted()))
@@ -38,7 +38,7 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
     }
 
     @Override
-    public List<UserNotification> findCategoryScheduleByUserId(int userId) {
+    public List<UserNotification> findAllCategoryScheduleByUserId(int userId) {
         return queryFactory
                 .selectFrom(userNotification)
                 .where( eqReceiverId(userId).and(isSchedule()).and(isNotDeleted()))
@@ -47,7 +47,7 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
     }
 
     @Override
-    public List<UserNotification> findCategoryMeetingByUserId(int userId) {
+    public List<UserNotification> findAllCategoryMeetingByUserId(int userId) {
         return queryFactory
                 .selectFrom(userNotification)
                 .where( eqReceiverId(userId).and(isMeeting()).and(isNotDeleted()))
@@ -55,18 +55,35 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
                 .fetch();
     }
 
+    @Override
+    public long countOfIsNotSent(int userId) {
+        return queryFactory
+                .select(userNotification.count())
+                .from(userNotification)
+                .where(eqReceiverId(userId).and(isNotSent()))
+                .fetchCount();
+    }
+
+    private BooleanExpression isNotSent() {
+        return userNotification.userNotificationIsSent.eq(false);
+    }
+
     private BooleanExpression isBoard() {
         return userNotification.userNotificationBoard.isNotNull();
     }
+
     private BooleanExpression isSchedule() {
         return userNotification.userNotificationSchedule.isNotNull();
     }
+
     private BooleanExpression isMeeting() {
         return userNotification.userNotificationMeeting.isNotNull();
     }
+
     private BooleanExpression eqReceiverId(int userId) {
         return userNotification.userNotificationReceiver.userId.eq(userId);
     }
+
     private BooleanExpression isNotDeleted() {
         return userNotification.userNotificationIsDeleted.eq(false);
     }
