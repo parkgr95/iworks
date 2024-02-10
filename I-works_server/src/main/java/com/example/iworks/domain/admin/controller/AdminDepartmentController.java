@@ -1,8 +1,8 @@
 package com.example.iworks.domain.admin.controller;
 
-import com.example.iworks.domain.admin.dto.request.AdminDepartmentCreateRequestDto;
-import com.example.iworks.domain.admin.dto.request.AdminDepartmentUpdateRequestDto;
-import com.example.iworks.domain.admin.service.AdminService;
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentCreateRequestDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentUpdateRequestDto;
+import com.example.iworks.domain.admin.service.adminDepartment.AdminDepartmentService;
 import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminDepartmentController {
 
-    private final AdminService adminService;
+    private final AdminDepartmentService adminService;
     private final Response response;
 
     // 부서 등록
