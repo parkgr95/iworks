@@ -13,6 +13,8 @@ public interface UserNotificationSearchRepository {
 
     List<UserNotification> findAllCategoryMeetingByUserId(int userId);
 
+    List<UserNotification> findAllIsNotSentByUserId(int userId);
+
     long countOfIsNotSent(int userId);
 
 }

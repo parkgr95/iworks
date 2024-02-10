@@ -54,6 +54,14 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
                 .orderBy(userNotification.userNotificationCreatedAt.asc())
                 .fetch();
     }
+    @Override
+    public List<UserNotification> findAllIsNotSentByUserId(int userId) {
+        return queryFactory
+                .selectFrom(userNotification)
+                .where( eqReceiverId(userId).and(isNotSent()))
+                .orderBy(userNotification.userNotificationCreatedAt.asc())
+                .fetch();
+    }
 
     @Override
     public long countOfIsNotSent(int userId) {
@@ -67,6 +75,7 @@ public class UserNotificationRepositoryImpl implements UserNotificationSearchRep
     private BooleanExpression isNotSent() {
         return userNotification.userNotificationIsSent.eq(false);
     }
+
 
     private BooleanExpression isBoard() {
         return userNotification.userNotificationBoard.isNotNull();
