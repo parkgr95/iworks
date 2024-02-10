@@ -22,9 +22,7 @@ public class UserNotificationCreateRequestDto {
 
     private int scheduleId; // 할일 아이디
 
-    private int meetingId; // 회의 아이디
-
-    private String notificationContent; // 알림 내용
+    private int meetingId; // 할일 아이디
 
     private String notificationType; // 알림 타입(생성, 삭제, 수정)
 
@@ -36,7 +34,6 @@ public class UserNotificationCreateRequestDto {
                 .userNotificationBoard(board)
                 .userNotificationSchedule(schedule)
                 .userNotificationMeeting(meeting)
-                .userNotificationContent(notificationContent)
                 .build();
     }
 }

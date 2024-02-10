@@ -23,9 +23,6 @@ public class UserNotification {
     @Column(name = "notification_type")
     private NotificationType notificationType; // 알림 타입(생성, 삭제, 수정)
 
-    @Column(name = "user_notification_content", nullable = false)
-    private String userNotificationContent; // 알림 내용
-
     @Builder.Default
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "notification_created_at", nullable = false)

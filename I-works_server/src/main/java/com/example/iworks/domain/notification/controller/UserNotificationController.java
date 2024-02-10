@@ -18,42 +18,17 @@ public class UserNotificationController {
     
     private final UserNotificationService userNotificationService;
     private final Response response;
-    private final JwtProvider jwtProvider;
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> createNotification(@RequestBody UserNotificationCreateRequestDto userNotificationCreateRequestDto) {
-        userNotificationService.create(userNotificationCreateRequestDto);
+        userNotificationService.createUserNotification(userNotificationCreateRequestDto);
         return response.handleSuccess("알림 생성 완료");
     }
 
     @GetMapping("/{userNotificationId}/delete")
     public ResponseEntity<Map<String, Object>> deleteNotification(@PathVariable("userNotificationId") int notificationId) {
-        userNotificationService.delete(notificationId);
+        userNotificationService.deleteUserNotification(notificationId);
         return response.handleSuccess("알림 삭제 완료");
-    }
-
-    @GetMapping
-    public ResponseEntity<Map<String, Object>> getAllUserNotificationsByUserId(@RequestHeader("Authorization") String token){
-        int userId = jwtProvider.getUserId(token);
-        return response.handleSuccess(userNotificationService.getAllByUserId(userId));
-    }
-
-    @GetMapping("/board")
-    public ResponseEntity<Map<String, Object>> getAllAboutBoardByUserId(@RequestHeader("Authorization") String token){
-        int userId = jwtProvider.getUserId(token);
-        return response.handleSuccess(userNotificationService.getAllAboutBoardByUserId(userId));
-    }
-
-    @GetMapping("/schedule")
-    public ResponseEntity<Map<String, Object>> getAllAboutScheduleByUserId(@RequestHeader("Authorization") String token){
-        int userId = jwtProvider.getUserId(token);
-        return response.handleSuccess(userNotificationService.getAllAboutScheduleByUserId(userId));
-    }
-
-    @GetMapping("/meeting")
-    public ResponseEntity<Map<String, Object>> getAllAboutMeetingByUserId(@RequestHeader("Authorization") String token){
-        int userId = jwtProvider.getUserId(token);
-        return response.handleSuccess(userNotificationService.getAllAboutMeetingByUserId(userId));
     }
 
 }
