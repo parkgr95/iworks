@@ -2,7 +2,7 @@ package com.example.iworks.domain.schedule.controller;
 
 import com.example.iworks.domain.schedule.service.scheduleAssign.ScheduleAssignService;
 import com.example.iworks.global.dto.DateCondition;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

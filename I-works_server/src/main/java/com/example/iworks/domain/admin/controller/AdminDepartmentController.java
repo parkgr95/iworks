@@ -3,7 +3,7 @@ package com.example.iworks.domain.admin.controller;
 import com.example.iworks.domain.admin.dto.request.AdminDepartmentCreateRequestDto;
 import com.example.iworks.domain.admin.dto.request.AdminDepartmentUpdateRequestDto;
 import com.example.iworks.domain.admin.service.AdminService;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
