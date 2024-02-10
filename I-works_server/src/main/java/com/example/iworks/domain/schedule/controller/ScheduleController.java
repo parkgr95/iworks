@@ -3,7 +3,7 @@ package com.example.iworks.domain.schedule.controller;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

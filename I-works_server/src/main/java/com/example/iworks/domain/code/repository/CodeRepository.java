@@ -1,7 +1,6 @@
-package com.example.iworks.global.model.repository;
+package com.example.iworks.domain.code.repository;
 
-import com.example.iworks.global.model.entity.Code;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.example.iworks.domain.code.entity.Code;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CodeRepository extends JpaRepository<Code, Integer> {

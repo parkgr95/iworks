@@ -30,7 +30,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (JwtException | IllegalArgumentException e) {
-
             //유효하지 않은 토큰
             Map<String,Object> result = new HashMap<>();
             result.put("result","failed");
