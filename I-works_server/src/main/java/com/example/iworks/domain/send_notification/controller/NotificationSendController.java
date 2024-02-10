@@ -1,28 +1,28 @@
-package com.example.iworks.domain.notification.controller;
+package com.example.iworks.domain.send_notification.controller;
 
 import com.example.iworks.domain.notification.service.UserNotificationService;
+import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/notification-push")
-public class NotificationPushController {
+@RequestMapping("/api/notification-send")
+public class NotificationSendController {
 
 //    private ExecutorService executorService = Executors.newFixedThreadPool(10);
     private final UserNotificationService userNotificationService;
+    private final JwtProvider jwtProvider;
 
-    @GetMapping("/test")
+    @GetMapping
     public DeferredResult<String> test(@RequestHeader("Authorization") String token) {
-        int userId = 101;
+        int userId = jwtProvider.getUserId(token);
 
         long timeOutInMilliSec = 100000L;
         String timeOutResp = "Time Out.";
@@ -33,7 +33,7 @@ public class NotificationPushController {
                 //Long polling task
                 while (userNotificationService.getCountIsNotSent(userId) == 0){
                     log.info("Waiting for message...");
-                    TimeUnit.SECONDS.sleep(10);
+                    TimeUnit.SECONDS.sleep(3);
                 }
 
                 String message = userNotificationService.getOneMessage(userId);

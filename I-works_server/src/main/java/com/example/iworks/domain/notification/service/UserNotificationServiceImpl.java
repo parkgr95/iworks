@@ -100,10 +100,13 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Transactional
     @Override
-    public String getOneMessage(int userId) {
-        List<UserNotification> userNotificationListByUserId = userNotificationRepository.findAllByUserId(userId);//영속성 컨텍스트에 있음
-        String message = userNotificationListByUserId.get(0).getUserNotificationContent();
-        userNotificationListByUserId.get(0).delete();
+    public String getOneMessage(int userId) throws IllegalArgumentException{
+        List<UserNotification> userNotificationList = userNotificationRepository.findAllIsNotSentByUserId(userId);//영속성 컨텍스트에 있음
+        if (userNotificationList.isEmpty()) {
+            throw new IllegalArgumentException("해당 유저의 알림이 없습니다. id=" + userId);
+        }
+        String message = userNotificationList.get(0).getUserNotificationContent();
+        userNotificationList.get(0).setIsSent();
         return message;
     }
 }
