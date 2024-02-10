@@ -1,6 +1,6 @@
 package com.example.iworks.domain.address.respository;
 
-import com.example.iworks.domain.address.domain.Address;
+import com.example.iworks.domain.address.entity.Address;
 import com.example.iworks.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

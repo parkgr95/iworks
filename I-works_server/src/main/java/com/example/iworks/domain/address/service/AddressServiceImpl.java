@@ -1,6 +1,6 @@
 package com.example.iworks.domain.address.service;
 
-import com.example.iworks.domain.address.domain.Address;
+import com.example.iworks.domain.address.entity.Address;
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
 import com.example.iworks.domain.address.dto.response.AddressDepartmentResonseDto;
@@ -18,7 +18,7 @@ import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.user.repository.UserSearchRepository;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
