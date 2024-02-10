@@ -1,9 +1,8 @@
 package com.example.iworks.domain.department.domain;
 
-import com.example.iworks.domain.admin.dto.request.AdminDepartmentUpdateRequestDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDateTime;

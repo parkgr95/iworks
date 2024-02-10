@@ -1,12 +1,12 @@
-package com.example.iworks.domain.admin.service;
+package com.example.iworks.domain.admin.service.adminDepartment;
 
-import com.example.iworks.domain.admin.dto.request.AdminDepartmentCreateRequestDto;
-import com.example.iworks.domain.admin.dto.request.AdminDepartmentUpdateRequestDto;
-import com.example.iworks.domain.admin.dto.response.AdminDepartmentResponseDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentCreateRequestDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentUpdateRequestDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.response.AdminDepartmentResponseDto;
 
 import java.util.List;
 
-public interface AdminService {
+public interface AdminDepartmentService {
 
     // 부서 등록
     void createDepartment(AdminDepartmentCreateRequestDto requestDto);
