@@ -1,4 +1,4 @@
-import { Link, Form } from "react-router-dom"
+import { Link, Form, NavLink } from "react-router-dom"
 
 function MainNav() {
   
@@ -18,10 +18,10 @@ function MainNav() {
           <Link to="/address" className="block py-2 px-4">주소록</Link>
         </li>
         <li>
-          <Link to="/schedule" className="block py-2 px-4">캘린더</Link>
+          <Link to="/" className="block py-2 px-4">캘린더</Link>
         </li>
         <li>
-          <Link to="/schedule" className="block py-2 px-4">할 일</Link>
+          <Link to="/schedule?mode=all" className="block py-2 px-4">할 일</Link>
         </li>
         <li>
           <Link to="/user/mypage" className="block py-2 px-4">마이페이지</Link>

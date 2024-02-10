@@ -4,15 +4,30 @@ import {
   useRef,
   FormEvent,
   RefObject,
+  useEffect,
+  useState,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { Form } from 'react-router-dom'
 import axios from 'axios'
-import { TextInput, Button, Radio, Label } from 'flowbite-react'
+import { TextInput, Button, Radio, Label, Select } from 'flowbite-react'
 import { formDataToRequestData } from '../utils/api'
+import { getDepartmentAllList } from '../utils/Address'
+import { getPositionCodeList } from '../utils/Code'
 
 export interface SignupRef {
   open: () => void
+}
+
+interface DepartmentInfo {
+  departmentName:string
+  departmentId: number
+}
+
+interface PositonInfo {
+  codeId: number
+  codeCode: number
+  codeName: string
 }
 
 const API_URL = 'https://suhyeon.site/api/user/join'
@@ -20,6 +35,18 @@ const API_URL = 'https://suhyeon.site/api/user/join'
 const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
   const formRef = useRef<HTMLFormElement>(null);
+  const [departmentList, setDepartmentList] = useState<DepartmentInfo[]>([]);
+  const [positionList, setPositionList] = useState<PositonInfo[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const departmentResponse = await getDepartmentAllList() as DepartmentInfo[];
+      const positionResponse = await getPositionCodeList() as PositonInfo[]
+      setDepartmentList(departmentResponse);
+      setPositionList(positionResponse)
+    };
+    fetchData();
+  }, []);
 
   useImperativeHandle(
     ref,
@@ -30,6 +57,8 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
     }),
     [],
   )
+  
+
 
   function handleSignUp(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -69,11 +98,19 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
         </div>
         <div>
           <Label className="text-lg">부서</Label>
-          <TextInput type="text" name="userDepartmentId" required />
+          <Select name="userDepartmentId" required >
+            {departmentList.map((departmentInfo: DepartmentInfo) => {
+              return <option key={departmentInfo.departmentId} value={departmentInfo.departmentId}>{departmentInfo.departmentName}</option>
+            })}
+          </Select>
         </div>
         <div>
           <Label className="text-lg">직급</Label>
-          <TextInput type="text" name="userPositionCodeId" required />
+          <Select name="userPositionCodeId" required >
+            {positionList.map((positonInfo : PositonInfo ) => {
+              return <option key={positonInfo.codeId} value={positonInfo.codeId}>{positonInfo.codeName.slice(5)}</option>
+            })}
+          </Select>
         </div>
         <div>
           <Label className="text-lg">이메일</Label>
@@ -81,7 +118,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
         </div>
         <div>
           <Label className="text-lg">전화번호</Label>
-          <TextInput type="text" name="userTel" required/>
+          <TextInput type="tel" name="userTel" required/>
         </div>
         <div>
           <Label className="text-lg">주소</Label>

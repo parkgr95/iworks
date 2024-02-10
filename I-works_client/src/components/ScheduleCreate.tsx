@@ -9,15 +9,26 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { Form } from 'react-router-dom'
-import { Button, TextInput, Textarea, Label, Select } from 'flowbite-react'
+import {
+  Button,
+  TextInput,
+  Textarea,
+  Label,
+  Select,
+  Toast,
+} from 'flowbite-react'
 import { formDataToRequestData } from '../utils/api'
 import axios from 'axios'
 import { UserType } from '../interface/UserType'
 import { getAccessToken } from '../utils/auth'
+import {
+  getDepartmentAllList,
+  getTeamAllList,
+  getUserAllList,
+} from '../utils/Address'
+import { AiOutlineClose } from "react-icons/ai"
 
 const API_URL = 'https://suhyeon.site/api/schedule'
-const API_DEPT = 'https://suhyeon.site/api/address/department/all'
-const API_USR = 'https://suhyeon.site/api/address/user/all'
 
 const scheduleDivisionList: { [key: string]: string } = {
   행사: '1',
@@ -31,41 +42,46 @@ export interface ScheduleCreateRef {
   open: () => void
 }
 
-interface dept {
-  departmentName: string
-  departmentId: string
+export interface AssigneeType {
+  categoryCodeId: number
+  assigneeId: number
 }
 
-// interface responseList {
-//   result: string
-//   data: dept | userType[]
-// }
+interface DepartmentInfo {
+  departmentName: string
+  departmentId: number
+}
 
-// interface reqDate {
-//   startDate:string
-//   endDate:string
-// }
+interface TeamInfo {
+  teamName: string
+  teamId: number
+}
 
 const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
-  const [departmentList, setDepartmentList] = useState<dept[]>()
-  const [userList, setUserList] = useState<UserType[]>()
-  const [assignDepartment, setAssignDepartment] = useState<Boolean>(true)
 
-  // const mySchedule = useLoaderData()
+  const [userList, setUserList] = useState<UserType[]>([])
+  const [departmentList, setDepartmentList] = useState<DepartmentInfo[]>([])
+  const [teamList, setTeamList] = useState<TeamInfo[]>([])
 
+  const [assigneeUserList, setAssigneeUserList] = useState<UserType[]>([])
+  const [assigneeDepartmentList, setAssigneeDepartmentList] = useState<
+    DepartmentInfo[]
+  >([])
+  const [assigneeTeamList, setAssigneeTeamList] = useState<TeamInfo[]>([])
 
   useEffect(() => {
-    axios
-      .all([axios.get(API_DEPT), axios.get(API_USR)])
-      .then(
-        axios.spread((dept, usr) => {
-          setDepartmentList(dept.data.data)
-          setUserList(usr.data.data)
-        }),
-      )
-      .catch((_error) => alert('불러오기 실패'))
+    const fetchData = async () => {
+      const departmentResponse =
+        (await getDepartmentAllList()) as DepartmentInfo[]
+      const userResponse = (await getUserAllList()) as UserType[]
+      const teamResponse = (await getTeamAllList()) as TeamInfo[]
+      setDepartmentList(departmentResponse)
+      setUserList(userResponse)
+      setTeamList(teamResponse)
+    }
+    fetchData()
   }, [])
 
   useImperativeHandle(
@@ -78,33 +94,111 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
     [],
   )
 
-  function handleSelectedDepartment() {
-    setAssignDepartment((prev) => !prev)
+  function handleAddAssignee(event: any, target: string) {
+    if (event.target.value == 'none') {
+      return
+    }
+    if (target == 'user') {
+      if (assigneeUserList.find((info) => info.userId == event.target.value)) {
+        alert('이미 추가된 유저입니다.')
+        return
+      }
+
+      const selectedUser: UserType = userList.find(
+        (user) => user.userId == event.target.value,
+      )!
+
+      setAssigneeUserList((prev) => {
+        return [...prev, selectedUser]
+      })
+    } else if (target == 'department') {
+      if (
+        assigneeDepartmentList.find(
+          (info) => info.departmentId == event.target.value,
+        )
+      ) {
+        alert('이미 추가된 부서입니다.')
+        return
+      }
+
+      const selectedDepartment: DepartmentInfo = departmentList.find(
+        (department) => department.departmentId == event.target.value,
+      )!
+
+      setAssigneeDepartmentList((prev) => {
+        return [...prev, selectedDepartment]
+      })
+    } else if (target == 'team') {
+      if (assigneeTeamList.find((info) => info.teamId == event.target.value)) {
+        console.log(assigneeTeamList)
+        alert('이미 추가된 팀입니다.')
+        return
+      }
+
+      const selectedTeam: TeamInfo = teamList.find(
+        (team) => team.teamId == event.target.value,
+      )!
+
+      setAssigneeTeamList((prev) => {
+        return [...prev, selectedTeam]
+      })
+    }
+  }
+
+  function handleDeleteAssignee(id: number, target: string) {
+    if (target == 'user') {
+      setAssigneeUserList((prev) => {
+        return prev.filter((info) => info.userId != id)
+      })
+    } else if (target == 'department') {
+      setAssigneeDepartmentList((prev) => {
+        return prev.filter((info) => info.departmentId != id)
+      })
+    } else if (target == 'team') {
+      setAssigneeTeamList((prev) => {
+        return prev.filter((info) => info.teamId != id)
+      })
+    }
+  }
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault() // 폼 제출을 방지합니다.
+    }
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event?.preventDefault()
 
     const scheduleFormData = new FormData(event.currentTarget)
-    const scheduleAssigneeCategoryCodeId = assignDepartment ? '2' : '1'
-    scheduleFormData.append(
-      'scheduleAssigneeCategoryCodeId',
-      scheduleAssigneeCategoryCodeId,
-    )
 
-    // const test = scheduleFormData.get('departmentId')
+    let assigneeBelongs: AssigneeType[] = []
 
-    // const testl = departmentList?.find(dept => dept.departmentName == test) as dept
+    for (const user of assigneeUserList) {
+      assigneeBelongs.push({ categoryCodeId: 5, assigneeId: user.userId })
+    }
 
-    // scheduleFormData.set('departmentId', testl.departmentId)
+    for (const department of assigneeDepartmentList) {
+      assigneeBelongs.push({
+        categoryCodeId: 6,
+        assigneeId: department.departmentId,
+      })
+    }
 
-    const scheduleRequestData = formDataToRequestData(scheduleFormData)
-    
+    for (const team of assigneeTeamList) {
+      assigneeBelongs.push({ categoryCodeId: 7, assigneeId: team.teamId })
+    }
+
+    const scheduleRequestData: any = formDataToRequestData(scheduleFormData)
+
+    scheduleRequestData.assigneeBelongs = assigneeBelongs
+
+    console.log(scheduleRequestData)
+
     axios
       .post(API_URL, scheduleRequestData, {
         headers: {
-          Authorization:
-            'Bearer ' + getAccessToken()
+          Authorization: 'Bearer ' + getAccessToken(),
         },
       })
       .then((response) => {
@@ -122,10 +216,15 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
       ref={dialog as RefObject<HTMLDialogElement>}
     >
       <h1 className="text-3xl text-center mb-10">할 일 생성</h1>
-      <Form ref={formRef} className="flex flex-col" onSubmit={handleSubmit}>
+      <Form
+        ref={formRef}
+        className="flex flex-col gap-4"
+        onSubmit={handleSubmit}
+        onKeyDown={handleKeyDown}
+      >
         <div className="max-w-md">
           <div className="mb-2 block">
-            {/* 수정: id와 name을 일치시켜줍니다. */}
+            {/* 할 일 구분 */}
             <Label htmlFor="scheduleDivisionCodeId">구분</Label>
             <Select
               id="scheduleDivisionCodeId"
@@ -144,6 +243,8 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
               )}
             </Select>
           </div>
+
+          {/* 제목 */}
           <div>
             <Label className="text-lg" htmlFor="scheduleTitle">
               제목
@@ -155,46 +256,106 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
               id="scheduleTitle"
             />
           </div>
-          <Label htmlFor="scheduleAssigneeId">
-            {assignDepartment ? '부서' : '담당자'}
-          </Label>
-          <div className="flex gap-2">
-            {assignDepartment ? (
-              <>
-                <div className="flex-1">
-                  <Select id="scheduleAssigneeId" name="scheduleAssigneeId">
-                    {departmentList?.map((value) => {
-                      return (
-                        <option
-                          key={value.departmentId}
-                          value={value.departmentId}
-                          label={value.departmentName}
-                        />
-                      )
-                    })}
-                  </Select>
-                </div>
-              </>
-            ) : (
-              <div className="flex-1">
-                <Select id="scheduleAssigneeId" name="scheduleAssigneeId">
-                  {userList?.map((value) => {
-                    return (
-                      <option
-                        key={value.userId}
-                        value={value.userId}
-                        label={value.userNameLast + value.userNameFirst}
-                      />
-                    )
-                  })}
-                </Select>
-              </div>
-            )}
-            <Button onClick={handleSelectedDepartment}>
-              {assignDepartment ? '개인' : '부서'} 선택
-            </Button>
+
+          {/* 담당 부서 */}
+          <div>
+            <Label>담당 부서</Label>
+            <div className="flex flex-wrap gap-2">
+              {assigneeDepartmentList.map((info) => {
+                return (
+                  <Toast
+                    className="w-fit text-black text-sm mb-2 px-2 py-1 bg-red-100"
+                    key={info.departmentId}
+                  >
+                    {info.departmentName}{' '}
+                    <Button
+                      onClick={() =>
+                        handleDeleteAssignee(info.departmentId, 'department')
+                      }
+                      className="size-6 p-0 ml-1 text-black bg-red-100"
+                    ><AiOutlineClose /></Button>
+                  </Toast>
+                )
+              })}
+            </div>
+            <Select
+              onChange={(event) => handleAddAssignee(event, 'department')}
+            >
+              <option value="none">선택해주세요</option>
+              {departmentList.map((info) => {
+                return (
+                  <option key={info.departmentId} value={info.departmentId}>
+                    {info.departmentName}
+                  </option>
+                )
+              })}
+            </Select>
           </div>
 
+          {/* 담당 팀 */}
+          <div>
+            <Label>담당 팀</Label>
+            <div className="flex flex-wrap gap-2">
+              {assigneeTeamList.map((info) => {
+                return (
+                  <Toast
+                    className="w-fit text-black text-sm my-2 px-2 py-1 bg-lime-100"
+                    key={info.teamId}
+                  >
+                    {info.teamName}{' '}
+                    <Button
+                      onClick={() => handleDeleteAssignee(info.teamId, 'team')}
+                      className="size-6 p-0 ml-1 text-black bg-lime-100"
+                    ><AiOutlineClose /></Button>
+                  </Toast>
+                )
+              })}
+            </div>
+            <Select onChange={(event) => handleAddAssignee(event, 'team')}>
+              <option value="none">선택해주세요</option>
+              {teamList.map((info) => {
+                return (
+                  <option key={info.teamId} value={info.teamId}>
+                    {info.teamName}
+                  </option>
+                )
+              })}
+            </Select>
+          </div>
+
+          {/* 담당자 */}
+          <div>
+            <Label>담당자</Label>
+            <div className="flex flex-wrap gap-2">
+              {assigneeUserList.map((info) => {
+                return (
+                  <Toast
+                    className="w-fit text-black text-sm my-2 px-2 py-1 bg-teal-100"
+                    key={info.userId}
+                  >
+                    {info.userNameLast + info.userNameFirst}{' '}
+                    <Button
+                      onClick={() => handleDeleteAssignee(info.userId, 'user')}
+                      className="size-6 p-0 ml-1 text-black bg-teal-100"
+                    ><AiOutlineClose /></Button>
+                  </Toast>
+                )
+              })}
+            </div>
+            <Select onChange={(event) => handleAddAssignee(event, 'user')}>
+              <option value="none">선택해주세요</option>
+              {userList.map((info) => {
+                return (
+                  <option key={info.userId} value={info.userId}>
+                    {info.userNameLast + info.userNameFirst} (
+                    {info.departmentName})
+                  </option>
+                )
+              })}
+            </Select>
+          </div>
+
+          {/* 우선순위 */}
           <div>
             <Label className="text-lg" htmlFor="schedulePriority">
               우선순위
@@ -205,12 +366,16 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
               <option value={'L'}>낮음</option>
             </Select>
           </div>
+
+          {/* 내용 */}
           <div>
             <Label className="text-lg" htmlFor="scheduleContent">
               내용
             </Label>
             <Textarea name="scheduleContent" required id="scheduleContent" />
           </div>
+
+          {/* 시작일시 */}
           <div>
             <Label className="text-lg" htmlFor="scheduleStartDate">
               시작 일시
@@ -222,6 +387,8 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
               id="scheduleStartDate"
             />
           </div>
+
+          {/* 종료 일시 */}
           <div>
             <Label className="text-lg" htmlFor="scheduleEndDate">
               종료 일시
@@ -233,6 +400,8 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
               id="scheduleEndDate"
             />
           </div>
+
+          {/* 장소 */}
           <div>
             <Label className="text-lg" htmlFor="schedulePlace">
               장소
@@ -244,6 +413,8 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
               id="schedulePlace"
             />
           </div>
+
+          {/* 회의 일시 */}
           <div>
             <Label className="text-lg" htmlFor="meetingDate">
               회의 일시
@@ -255,6 +426,8 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
               id="meetingDate"
             />
           </div>
+
+          {/* 버튼 */}
           <Button className="mt-10" type="submit">
             할 일 생성
           </Button>
@@ -266,5 +439,3 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
 })
 
 export default ScheduleCreate
-
-

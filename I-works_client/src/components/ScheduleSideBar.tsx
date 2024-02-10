@@ -1,8 +1,7 @@
 import { Button, ListGroup } from 'flowbite-react'
 import ScheduleCreate, { ScheduleCreateRef } from './ScheduleCreate'
 import { useRef } from 'react'
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { RiUserReceived2Line, RiUserShared2Line } from "react-icons/ri";
+import { RiBuilding4Line, RiUser3Line, RiGroupLine, RiListCheck } from "react-icons/ri";
 
 function ScheduleSideBar() {
   const dialog = useRef<ScheduleCreateRef>(null)
@@ -21,14 +20,17 @@ function ScheduleSideBar() {
       </div>
       <div className="w-full my-2 pb-2">
         <ListGroup className='' >
-          <ListGroup.Item href="#" icon={IoMdCheckmarkCircleOutline}>            
+          <ListGroup.Item href="/schedule?mode=all" icon={RiListCheck}>
             전체 할 일
           </ListGroup.Item>
-          <ListGroup.Item href='#' icon={RiUserReceived2Line}>
-            담당 할 일
+          <ListGroup.Item href="/schedule?mode=user" icon={RiUser3Line}>
+            내 할 일
           </ListGroup.Item>
-          <ListGroup.Item href="#" icon={RiUserShared2Line}>
-            요청 할 일
+          <ListGroup.Item href='/schedule?mode=department' icon={RiBuilding4Line}>
+            부서 할 일
+          </ListGroup.Item>
+          <ListGroup.Item href="/schedule?mode=team" icon={RiGroupLine}>            
+            팀 할 일
           </ListGroup.Item>
         </ListGroup>
       </div>

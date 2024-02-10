@@ -1,3 +1,7 @@
+const API_URL = 'https://suhyeon.site/api'
+
+
+
 function formDataToRequestData(formData: FormData): object {
   const requestData: Record<string, string> = {};
 
@@ -8,4 +12,4 @@ function formDataToRequestData(formData: FormData): object {
   return requestData;
 }
 
-export { formDataToRequestData }
+export { API_URL, formDataToRequestData }
