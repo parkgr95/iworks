@@ -6,7 +6,7 @@ import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
