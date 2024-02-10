@@ -16,4 +16,8 @@ public interface UserNotificationService {
     List<UserNotificationGetAllByUserResponseDto> getAllAboutBoardByUserId(int userId);
     List<UserNotificationGetAllByUserResponseDto> getAllAboutScheduleByUserId(int userId);
     List<UserNotificationGetAllByUserResponseDto> getAllAboutMeetingByUserId(int userId);
+
+    long getCountIsNotSent(int userId);
+
+    String getOneMessage(int userId);
 }

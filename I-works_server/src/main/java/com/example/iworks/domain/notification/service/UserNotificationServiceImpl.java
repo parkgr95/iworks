@@ -63,7 +63,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllByUserId(int userId) {
-        return userNotificationRepository.findByUserId(userId)
+        return userNotificationRepository.findAllByUserId(userId)
                 .stream()
                 .map(UserNotificationGetAllByUserResponseDto::new)
                 .toList();
@@ -71,7 +71,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllAboutBoardByUserId(int userId) {
-        return userNotificationRepository.findCategoryBoardByUserId(userId)
+        return userNotificationRepository.findAllCategoryBoardByUserId(userId)
                 .stream()
                 .map(UserNotificationGetAllByUserResponseDto::new)
                 .toList();
@@ -79,11 +79,34 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllAboutScheduleByUserId(int userId) {
-        return null;
+        return userNotificationRepository.findAllCategoryScheduleByUserId(userId)
+                .stream()
+                .map(UserNotificationGetAllByUserResponseDto::new)
+                .toList();
     }
 
     @Override
     public List<UserNotificationGetAllByUserResponseDto> getAllAboutMeetingByUserId(int userId) {
-        return null;
+        return userNotificationRepository.findAllCategoryMeetingByUserId(userId)
+                .stream()
+                .map(UserNotificationGetAllByUserResponseDto::new)
+                .toList();
+    }
+
+    @Override
+    public long getCountIsNotSent(int userId) {
+        return userNotificationRepository.countOfIsNotSent(userId);
+    }
+
+    @Transactional
+    @Override
+    public String getOneMessage(int userId) throws IllegalArgumentException{
+        List<UserNotification> userNotificationList = userNotificationRepository.findAllIsNotSentByUserId(userId);//영속성 컨텍스트에 있음
+        if (userNotificationList.isEmpty()) {
+            throw new IllegalArgumentException("해당 유저의 알림이 없습니다. id=" + userId);
+        }
+        String message = userNotificationList.get(0).getUserNotificationContent();
+        userNotificationList.get(0).setIsSent();
+        return message;
     }
 }
