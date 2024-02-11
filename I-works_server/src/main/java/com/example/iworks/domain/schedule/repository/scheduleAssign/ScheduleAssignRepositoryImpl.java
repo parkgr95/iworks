@@ -1,6 +1,6 @@
 package com.example.iworks.domain.schedule.repository.scheduleAssign;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeBelong;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignGetRepository;
 import com.example.iworks.global.dto.DateCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -26,10 +26,10 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    private final JPAQueryFactory jpaQueryFactory;
 
    @Override
-   public List<ScheduleAssign> findScheduleAssignsBySearchParameter(List<AssigneeBelong> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
+   public List<ScheduleAssign> findScheduleAssignsBySearchParameter(List<AssigneeInfo> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
       Set<ScheduleAssign> foundScheduleAssignList = new HashSet<>();
 
-      for (AssigneeBelong requestDto : requestDtoList){
+      for (AssigneeInfo requestDto : requestDtoList){
          List<ScheduleAssign> foundScheduleAssign =
                  jpaQueryFactory
                          .selectFrom(scheduleAssign)
