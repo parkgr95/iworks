@@ -21,16 +21,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
 
+        // Prepare Relation Entity
         Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
@@ -38,23 +40,22 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         User creator = userRepository.findByUserId(userId);
 
+        // Create Schedule Entity
         Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
 
-        /** need to refactoring */
-        for (AssigneeInfo assigneeInfo : createRequestDto.getAssigneeInfos()) {
+        assignUsers(schedule, createRequestDto.getAssigneeInfos());
 
-            Code belongCategory = codeRepository.findById(assigneeInfo.getCategoryCodeId())
-                    .orElseThrow(() -> new EntityNotFoundException("Assignee Category not found"));
-
-            schedule.addScheduleAssigns(ScheduleAssign.builder()
-                            .scheduleAssigneeCategory(belongCategory)
-                    .scheduleAssigneeId(assigneeInfo.getAssigneeId()).build());
-        }
         scheduleRepository.save(schedule);
     }
-    private void assignUsers(AssigneeInfo assigneeInfo){
 
+    private void assignUsers(Schedule schedule, List<AssigneeInfo> assigneeInfos){
+        for (AssigneeInfo assigneeInfo : assigneeInfos) {
 
+            Code belongDivision = codeRepository.findById(assigneeInfo.getCategoryCodeId())
+                    .orElseThrow(() -> new EntityNotFoundException("Assignee Category not found"));
+
+            schedule.addScheduleAssigns(assigneeInfo.toScheduleAssignEntity(belongDivision));
+        }
     }
 
     @Override
@@ -68,6 +69,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.findByKeyword(keyword);
     }
 
+    @Transactional
     @Override
     public void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
         int divisionCodeId = scheduleUpdateRequestDto.getScheduleDivisionCodeId();
@@ -76,7 +78,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         findSchedule.updateSchedule(findCode, scheduleUpdateRequestDto);
     }
 
-    /** 할일 완료 여부 */
+
+    @Transactional
     @Override
     public void isFinishedSchedule(int scheduleId, boolean isFinish) {
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
@@ -84,6 +87,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         findSchedule.isFinished(isFinish);
     }
 
+    @Transactional
     @Override
     public void deleteSchedule(Integer scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
