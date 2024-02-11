@@ -3,11 +3,9 @@ package com.example.iworks.domain.schedule.dto.schedule.request;
 import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.domain.Schedule;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeBelong;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.user.domain.User;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +21,7 @@ public class ScheduleCreateRequestDto {
     private LocalDateTime scheduleEndDate; //할 일의 종료일시
     private String schedulePlace; //할 일의 장소
     private LocalDateTime meetingDate; // 회의 일시
-    private List<AssigneeBelong> assigneeBelongs; // 담당자 카테고리 아이디, 담당자 아이디
+    private List<AssigneeInfo> assigneeInfos; // 담당자 카테고리 아이디, 담당자 아이디
 
     public Schedule toScheduleEntity(Code division, Meeting meeting, User creator){
         return Schedule.builder()

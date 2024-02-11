@@ -1,15 +1,13 @@
 package com.example.iworks.domain.schedule.service.schedule;
 
 import com.example.iworks.domain.meeting.domain.Meeting;
-import com.example.iworks.domain.meeting.repository.MeetingRepository;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeBelong;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
-import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssignRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.code.entity.Code;
@@ -19,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,8 +27,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
-    private final MeetingRepository meetingRepository;
-    private final ScheduleAssignRepository scheduleAssignRepository;
 
     @Override
     public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
@@ -46,16 +41,20 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
 
         /** need to refactoring */
-        for (AssigneeBelong assigneeBelong : createRequestDto.getAssigneeBelongs()) {
+        for (AssigneeInfo assigneeInfo : createRequestDto.getAssigneeInfos()) {
 
-            Code belongCategory = codeRepository.findById(assigneeBelong.getCategoryCodeId())
+            Code belongCategory = codeRepository.findById(assigneeInfo.getCategoryCodeId())
                     .orElseThrow(() -> new EntityNotFoundException("Assignee Category not found"));
 
             schedule.addScheduleAssigns(ScheduleAssign.builder()
                             .scheduleAssigneeCategory(belongCategory)
-                    .scheduleAssigneeId(assigneeBelong.getAssigneeId()).build());
+                    .scheduleAssigneeId(assigneeInfo.getAssigneeId()).build());
         }
         scheduleRepository.save(schedule);
+    }
+    private void assignUsers(AssigneeInfo assigneeInfo){
+
+
     }
 
     @Override
@@ -90,6 +89,5 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
         scheduleRepository.delete(schedule);
     }
-
 
 }

@@ -7,13 +7,13 @@ import lombok.*;
 @Getter
 @Builder
 @EqualsAndHashCode
-public class AssigneeBelong {
+public class AssigneeInfo {
 
    private int categoryCodeId; // 담당자 카테고리 아이디
    private int assigneeId; // 담당자 아이디
 
    @QueryProjection
-    public AssigneeBelong(int categoryCodeId, int assigneeId) {
+    public AssigneeInfo(int categoryCodeId, int assigneeId) {
         this.categoryCodeId = categoryCodeId;
         this.assigneeId = assigneeId;
     }
