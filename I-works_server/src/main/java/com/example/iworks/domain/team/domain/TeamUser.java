@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class TeamUser {
 
     @Id @GeneratedValue
-    @Column(name = "teeam_user_id")
+    @Column(name = "team_user_id")
     private Integer teamUserId;
 
     @ManyToOne
@@ -24,5 +24,8 @@ public class TeamUser {
     @JoinColumn(name = "team_user_user_id", updatable = false)
     private User teamUserUser; // 유저 아이디
 
+    public void setTeamUserTeamId(Team team){
+        this.teamUserTeam = team;
+    }
 
 }

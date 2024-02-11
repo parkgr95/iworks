@@ -2,10 +2,11 @@ package com.example.iworks.domain.user.domain;
 
 
 import com.example.iworks.domain.department.domain.Department;
+import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -81,8 +82,9 @@ public class User {
     @Column(name = "user_deleted_at")
     private LocalDateTime userDeletedAt; // 탈퇴일시
 
-    @Column(name = "user_is_deleted")
-    private Boolean userIsDeleted; //탈퇴여부
+    @Builder.Default
+    @Column(name = "user_is_deleted", nullable = false)
+    private Boolean userIsDeleted = false; //탈퇴여부
 
     @Builder.Default
     @Column(name = "user_role", nullable = false)
@@ -92,8 +94,12 @@ public class User {
     @Column(name = "user_status")
     private Status userStatus; // 상태
 
+    @Builder.Default
     @OneToMany(mappedBy = "teamUserUser")
     private List<TeamUser> userTeamUsers = new ArrayList<>(); // 맴버별 팀유저
+
+    @OneToMany(mappedBy = "userNotificationReceiver")
+    private List<UserNotification> userNotifications = new ArrayList<>(); // 유저별 알림
 
     public User(UserJoinRequestDto dto){
          this.userEid = dto.getUserEid();
@@ -103,6 +109,7 @@ public class User {
          this.userTel = dto.getUserTel();
          this.userAddress = dto.getUserAddress();
          this.userGender = dto.getUserGender();
+         this.userIsDeleted = false;
          this.userCreatedAt = LocalDateTime.now();
          this.userUpdatedAt = LocalDateTime.now();
     }

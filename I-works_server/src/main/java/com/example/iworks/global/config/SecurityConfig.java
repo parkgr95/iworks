@@ -1,10 +1,7 @@
 package com.example.iworks.global.config;
 
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.global.filter.JwtAuthenticationFilter;
-import com.example.iworks.global.filter.JwtAuthorizationFilter;
-import com.example.iworks.global.filter.CustomCorsFilter;
-import com.example.iworks.global.filter.JwtExceptionFilter;
+import com.example.iworks.global.filter.*;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +28,8 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtProvider jwtProvider;
     private final CustomCorsFilter corsFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public BCryptPasswordEncoder encodePwd(){
@@ -70,6 +69,9 @@ public class SecurityConfig {
                             .anyRequest().permitAll();
                 })
                 .authenticationManager(authenticationManager)
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedPage("/api/user/login"))
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(customAuthenticationEntryPoint))
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(customAccessDeniedHandler))
                 .addFilterBefore(corsFilter, SecurityContextHolderFilter.class)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtProvider))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository, jwtProvider))

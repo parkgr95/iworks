@@ -3,8 +3,8 @@ package com.example.iworks.global.filter;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.global.config.auth.PrincipalDetails;
 import com.example.iworks.global.util.JwtProvider;
-import com.example.iworks.global.model.Response;
-import com.example.iworks.global.model.entity.JWToken;
+import com.example.iworks.global.util.Response;
+import com.example.iworks.global.entity.JWToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -68,10 +68,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         User user = principalDetails.getUser();
         //Access Token 생성
-        String accessToken = tokenProvider.createAccessToken(user.getUserEid(),user.getRoleList());
+        String accessToken = tokenProvider.createAccessToken(user.getUserId(),user.getRoleList());
 
         // Refresh Token 생성
-        String refreshToken = tokenProvider.createRefreshToken(user.getUserEid(),user.getRoleList());
+        String refreshToken = tokenProvider.createRefreshToken(user.getUserId(),user.getRoleList());
         //서버에 저장
 
 
@@ -85,6 +85,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.BAD_REQUEST.value());
-        response.getWriter().write(new Response().getFailString("ID/PW를 확인해주세요"));
+        response.getWriter().write(new Response().getFailString("ID/PW를 확인해주세요",null));
     }
 }

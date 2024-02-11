@@ -1,8 +1,8 @@
 package com.example.iworks.domain.department.domain;
 
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -62,5 +62,16 @@ public class Department {
         if(user.getUserDepartment() != this){
             user.setDepartment(this);
         }
+    }
+
+    public void update(AdminDepartmentUpdateRequestDto requestDto) {
+        this.departmentLeaderId = requestDto.getDepartmentLeaderId();
+        this.departmentName = requestDto.getDepartmentName();
+        this.departmentDesc = requestDto.getDepartmentDesc();
+        this.departmentTelFirst = requestDto.getDepartmentTelFirst();
+        this.departmentTelMiddle = requestDto.getDepartmentTelMiddle();
+        this.departmentTelLast = requestDto.getDepartmentTelLast();
+        this.departmentIsUsed = requestDto.getDepartmentIsUsed();
+        this.departmentUpdatedAt = LocalDateTime.now();
     }
 }
