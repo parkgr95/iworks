@@ -6,4 +6,5 @@ export default interface PostType {
     boardContent?:string
     boardCreatedAt?:string
     boardUpdatedAt?: string
+    boardCategoryCodeId?: string
 }

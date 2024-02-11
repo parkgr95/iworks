@@ -5,10 +5,13 @@ import BoardModal from "../../components/BoardModal"
 import { Button, } from "flowbite-react"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
+import { getAccessToken } from "../../utils/auth"
+import { useUser } from "../../utils/userInfo"
 
 function BoardCreate() {
+  const loginedUser = useUser()
   const navigate = useNavigate()
-
+  console.log(loginedUser)
   const [boardTitle, setBoardTitle] = useState<string>('')
   const [boardContent, setBoardContent] = useState<string>()
   const [boardOwnerId, setBoardOwnerId] = useState<string>('')
@@ -23,15 +26,24 @@ function BoardCreate() {
 
   function handleCreate(event: FormEvent) {
     event.preventDefault()
+    if (!loginedUser) {
+      // 유저 정보가 없을 경우에 대한 처리
+      return alert("로그인이 필요합니다.");
+    }
+    
     const plainTextContent = (boardContent || '').replace(/<[^>]+>/g, '');
     axios
       .post("https://suhyeon.site/api/board/", {
         "boardTitle": boardTitle,
         "boardContent": plainTextContent,
-        "boardCreatorId": '1',
+        "boardCreatorId": loginedUser.userId,
         "boardIsDeleted": '0',
         "boardCategoryCodeId": boardCategoryCodeId,
         "boardOwnerId": boardOwnerId,
+      },         {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
       })
       .then((res) => {
         navigate("../")

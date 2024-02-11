@@ -12,6 +12,7 @@ const dateUtils: DateUtils = {
   formatDateTime(dateTime: string | undefined): string {
     if (!dateTime) return ''; // undefined인 경우 빈 문자열 반환
     const date = new Date(dateTime);
+    date.setHours(date.getHours() + 9); // 9시간을 더한 값으로 설정
     return `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
   }
 };

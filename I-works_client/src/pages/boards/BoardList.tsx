@@ -50,7 +50,7 @@ function BoardList() {
   return (
     <div className="">
       {boardList.map((article) => {
-        const user: UserType | undefined = users.find((user) => user.userEid == article.boardCreatorId)
+        const user: UserType | undefined = users.find((user) => user.userId == article.boardCreatorId)
         
         return (
         <div className="border-b-2 pb-2 mb-2" key={article.boardId}>

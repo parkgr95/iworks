@@ -11,6 +11,7 @@ import BoardCreate from './pages/boards/BoardCreate';
 import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
+import BoardMy from './pages/boards/BoardMy';
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
           {
             path: 'search/:searchKeyword',
             element: <BoardSearch />
+          },
+          {
+            path: 'my/:userId',
+            element: <BoardMy />
           },
         ]
       },

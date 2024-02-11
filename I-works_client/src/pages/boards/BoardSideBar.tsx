@@ -2,6 +2,9 @@ import { ChangeEvent, useState, useEffect } from "react"
 import { Outlet, Link, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
 import axios from "axios"
+import { PiCaretDownThin } from "react-icons/pi";
+import { FaStar } from "react-icons/fa";
+import { useUser } from "../../utils/userInfo";
 
 interface orginizationType {
   departmentName?: string,
@@ -11,6 +14,8 @@ interface orginizationType {
 }
 
 function BoardSideBar() {
+  const loginedUser = useUser()
+
   // 네비게이션
   const navigate = useNavigate()
   const moveToCreate = () => {
@@ -30,10 +35,10 @@ function BoardSideBar() {
   const [allOpen, setAllOpen] = useState(true);
   const toggleAllOpen = () => setAllOpen((cur) => !cur)
 
-  const [departmentOpen, setDepartmentOpen] = useState(true);
+  const [departmentOpen, setDepartmentOpen] = useState(false);
   const toggleDepartmentOpen = () => setDepartmentOpen((cur) => !cur)
 
-  const [teamOpen, setTeamOpen] = useState(true);
+  const [teamOpen, setTeamOpen] = useState(false);
   const toggleTeamOpen = () => setTeamOpen((cur) => !cur)
 
   // 부서, 팀 받아오기
@@ -56,34 +61,39 @@ function BoardSideBar() {
 
   return (
     <div className="flex h-full">
-      <div className="flex flex-col items-center border-r-2 m-0 px-3 position-absolute w-auto flex-shrink-0">
+      <div className="flex flex-col items-center border-r-2 px-3 position-absolute w-72 flex-shrink-0">
         <div className="flex justify-center items-center w-full h-20">
           <Button onClick={moveToCreate} className="h-12 w-full bg-mainBlue text-white">
-            <span>글쓰기</span>
+            <span className="font-semibold">글쓰기</span>
           </Button>
         </div>
-        <div className="flex justify-center items-center w-full h-12 border-b-2 ">
+        <div className="flex justify-center items-center w-full h-16 border-b-2 ">
           <ul className="flex justify-center">
             <li className="px-4">
-              <Link to="/board">최신글</Link>
+                <Link className="text-xs flex flex-col items-center" to="/board">
+                <span className="font-bold text-lg">NEW</span>
+                <span>최신글</span>
+                </Link>
             </li>
             <li className="px-4">
-              <Link to="/board">중요</Link>
+              <Link className="text-xs flex flex-col" to={`/board/bookmark/${loginedUser?.userId}`}>
+              <FaStar size={24} />
+              <span className="mt-1">중요</span>
+              </Link>
             </li>
             <li className="px-4">
-              <Link to="/board">내 게시글</Link>
+              <Link className="text-xs flex flex-col items-center" to={`/board/my/${loginedUser?.userId}`}>
+                <span className="font-bold text-lg">MY</span>
+                <span>내 게시글</span></Link>
             </li>
-            {/* <li className="px-4">
-              <Link to={`/board/bookmark/${Id}`}>중요</Link>
-            </li>
-            <li className="px-4">
-              <Link to={`/board/my/${Id}`}>내 게시글</Link>
-            </li> */}
           </ul>
         </div>
         <div className="w-full my-2 border-b-2 pb-2">
           <button onClick={toggleAllOpen} type="button" className="flex items-center w-full p-2 text-base text-gray-900" aria-controls="ropdownAll" data-collapse-toggle="dropdownAll">
-            <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-semibold">전체게시판</span>
+            <div className="flex items-center">
+              <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-semibold">전체게시판</span>
+              <PiCaretDownThin className="ml-2" />
+            </div>
           </button>
           <ul id="dropdownAll" className={`${allOpen ? '' : 'hidden'} space-y-2`}>
             <li>
@@ -94,7 +104,10 @@ function BoardSideBar() {
             </li>
             <li>
               <button onClick={toggleDepartmentOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownDepartment" data-collapse-toggle="dropdownDepartment">
-                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">부서게시판</span>
+                <div className="flex items-center">
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">부서게시판</span>
+                  <PiCaretDownThin className="ml-2" />
+                </div>
               </button>
               <ul id="dropdownDepartment" className={`${departmentOpen ? '' : 'hidden'} space-y-2`}>
                 {departmentList.map((dept) => (
@@ -106,12 +119,15 @@ function BoardSideBar() {
             </li>
             <li>
               <button onClick={toggleTeamOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownTeam" data-collapse-toggle="dropdownTeam">
-                <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">그룹게시판</span>
+                <div className="flex items-center">
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">그룹게시판</span>
+                  <PiCaretDownThin className="ml-2" />
+                </div>
               </button>
               <ul id="dropdownTeam" className={`${teamOpen ? '' : 'hidden'} space-y-2`}>
                 {teamList.map((team) => (
                   <li key={team.teamId}>
-                    <Link to={`/board/4/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">부서1게시판</Link>
+                    <Link to={`/board/4/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">{team.teamName}게시판</Link>
                   </li>
                 ))}
               </ul>
