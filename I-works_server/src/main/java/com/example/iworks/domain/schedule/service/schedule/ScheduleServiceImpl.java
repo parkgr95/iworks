@@ -35,29 +35,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
-        System.out.println("userId = " + userId);
-        Code scheduleDivision = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
+
+        Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
+
+        Meeting meeting = createRequestDto.toMeetingEntity();
 
         User creator = userRepository.findByUserId(userId);
 
-        Meeting scheduleMeeting = Meeting.builder()
-                .meetingDate(createRequestDto.getMeetingDate())
-                .meetingCode("sampleMeetingCode")
-                .build();
-
-        Schedule schedule = Schedule.builder()
-                .scheduleDivision(scheduleDivision)
-                .scheduleTitle(createRequestDto.getScheduleTitle())
-                .schedulePriority(createRequestDto.getSchedulePriority())
-                .scheduleContent(createRequestDto.getScheduleContent())
-                .scheduleStartDate(createRequestDto.getScheduleStartDate())
-                .scheduleEndDate(createRequestDto.getScheduleEndDate())
-                .schedulePlace(createRequestDto.getSchedulePlace())
-                .scheduleMeeting(scheduleMeeting)
-                .scheduleCreator(creator)
-                .scheduleCreatedAt(LocalDateTime.now())
-                .build();
+        Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
 
         /** need to refactoring */
         for (AssigneeBelong assigneeBelong : createRequestDto.getAssigneeBelongs()) {
