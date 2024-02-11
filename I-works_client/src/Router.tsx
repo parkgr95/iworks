@@ -18,6 +18,7 @@ import AddressList from './pages/addresses/AddressList';
 import GroupCreate from './pages/addresses/GroupCreate';
 import GroupList from './pages/addresses/GroupList';
 import GroupDetail from './pages/addresses/GroupDetail';
+import GroupUpdate from './pages/addresses/GroupUpdate';
 
 const router = createBrowserRouter([
   {
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'group/update/:groupId',
-            element: <GroupDetail />
+            element: <GroupUpdate />
           },
         ]
       },

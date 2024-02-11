@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react"
 import { Outlet, Link, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
 import axios from "axios"
-
+import { PiCaretDownThin } from "react-icons/pi";
 interface orginizationType {
   departmentName?: string,
   departmentId?: string,
@@ -38,7 +38,7 @@ function AddressSideBar() {
 
 
   useEffect(() => {
-      axios.get('https://suhyeon.site/api/address/department/all')
+    axios.get('https://suhyeon.site/api/address/department/all')
       .then((res) => {
         setDepartmentList(res.data.data);
       })
@@ -57,12 +57,18 @@ function AddressSideBar() {
         </div>
         <div className="w-full my-2 border-b-2 pb-2">
           <button onClick={toggleAllOpen} type="button" className="flex items-center w-full p-2 text-base text-gray-900" aria-controls="ropdownAll" data-collapse-toggle="dropdownAll">
-            <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-semibold">조직도</span>
+            <div className="flex items-center">
+              <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-semibold">조직도</span>
+              <PiCaretDownThin />
+            </div>
           </button>
           <ul id="dropdownAll" className={`${allOpen ? '' : 'hidden'} space-y-2`}>
             <li>
               <button onClick={toggleDepartmentOpen} type="button" className="flex items-center w-full pl-8 text-base text-gray-900" aria-controls="dropdownDepartment" data-collapse-toggle="dropdownDepartment">
-                <Link to={`/address`} className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">A208</Link>
+                <div className="flex items-center">
+                  <Link to={`/address`} className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">A208</Link>
+                  <PiCaretDownThin />
+                </div>
               </button>
               <ul id="dropdownDepartment" className={`${departmentOpen ? '' : 'hidden'} space-y-2`}>
                 {departmentList.map((dept) => (

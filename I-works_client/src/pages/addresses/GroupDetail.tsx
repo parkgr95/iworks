@@ -10,10 +10,11 @@ interface GroupType {
   teamId: string
   teamName: string
   teamDescription: string
-  teamLeader: string
+  teamLeader: number
   teamUsers: {
-    teamUserId: string
+    teamUserId: number
     userDto: {
+      userId: number
       userNameLast: string
       userNameFirst: string
       userEmail: string
@@ -30,7 +31,7 @@ function GroupDetail() {
     teamId: '',
     teamName: '',
     teamDescription: '',
-    teamLeader: '',
+    teamLeader: 0,
     teamUsers: [],
   })
   const navigate = useNavigate()
@@ -74,9 +75,9 @@ function GroupDetail() {
 
   let groupLeaderName = ""
   if (groupDetail.teamLeader) {
-    const leader = groupDetail.teamUsers.find(user => user.teamUserId === groupDetail.teamLeader);
+    const leader = groupDetail.teamUsers.find(user => user.userDto.userId == groupDetail.teamLeader);
     if (leader) {
-      groupLeaderName = leader.userDto.userNameLast + leader.userDto.userNameFirst;
+      groupLeaderName = leader.userDto.userNameLast + leader.userDto.userNameFirst + " " + "/" + " " + leader.userDto.departmentName
     }
   }
 
@@ -85,18 +86,25 @@ function GroupDetail() {
       <div className="h-10 mb-4 text-sm text-gray-500 border-b-2">
         <p>그룹 상세 정보</p>
       </div>
-      <div className="flex justify-between items-center mb-4">
-        <p className="text-3xl font-semibold">{groupDetail.teamName}</p>
+      <div className="flex items-center mb-4">
+        <p className="text-xl font-semibold">그룹명 :</p>
+        <span className="ml-2 text-xl">{groupDetail.teamName}</span>
       </div>
-      <div>
-        <h1 className="font-semibold text-lg">그룹 리더</h1>
-        {groupLeaderName}
+      <div className="flex items-center mb-4">
+        <p className="text-xl font-semibold">그룹설명 :</p>
+        <span className="ml-2 text-xl">{groupDetail.teamDescription}</span>
       </div>
-      <h1 className="font-semibold text-lg">그룹 멤버</h1>
+      <div className="flex items-center mb-4">
+        <h1 className="font-semibold text-xl">그룹 리더 : </h1>
+        <span className="ml-1 p-2 bg-mainGray">{groupLeaderName}</span>
+      </div>
+      <h1 className="font-semibold text-xl mb-2">그룹 멤버</h1>
       <div className="flex flex-col border-2 h-full p-4 overflow-auto">
         <ul>
           {groupDetail.teamUsers.map((user) => (
-            <li key={user.teamUserId}>{user.userDto.userNameLast}{user.userDto.userNameLast}</li>
+            <li className="flex justify-between bg-mainGray p-2 mb-2" key={user.teamUserId}>
+              {user.userDto.userNameLast}{user.userDto.userNameFirst} / {user.userDto.departmentName}
+            </li>
           ))}
         </ul>
       </div>
