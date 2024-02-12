@@ -27,10 +27,10 @@ public class Code {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_group_id", nullable = false)
-    private CodeGroup codeCodeGroup; // 코드 그룹 아이디 (외래키)
+    private CodeGroup codeGroup; // 코드 그룹 아이디 (외래키)
 
     public void setCodeGroup(CodeGroup codeGroup){
-        this.codeCodeGroup = codeGroup;
+        this.codeGroup = codeGroup;
         if (codeGroup.getCodeGroupCodes() != this){
             codeGroup.setCodes(this);
         }
