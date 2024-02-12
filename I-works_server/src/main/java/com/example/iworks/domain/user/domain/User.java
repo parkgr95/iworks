@@ -176,6 +176,25 @@ public class User {
         this.userUpdatedAt = LocalDateTime.now();
     }
 
+    public void update(AdminUserUpdateRequestDto dto, BCryptPasswordEncoder encoder) {
+        if(dto.getUserAddress() != null){
+            this.userAddress = dto.getUserAddress();
+        }
+        if(dto.getUserEmail() != null){
+            this.userEmail = dto.getUserEmail();
+        }
+        if(dto.getUserTel() != null){
+            this.userTel = dto.getUserTel();
+        }
+        this.userUpdatedAt = LocalDateTime.now();
+    }
+
+    public void delete() {
+        this.userIsDeleted = true;
+        this.userDeletedAt = LocalDateTime.now();
+        this.userUpdatedAt = LocalDateTime.now();
+    }
+
     public String getUserName(){
         return this.userNameFirst +" "+this.userNameLast;
     }
