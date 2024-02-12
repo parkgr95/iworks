@@ -3,11 +3,18 @@ package com.example.iworks.domain.board.controller;
 import com.example.iworks.domain.board.dto.request.BoardCreateRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
+import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
 import com.example.iworks.domain.board.service.BoardService;
-import com.example.iworks.global.util.Response;
+import com.example.iworks.domain.file.dto.request.FileUploadRequestDto;
+import com.example.iworks.domain.file.service.FileService;
+import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -15,12 +22,25 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
 
     private final BoardService boardService;
+    private final FileService fileService;
+    private final FileUtils fileUtils;
     private final Response response;
 
     //게시글 등록
     @PostMapping("/")
     public ResponseEntity<?> createBoard(@RequestBody BoardCreateRequestDto boardCreateRequestDto) {
         boardService.createBoard(boardCreateRequestDto);
+        return response.handleSuccess("게시글 등록 완료");
+    }
+
+    //게시판 등록(파일 업로드)
+    @PostMapping("/upload")
+    public ResponseEntity<?> createBoardWithFile(@RequestPart(value = "boardCreateRequestDto") BoardCreateRequestDto boardCreateRequestDto, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        boardService.createBoard(boardCreateRequestDto);
+
+        BoardGetResponseDto findBoard = boardService.getBoardRecent();
+        List<FileUploadRequestDto> uploadFiles = fileUtils.uploadFiles(findBoard, files);
+        fileService.uploadFile(uploadFiles);
         return response.handleSuccess("게시글 등록 완료");
     }
 
