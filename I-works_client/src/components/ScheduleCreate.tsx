@@ -348,7 +348,7 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
                   className="w-fit text-black text-sm my-2 px-2 py-1 bg-teal-100"
                   key={info.userId}
                 >
-                  {info.userNameLast + info.userNameFirst}{' '}
+                  {info.userNameLast + info.userNameFirst}{' '}({info.departmentName})
                   <Button
                     onClick={() => handleDeleteAssignee(info.userId, 'user')}
                     className="size-6 p-0 ml-1 text-black bg-teal-100"
