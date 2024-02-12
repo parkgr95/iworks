@@ -53,7 +53,7 @@ function LoginPage() {
       localStorage.setItem('refreshToken', response.data.data.refreshToken)
       navigate('/')
     } catch (error: any) {
-      alert(error.response.data.data)
+      alert(error.response.data.message)
     }
   }
 
