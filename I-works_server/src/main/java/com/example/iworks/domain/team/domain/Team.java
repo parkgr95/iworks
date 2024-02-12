@@ -2,6 +2,7 @@ package com.example.iworks.domain.team.domain;
 
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.admin.dto.adminTeam.request.AdminTeamUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -72,6 +73,13 @@ public class Team {
     }
 
     public void update(AddressTeamEditRequestDto requestDto){
+        this.teamName = requestDto.getTeamName();
+        this.teamDescription = requestDto.getTeamDescription();
+        this.teamLeader = requestDto.getTeamLeaderId();
+        this.teamUpdatedAt = LocalDateTime.now();
+    }
+
+    public void update(AdminTeamUpdateRequestDto requestDto){
         this.teamName = requestDto.getTeamName();
         this.teamDescription = requestDto.getTeamDescription();
         this.teamLeader = requestDto.getTeamLeaderId();

@@ -1,4 +1,4 @@
-package com.example.iworks.domain.admin.dto.request;
+package com.example.iworks.domain.admin.dto.adminDepartment.request;
 
 import com.example.iworks.domain.department.domain.Department;
 import lombok.AccessLevel;

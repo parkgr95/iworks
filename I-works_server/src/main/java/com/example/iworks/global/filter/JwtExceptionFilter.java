@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             Map<String,Object> result = new HashMap<>();
             result.put("result","expired");
             result.put("message","토큰 유효기간 만료");
-            response.setStatus(400);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (JwtException | IllegalArgumentException e) {
@@ -34,7 +35,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             Map<String,Object> result = new HashMap<>();
             result.put("result","failed");
             result.put("message","유효하지 않은 토큰");
-            response.setStatus(400);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (NoSuchElementException e) {
@@ -43,7 +44,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             Map<String,Object> result = new HashMap<>();
             result.put("result","failed");
             result.put("data","찾을 수 없는 사용자");
-            response.setStatus(400);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -51,7 +52,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             Map<String,Object> result = new HashMap<>();
             result.put("result","failed");
             result.put("data","ArrayIndexOutOfBoundsException");
-            response.setStatus(400);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.getWriter().write(new ObjectMapper().writeValueAsString(result));
 
         } catch (NullPointerException e) {

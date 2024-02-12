@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @TestPropertySource(locations = "classpath:env.properties")
-class UserNotificationRepositoryImplTest {
+class UserNotificationSendRepositoryImplTest {
 
     @Value("${MYSQL_USER}")
     private String mysqlUser;
@@ -32,7 +32,7 @@ class UserNotificationRepositoryImplTest {
     private String jwtSecret;
 
 //    @Autowired
-//    UserNotificationRepository userNotificationRepository;
+//    UserNotificationSendSendRepository userNotificationRepository;
 
 //    @Autowired
 //    InitData initData;

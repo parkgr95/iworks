@@ -1,8 +1,8 @@
-package com.example.iworks.domain.admin.service;
+package com.example.iworks.domain.admin.service.adminDepartment;
 
-import com.example.iworks.domain.admin.dto.request.AdminDepartmentCreateRequestDto;
-import com.example.iworks.domain.admin.dto.request.AdminDepartmentUpdateRequestDto;
-import com.example.iworks.domain.admin.dto.response.AdminDepartmentResponseDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentCreateRequestDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.request.AdminDepartmentUpdateRequestDto;
+import com.example.iworks.domain.admin.dto.adminDepartment.response.AdminDepartmentResponseDto;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class AdminServiceImpl implements AdminService{
+public class AdminDepartmentServiceImpl implements AdminDepartmentService {
 
     private final DepartmentRepository departmentRepository;
 
