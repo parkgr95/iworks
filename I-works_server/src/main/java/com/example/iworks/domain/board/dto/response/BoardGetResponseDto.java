@@ -1,6 +1,6 @@
 package com.example.iworks.domain.board.dto.response;
 
-import com.example.iworks.domain.board.domain.Board;
+import com.example.iworks.domain.board.entity.Board;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

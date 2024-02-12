@@ -1,8 +1,7 @@
 package com.example.iworks.domain.board.repository;
 
-import com.example.iworks.domain.board.domain.Board;
+import com.example.iworks.domain.board.entity.Board;
 import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
-import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
 import com.example.iworks.domain.board.repository.custom.BoardGetRepository;
 import com.example.iworks.domain.board.repository.custom.BoardSearchRepository;
 import com.example.iworks.domain.code.entity.Code;
@@ -16,11 +15,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
 
-import static com.example.iworks.domain.board.domain.QBoard.board;
-import static com.example.iworks.domain.board.domain.QBookmark.bookmark;
-import static java.util.stream.Collectors.*;
+import static com.example.iworks.domain.board.entity.QBoard.board;
+import static com.example.iworks.domain.board.entity.QBookmark.bookmark;
 
 @RequiredArgsConstructor
 @Repository

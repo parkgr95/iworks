@@ -1,7 +1,7 @@
 package com.example.iworks.domain.board.service;
 
-import com.example.iworks.domain.board.domain.Board;
-import com.example.iworks.domain.board.domain.Bookmark;
+import com.example.iworks.domain.board.entity.Board;
+import com.example.iworks.domain.board.entity.Bookmark;
 import com.example.iworks.domain.board.dto.request.BoardCreateRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;

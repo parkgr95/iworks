@@ -1,4 +1,4 @@
-package com.example.iworks.domain.board.domain;
+package com.example.iworks.domain.board.entity;
 
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
 import com.example.iworks.domain.code.entity.Code;

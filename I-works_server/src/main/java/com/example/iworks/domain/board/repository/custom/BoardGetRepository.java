@@ -1,6 +1,6 @@
 package com.example.iworks.domain.board.repository.custom;
 
-import com.example.iworks.domain.board.domain.Board;
+import com.example.iworks.domain.board.entity.Board;
 import com.example.iworks.domain.code.entity.Code;
 import org.springframework.data.domain.Pageable;
 

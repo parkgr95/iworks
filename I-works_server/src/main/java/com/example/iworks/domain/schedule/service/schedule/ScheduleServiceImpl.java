@@ -52,24 +52,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
         // Create Assignees Notification
-        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
+//        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
 
     }
 
-    private void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
-        //Find all user by assigneeInfos
-        List<User> userList = userRepository.getUserListByAssineeInfos(assigneeInfos);
-
-        for ( User user : userList){
-            UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
-                    .scheduleId(savedSchedule.getScheduleId())
-                    .userId(user.getUserId())
-                    .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
-                    .notificationType(NotificationType.CREATE.toString())
-                    .build();
-            userNotificationService.create(notificationCreateRequestDto);
-        }
-    }
+//    private void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
+//        //Find all user by assigneeInfos
+//        List<User> userList = userRepository.getUserListByAssineeInfos(assigneeInfos);
+//
+//        for ( User user : userList){
+//            UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
+//                    .scheduleId(savedSchedule.getScheduleId())
+//                    .userId(user.getUserId())
+//                    .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
+//                    .notificationType(NotificationType.CREATE.toString())
+//                    .build();
+//            userNotificationService.create(notificationCreateRequestDto);
+//        }
+//    }
 
     private void assignUsers(Schedule schedule, List<AssigneeInfo> assigneeInfos){
         for (AssigneeInfo assigneeInfo : assigneeInfos) {
