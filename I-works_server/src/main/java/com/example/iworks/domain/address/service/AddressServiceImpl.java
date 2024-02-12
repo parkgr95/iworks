@@ -17,7 +17,7 @@ import com.example.iworks.domain.team.repository.team.TeamSearchRepository;
 import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.domain.user.repository.UserSearchRepository;
+import com.example.iworks.domain.user.repository.custom.UserSearchRepository;
 import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
