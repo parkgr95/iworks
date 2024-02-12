@@ -11,6 +11,16 @@ import BoardCreate from './pages/boards/BoardCreate';
 import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
+import AdminPage from './pages/AdminPage';
+import AdminIndex from './pages/admins/AdminIndex';
+import AdminUsers from './pages/admins/AdminUsers';
+import AdminDepartments from './pages/admins/AdminDepartments';
+import AdminGroups from './pages/admins/AdminGroups';
+import AdminBoards from './pages/admins/AdminBoards';
+import AdminSchedules from './pages/admins/AdminSchedules';
+import AdminUsersDetail from './pages/admins/AdminUsersDetail';
+import AdminBoardsUpdate from './pages/admins/AdminBoardsUpdate';
+import AdminBoardsCreate from './pages/admins/AdminBoardsCreate';
 
 const router = createBrowserRouter([
   {
@@ -72,11 +82,49 @@ const router = createBrowserRouter([
           },
         ]
       },
-      // 캘린더 라우터
-      // {
-      //   path: 'schedule',
-      //   element: <SchedulePage />
-      // },
+      // 관리자 라우터
+      {
+        path: 'admin',
+        element: <AdminPage />,
+        children: [
+          {
+            path: '',
+            element: <AdminIndex />
+          },
+          {
+            path: 'users',
+            element: <AdminUsers />
+          },
+          {
+            path: 'users/:userId',
+            element: <AdminUsersDetail />
+          },
+          {
+            path: 'departments',
+            element: <AdminDepartments />
+          },
+          {
+            path: 'groups',
+            element: <AdminGroups />
+          },
+          {
+            path: 'boards',
+            element: <AdminBoards />
+          },
+          {
+            path: 'boards/create',
+            element: <AdminBoardsCreate />
+          },
+          {
+            path: 'boards/update/:boardId',
+            element: <AdminBoardsUpdate />
+          },
+          {
+            path: 'schedules',
+            element: <AdminSchedules />
+          },
+        ]
+      },
     ]
   },
 ]);

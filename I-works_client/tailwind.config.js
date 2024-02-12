@@ -12,6 +12,9 @@ export default {
         'mainBlack': '#1B1C25',
         'mainGreen': '#206A5D',
         'mainGray': '#EBECF1',
+      },
+      height: {
+        '128': '32rem',
       }
     }
   },

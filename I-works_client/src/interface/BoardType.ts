@@ -1,9 +1,10 @@
 export default interface PostType {
+    boardId: string
     boardTitle: string
-    boardCreatorId?: number
-    boardModifierId?: number
-    // 더미 기준
-    id?: number
-    title?: string
-    body?: string
+    boardCreatorId?: string
+    boardModifierId?: string
+    boardContent?:string
+    boardCreatedAt?:string
+    boardUpdatedAt?: string
+    boardCategoryCodeId?: string
 }

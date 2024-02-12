@@ -1,77 +1,79 @@
-// function BoardModal({ isOpen, onClose, onSelectBoard, boards }) {
+import { Modal } from "flowbite-react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-//   if (!isOpen) {
-//     return null
-//   }
+interface BoardModalProps {
+  show: boolean;
+  onClose: () => void;
+  onSelect: (boardName: string, boardOwnerId: string, boardCategoryCodeId: string) => void;
+}
 
-//   return (
-//     <div className="modal">
-//       <div className="modal-content">
-//         <span className="close" onClick={onClose}>&times;</span>
-//         <h2>Select a Board</h2>
-//         <select onChange={(e) => onSelectBoard(e.target.value)}>
-//           {boards.map(board => (
-//             <option key={board.id} value={board.id}>{board.name}</option>
-//           ))}
-//         </select>
-//       </div>
-//     </div>
-//   )
-// }
+interface OrganizationType {
+  departmentName?: string;
+  departmentId?: string;
+  teamName?: string;
+  teamId?: string;
+}
 
-// export default BoardModal
+const BoardModal: React.FC<BoardModalProps> = ({ show, onClose, onSelect }) => {
+  // const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
+  const [departmentList, setDepartmentList] = useState<OrganizationType[]>([]);
+  const [teamList, setTeamList] = useState<OrganizationType[]>([]);
+  
 
+  useEffect(() => {
+    if (show) {
+      axios.all([
+        axios.get('https://suhyeon.site/api/address/department/all'),
+        axios.get('https://suhyeon.site/api/address/team/all'),
+      ])
+        .then(axios.spread((departmentRes, teamRes) => {
+          setDepartmentList(departmentRes.data.data);
+          setTeamList(teamRes.data.data);
+        }))
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [show]);
 
-// import React, { useState, useEffect } from 'react';
-// import Modal from './Modal';
+  const handleSelect = (boardName: string, boardOwnerId: string, boardCategoryCodeId: string) => {
+    // 선택한 부서를 onSelect 콜백을 통해 부모 창에 전달
+    // setSelectedBoard(boardName);
+    onSelect(boardName, boardOwnerId, boardCategoryCodeId);
+    onClose(); // 모달 닫기
+  };
 
-// const ParentComponent = () => {
-//   const [isModalOpen, setModalOpen] = useState(false);
-//   const [selectedBoard, setSelectedBoard] = useState(null);
-//   const [boards, setBoards] = useState([]);
+  return (
+    <Modal
+      show={show}
+      onClose={onClose}
+      size="sm"
+    > 
+      <h1 className="mt-6 mb-2 pl-8 font-semibold text-lg">게시판 선택</h1>
+      <div className="flex flex-col items-start py-10 mx-6 mb-6 border-2 pl-10">
 
-//   useEffect(() => {
-//     // API 호출 함수 정의
-//     const fetchBoards = async () => {
-//       try {
-//         const response = await fetch('YOUR_API_ENDPOINT');
-//         const data = await response.json();
-//         setBoards(data); // API에서 받아온 데이터로 boards 상태 업데이트
-//       } catch (error) {
-//         console.error('Error fetching boards:', error);
-//       }
-//     };
+        <button className="hover:text-blue-700" onClick={() => handleSelect('공지게시판', '1', '1')}>공지게시판</button>
+        <button className="hover:text-blue-700" onClick={() => handleSelect('자유게시판', '2', '2')}>자유게시판</button>
+        <h2 className="pointer-events-none">부서게시판</h2>
+        <ul>
+          {departmentList.map((department) => (
+            <li className="pl-5 hover:text-blue-700" key={department.departmentId}>
+              <button onClick={() => handleSelect(department.departmentName + '게시판' || '', department.departmentId || '', '3')}>- {department.departmentName}게시판</button>
+            </li>
+          ))}
+        </ul>
+        <h2 className="pointer-events-none">그룹게시판</h2>
+        <ul>
+          {teamList.map((team) => (
+            <li className="pl-5 hover:text-blue-700" key={team.teamId}>
+              <button onClick={() => handleSelect(team.teamName + '게시판' || '', team.teamId || '', '4')}>- {team.teamName}게시판</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Modal>
+  );
+};
 
-//     // 컴포넌트 마운트 시 API 호출
-//     fetchBoards();
-//   }, []); // 빈 배열을 전달하여 한 번만 호출되도록 설정
-
-//   const openModal = () => {
-//     setModalOpen(true);
-//   };
-
-//   const closeModal = () => {
-//     setModalOpen(false);
-//   };
-
-//   const handleSelectBoard = (boardId) => {
-//     // Handle the selected board as needed
-//     setSelectedBoard(boardId);
-//     closeModal();
-//   };
-
-//   return (
-//     <div>
-//       <button onClick={openModal}>Select Board</button>
-//       <Modal
-//         isOpen={isModalOpen}
-//         onClose={closeModal}
-//         onSelectBoard={handleSelectBoard}
-//         boards={boards}
-//       />
-//       {selectedBoard && <p>Selected Board: {selectedBoard}</p>}
-//     </div>
-//   );
-// };
-
-// export default ParentComponent;
+export default BoardModal;
