@@ -6,13 +6,14 @@ import com.example.iworks.domain.notification.domain.Notification;
 import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.user.domain.User;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @EqualsAndHashCode
+@Builder @AllArgsConstructor
+@NoArgsConstructor
 public class UserNotificationCreateRequestDto {
 
     private int userId; // 유저 아이디
@@ -26,8 +27,6 @@ public class UserNotificationCreateRequestDto {
     private String notificationContent; // 알림 내용
 
     private String notificationType; // 알림 타입(생성, 삭제, 수정)
-
-    private LocalDateTime notificationCreatedAt; // 알림 생성 일시
 
     public UserNotification toEntity(User user, Board board, Schedule schedule, Meeting meeting) {
         return UserNotification.builder()

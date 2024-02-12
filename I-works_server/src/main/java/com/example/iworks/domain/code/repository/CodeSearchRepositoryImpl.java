@@ -22,7 +22,7 @@ public class CodeSearchRepositoryImpl implements CodeSearchRepository{
                 .from(c)
                 .where(
                         c.codeIsUse.isTrue()
-                                .and(c.codeCodeGroup.codeGroupId.eq(codeGroupId)))
+                                .and(c.codeGroup.codeGroupId.eq(codeGroupId)))
                 .stream()
                 .map(CodeResponseDto::new).toList();
     }

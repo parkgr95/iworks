@@ -1,6 +1,8 @@
 package com.example.iworks.domain.schedule.service.schedule;
 
 import com.example.iworks.domain.meeting.domain.Meeting;
+import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
+import com.example.iworks.domain.notification.service.UserNotificationService;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
@@ -12,6 +14,7 @@ import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.code.repository.CodeRepository;
+import com.example.iworks.global.enumtype.NotificationType;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
+    private final UserNotificationService userNotificationService;
 
     @Transactional
     @Override
@@ -40,12 +44,31 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         User creator = userRepository.findByUserId(userId);
 
-        // Create Schedule Entity
+        // Create Schedule
         Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
 
         assignUsers(schedule, createRequestDto.getAssigneeInfos());
 
-        scheduleRepository.save(schedule);
+        Schedule savedSchedule = scheduleRepository.save(schedule);
+
+        // Create Assignees Notification
+        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
+
+    }
+
+    private void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
+        //Find all user by assigneeInfos
+        List<User> userList = userRepository.getUserListByAssineeInfos(assigneeInfos);
+
+        for ( User user : userList){
+            UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
+                    .scheduleId(savedSchedule.getScheduleId())
+                    .userId(user.getUserId())
+                    .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
+                    .notificationType(NotificationType.CREATE.toString())
+                    .build();
+            userNotificationService.create(notificationCreateRequestDto);
+        }
     }
 
     private void assignUsers(Schedule schedule, List<AssigneeInfo> assigneeInfos){
