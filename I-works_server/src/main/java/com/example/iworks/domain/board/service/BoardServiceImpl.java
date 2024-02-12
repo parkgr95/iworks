@@ -120,6 +120,14 @@ public class BoardServiceImpl implements BoardService{
         }
     }
 
+    @Override
+    public List<BoardGetResponseDto> getAllByBookmark(String userEid) {
+        return boardRepository.findAllByBookmark(pageRequest, userEid)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
+    }
+
     private Code findCode(int boardCategoryCodeId) {
         return codeRepository.findById(boardCategoryCodeId)
                 .orElseThrow(IllegalStateException::new);

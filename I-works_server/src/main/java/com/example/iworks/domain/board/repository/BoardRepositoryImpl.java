@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.example.iworks.domain.board.domain.QBoard.board;
+import static com.example.iworks.domain.board.domain.QBookmark.bookmark;
 import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
@@ -71,6 +72,21 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 .stream()
                 .map(BoardGetResponseDto::new)
                 .collect(toList());
+    }
+
+    @Override
+    public List<Board> findAllByBookmark(Pageable pageable, String userEid) {
+        return queryFactory
+                .selectFrom(board)
+                .innerJoin(bookmark)
+                .on(board.eq(bookmark.board))
+                .where(
+                        eqUser(userEid)
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     @Override
@@ -133,6 +149,10 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
 
     private BooleanBuilder eqBoardContent(String boardContent) {
         return StringUtils.hasText(boardContent) ? new BooleanBuilder(board.boardContent.eq(boardContent)) : new BooleanBuilder();
+    }
+
+    private BooleanExpression eqUser(String userEid) {
+        return bookmark.user.userEid.eq(userEid);
     }
 
     private BooleanExpression eqDeleted() {

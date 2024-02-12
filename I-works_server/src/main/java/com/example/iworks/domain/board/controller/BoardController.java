@@ -57,7 +57,7 @@ public class BoardController {
             @RequestParam(name = "boardOwnerId") int boardOwnerId) {
         return response.handleSuccess(boardService.getAllByCategory(boardCategoryCodeId, boardOwnerId));
     }
-    
+
     //카테고리 별 게시글 세부 조회
     @GetMapping("/byCategory/{boardId}")
     public ResponseEntity<?> getBoardByCategory(
@@ -84,12 +84,18 @@ public class BoardController {
     public ResponseEntity<?> getBoardsByKeywords(@RequestParam(name = "keywords") String keywords) {
         return response.handleSuccess(boardService.getAllByKeywords(keywords));
     }
-    
+
     //북마크 등록/삭제
     @PostMapping("/bookmark/{boardId}")
     public ResponseEntity<?> updateBookmark(@PathVariable(name = "boardId") int boardId, @RequestParam(name = "userEid") String userEid) {
         boardService.updateBookmark(boardId, userEid);
         return response.handleSuccess("북마크 완료");
+    }
+
+    //북마크 된 게시글 전체 조회
+    @GetMapping("/byBookmark")
+    public ResponseEntity<?> getBookmarkedBoards(@RequestParam(name = "userEid") String userEid) {
+        return response.handleSuccess(boardService.getAllByBookmark(userEid));
     }
 
 }

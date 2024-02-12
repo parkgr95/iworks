@@ -1,5 +1,6 @@
 package com.example.iworks.domain.board.repository.custom;
 
+import com.example.iworks.domain.board.domain.Board;
 import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
 import com.example.iworks.domain.code.entity.Code;
 import org.springframework.data.domain.Pageable;
@@ -16,5 +17,8 @@ public interface BoardGetRepository {
 
     //작성한 게시글 전체 조회
     List<BoardGetResponseDto> findAllByCreator(Pageable pageable, int boardCreatorId);
+
+    //북마크 된 게시글 전체 조회
+    List<Board> findAllByBookmark(Pageable pageable, String userEid);
 
 }
