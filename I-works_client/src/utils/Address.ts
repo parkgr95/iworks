@@ -3,7 +3,7 @@ import { API_URL } from "./api";
 
 const ADDRESS_URL = API_URL+ '/address'
 
-interface dept {
+export interface DepartmentInfo {
     departmentName:string
     departmentId: number
   }

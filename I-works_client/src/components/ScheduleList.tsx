@@ -57,8 +57,8 @@ function ScheduleList(props: prop) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 justify-center">
-      <div className="flex flex-col gap-2" style={{ height:'75vh', overflow: 'scroll' }}>
+    <div className="flex gap-4 items-stretch">
+      <div className="flex flex-col gap-2" style={{ width:'45vw', height:'75vh', overflow: 'scroll' }}>
         {sortedList.map((schedule) => {
           return (
             <div
@@ -91,7 +91,7 @@ function ScheduleList(props: prop) {
         {scheduleDetailInfo ? (
           <ScheduleDetail scheduleDetailInfo={scheduleDetailInfo} />
         ) : (
-          <div className="text-center text-3xl font-bold p-36 border-2 text-nowrap">
+          <div className="text-center text-3xl font-bold border-2 border-mainGreen rounded-xl text-nowrap h-full pt-20" style={{width:'35vw'}}>
             스케줄을 선택해주세요
           </div>
         )}

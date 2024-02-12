@@ -26,7 +26,7 @@ import {
   getTeamAllList,
   getUserAllList,
 } from '../utils/Address'
-import { AiOutlineClose } from "react-icons/ai"
+import { AiOutlineClose } from 'react-icons/ai'
 
 const SCH_URL = API_URL + '/schedule'
 
@@ -56,6 +56,9 @@ interface TeamInfo {
   teamName: string
   teamId: number
 }
+
+const labelClass = 'text-md font-bold p-1'
+const inputClass = 'mt-1'
 
 const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
@@ -213,226 +216,255 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
 
   return createPortal(
     <dialog
-      className="rounded-xl p-10 w-2/3 max-w-xl min-w-fit"
+      className="rounded-xl p-10 w-2/3 max-w-xl min-w-fit "
       ref={dialog as RefObject<HTMLDialogElement>}
     >
-      <h1 className="text-3xl text-center mb-10">할 일 생성</h1>
+      <h1 className="text-3xl text-center mb-4 font-bold">할 일 생성</h1>
       <Form
+        className="grid grid-col gap-4"
         ref={formRef}
-        className="flex flex-col gap-4"
         onSubmit={handleSubmit}
         onKeyDown={handleKeyDown}
       >
-        <div className="max-w-md">
-          <div className="mb-2 block">
-            {/* 할 일 구분 */}
-            <Label htmlFor="scheduleDivisionCodeId">구분</Label>
-            <Select
-              id="scheduleDivisionCodeId"
-              name="scheduleDivisionCodeId"
-              required
-            >
-              {Object.entries(scheduleDivisionList).map(
-                ([scheduleDivisionName, scheduleDivisionCodeId], _index) => (
-                  <option
-                    key={scheduleDivisionCodeId}
-                    value={scheduleDivisionCodeId}
-                  >
-                    {scheduleDivisionName}
-                  </option>
-                ),
-              )}
-            </Select>
-          </div>
-
-          {/* 제목 */}
-          <div>
-            <Label className="text-lg" htmlFor="scheduleTitle">
-              제목
-            </Label>
-            <TextInput
-              type="text"
-              name="scheduleTitle"
-              required
-              id="scheduleTitle"
-            />
-          </div>
-
-          {/* 담당 부서 */}
-          <div>
-            <Label>담당 부서</Label>
-            <div className="flex flex-wrap gap-2">
-              {assigneeDepartmentList.map((info) => {
-                return (
-                  <Toast
-                    className="w-fit text-black text-sm mb-2 px-2 py-1 bg-red-100"
-                    key={info.departmentId}
-                  >
-                    {info.departmentName}{' '}
-                    <Button
-                      onClick={() =>
-                        handleDeleteAssignee(info.departmentId, 'department')
-                      }
-                      className="size-6 p-0 ml-1 text-black bg-red-100"
-                    ><AiOutlineClose /></Button>
-                  </Toast>
-                )
-              })}
-            </div>
-            <Select
-              onChange={(event) => handleAddAssignee(event, 'department')}
-            >
-              <option value="none">선택해주세요</option>
-              {departmentList.map((info) => {
-                return (
-                  <option key={info.departmentId} value={info.departmentId}>
-                    {info.departmentName}
-                  </option>
-                )
-              })}
-            </Select>
-          </div>
-
-          {/* 담당 팀 */}
-          <div>
-            <Label>담당 팀</Label>
-            <div className="flex flex-wrap gap-2">
-              {assigneeTeamList.map((info) => {
-                return (
-                  <Toast
-                    className="w-fit text-black text-sm my-2 px-2 py-1 bg-lime-100"
-                    key={info.teamId}
-                  >
-                    {info.teamName}{' '}
-                    <Button
-                      onClick={() => handleDeleteAssignee(info.teamId, 'team')}
-                      className="size-6 p-0 ml-1 text-black bg-lime-100"
-                    ><AiOutlineClose /></Button>
-                  </Toast>
-                )
-              })}
-            </div>
-            <Select onChange={(event) => handleAddAssignee(event, 'team')}>
-              <option value="none">선택해주세요</option>
-              {teamList.map((info) => {
-                return (
-                  <option key={info.teamId} value={info.teamId}>
-                    {info.teamName}
-                  </option>
-                )
-              })}
-            </Select>
-          </div>
-
-          {/* 담당자 */}
-          <div>
-            <Label>담당자</Label>
-            <div className="flex flex-wrap gap-2">
-              {assigneeUserList.map((info) => {
-                return (
-                  <Toast
-                    className="w-fit text-black text-sm my-2 px-2 py-1 bg-teal-100"
-                    key={info.userId}
-                  >
-                    {info.userNameLast + info.userNameFirst}{' '}
-                    <Button
-                      onClick={() => handleDeleteAssignee(info.userId, 'user')}
-                      className="size-6 p-0 ml-1 text-black bg-teal-100"
-                    ><AiOutlineClose /></Button>
-                  </Toast>
-                )
-              })}
-            </div>
-            <Select onChange={(event) => handleAddAssignee(event, 'user')}>
-              <option value="none">선택해주세요</option>
-              {userList.map((info) => {
-                return (
-                  <option key={info.userId} value={info.userId}>
-                    {info.userNameLast + info.userNameFirst} (
-                    {info.departmentName})
-                  </option>
-                )
-              })}
-            </Select>
-          </div>
-
-          {/* 우선순위 */}
-          <div>
-            <Label className="text-lg" htmlFor="schedulePriority">
-              우선순위
-            </Label>
-            <Select id="schedulePriority" name="schedulePriority" required>
-              <option value={'H'}>높음</option>
-              <option value={'M'}>중간</option>
-              <option value={'L'}>낮음</option>
-            </Select>
-          </div>
-
-          {/* 내용 */}
-          <div>
-            <Label className="text-lg" htmlFor="scheduleContent">
-              내용
-            </Label>
-            <Textarea name="scheduleContent" required id="scheduleContent" />
-          </div>
-
-          {/* 시작일시 */}
-          <div>
-            <Label className="text-lg" htmlFor="scheduleStartDate">
-              시작 일시
-            </Label>
-            <TextInput
-              type="datetime-local"
-              name="scheduleStartDate"
-              required
-              id="scheduleStartDate"
-            />
-          </div>
-
-          {/* 종료 일시 */}
-          <div>
-            <Label className="text-lg" htmlFor="scheduleEndDate">
-              종료 일시
-            </Label>
-            <TextInput
-              type="datetime-local"
-              name="scheduleEndDate"
-              required
-              id="scheduleEndDate"
-            />
-          </div>
-
-          {/* 장소 */}
-          <div>
-            <Label className="text-lg" htmlFor="schedulePlace">
-              장소
-            </Label>
-            <TextInput
-              type="text"
-              name="schedulePlace"
-              required
-              id="schedulePlace"
-            />
-          </div>
-
-          {/* 회의 일시 */}
-          <div>
-            <Label className="text-lg" htmlFor="meetingDate">
-              회의 일시
-            </Label>
-            <TextInput
-              type="datetime-local"
-              name="meetingDate"
-              required
-              id="meetingDate"
-            />
-          </div>
-
-          {/* 버튼 */}
-          <Button className="mt-10" type="submit">
-            할 일 생성
-          </Button>
+        {/* 할 일 구분 */}
+        <div className="mb-2 block">
+          <Label className={labelClass} htmlFor="scheduleDivisionCodeId">
+            구분
+          </Label>
+          <Select
+            className={inputClass}
+            id="scheduleDivisionCodeId"
+            name="scheduleDivisionCodeId"
+            required
+          >
+            {Object.entries(scheduleDivisionList).map(
+              ([scheduleDivisionName, scheduleDivisionCodeId], _index) => (
+                <option
+                  key={scheduleDivisionCodeId}
+                  value={scheduleDivisionCodeId}
+                >
+                  {scheduleDivisionName}
+                </option>
+              ),
+            )}
+          </Select>
         </div>
+
+        {/* 제목 */}
+        <div>
+          <Label className={labelClass} htmlFor="scheduleTitle">
+            제목
+          </Label>
+          <TextInput
+            className={inputClass}
+            type="text"
+            name="scheduleTitle"
+            required
+            id="scheduleTitle"
+          />
+        </div>
+
+        {/* 담당 부서 */}
+        <div>
+          <Label className={labelClass}>담당 부서</Label>
+          <div className="flex flex-wrap gap-2">
+            {assigneeDepartmentList.map((info) => {
+              return (
+                <Toast
+                  className="w-fit text-black text-sm mb-2 px-2 py-1 bg-red-100"
+                  key={info.departmentId}
+                >
+                  {info.departmentName}{' '}
+                  <Button
+                    onClick={() =>
+                      handleDeleteAssignee(info.departmentId, 'department')
+                    }
+                    className="size-6 p-0 ml-1 text-black bg-red-100"
+                  >
+                    <AiOutlineClose />
+                  </Button>
+                </Toast>
+              )
+            })}
+          </div>
+          <Select
+            className={inputClass}
+            onChange={(event) => handleAddAssignee(event, 'department')}
+          >
+            <option value="none">선택해주세요</option>
+            {departmentList.map((info) => {
+              return (
+                <option key={info.departmentId} value={info.departmentId}>
+                  {info.departmentName}
+                </option>
+              )
+            })}
+          </Select>
+        </div>
+
+        {/* 담당 팀 */}
+        <div>
+          <Label className={labelClass}>담당 팀</Label>
+          <div className="flex flex-wrap gap-2">
+            {assigneeTeamList.map((info) => {
+              return (
+                <Toast
+                  className="w-fit text-black text-sm my-2 px-2 py-1 bg-lime-100"
+                  key={info.teamId}
+                >
+                  {info.teamName}{' '}
+                  <Button
+                    onClick={() => handleDeleteAssignee(info.teamId, 'team')}
+                    className="size-6 p-0 ml-1 text-black bg-lime-100"
+                  >
+                    <AiOutlineClose />
+                  </Button>
+                </Toast>
+              )
+            })}
+          </div>
+          <Select
+            className={inputClass}
+            onChange={(event) => handleAddAssignee(event, 'team')}
+          >
+            <option value="none">선택해주세요</option>
+            {teamList.map((info) => {
+              return (
+                <option key={info.teamId} value={info.teamId}>
+                  {info.teamName}
+                </option>
+              )
+            })}
+          </Select>
+        </div>
+
+        {/* 담당자 */}
+        <div>
+          <Label className={labelClass}>담당자</Label>
+          <div className="flex flex-wrap gap-2">
+            {assigneeUserList.map((info) => {
+              return (
+                <Toast
+                  className="w-fit text-black text-sm my-2 px-2 py-1 bg-teal-100"
+                  key={info.userId}
+                >
+                  {info.userNameLast + info.userNameFirst}{' '}
+                  <Button
+                    onClick={() => handleDeleteAssignee(info.userId, 'user')}
+                    className="size-6 p-0 ml-1 text-black bg-teal-100"
+                  >
+                    <AiOutlineClose />
+                  </Button>
+                </Toast>
+              )
+            })}
+          </div>
+          <Select
+            className={inputClass}
+            onChange={(event) => handleAddAssignee(event, 'user')}
+          >
+            <option value="none">선택해주세요</option>
+            {userList.map((info) => {
+              return (
+                <option key={info.userId} value={info.userId}>
+                  {info.userNameLast + info.userNameFirst} (
+                  {info.departmentName})
+                </option>
+              )
+            })}
+          </Select>
+        </div>
+
+        {/* 우선순위 */}
+        <div>
+          <Label className={labelClass} htmlFor="schedulePriority">
+            우선순위
+          </Label>
+          <Select
+            className={inputClass}
+            id="schedulePriority"
+            name="schedulePriority"
+            required
+          >
+            <option value={'H'}>높음</option>
+            <option value={'M'}>중간</option>
+            <option value={'L'}>낮음</option>
+          </Select>
+        </div>
+
+        {/* 내용 */}
+        <div>
+          <Label className={labelClass} htmlFor="scheduleContent">
+            내용
+          </Label>
+          <Textarea
+            className={inputClass}
+            name="scheduleContent"
+            required
+            id="scheduleContent"
+          />
+        </div>
+
+        {/* 시작일시 */}
+        <div>
+          <Label className={labelClass} htmlFor="scheduleStartDate">
+            시작 일시
+          </Label>
+          <TextInput
+            className={inputClass}
+            type="datetime-local"
+            name="scheduleStartDate"
+            required
+            id="scheduleStartDate"
+          />
+        </div>
+
+        {/* 종료 일시 */}
+        <div>
+          <Label className={labelClass} htmlFor="scheduleEndDate">
+            종료 일시
+          </Label>
+          <TextInput
+            className={inputClass}
+            type="datetime-local"
+            name="scheduleEndDate"
+            required
+            id="scheduleEndDate"
+          />
+        </div>
+
+        {/* 장소 */}
+        <div>
+          <Label className={labelClass} htmlFor="schedulePlace">
+            장소
+          </Label>
+          <TextInput
+            className={inputClass}
+            type="text"
+            name="schedulePlace"
+            required
+            id="schedulePlace"
+          />
+        </div>
+
+        {/* 회의 일시 */}
+        <div>
+          <Label className={labelClass} htmlFor="meetingDate">
+            회의 일시
+          </Label>
+          <TextInput
+            className={inputClass}
+            type="datetime-local"
+            name="meetingDate"
+            required
+            id="meetingDate"
+          />
+        </div>
+
+        {/* 버튼 */}
+        <Button className="bg-mainGreen mt-4" type="submit">
+          할 일 생성
+        </Button>
       </Form>
     </dialog>,
     document.getElementById('modal') as HTMLElement,

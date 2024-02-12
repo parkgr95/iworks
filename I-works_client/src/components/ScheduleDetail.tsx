@@ -23,7 +23,7 @@ function ScheduleDetail(props: any) {
   return (
     <div
       className="flex flex-col gap-8 border-2 border-mainGreen rounded-xl p-16"
-      style={{ height: '75vh', overflow: 'scroll' }}
+      style={{ width:'35vw', height: '75vh', overflow: 'scroll' }}
     >
       <div className="flex text-3xl font-bold pb-2 border-b-2 border-b-mainGreen justify-between">
         {scheduleDetailInfo.scheduleTitle}

@@ -6,7 +6,7 @@ import { Button, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import ScheduleList from '../components/ScheduleList'
 import { AssigneeType } from '../components/ScheduleCreate'
-import { UserDetail, getUserDetailInfo } from '../utils/User'
+import { UserDetail } from '../utils/User'
 
 const API_SCH = API_URL + '/schedule-assign/get-by-assignees-and-date'
 
@@ -21,13 +21,13 @@ interface ScheduleRequestBody {
 }
 
 function SchedulePage() {
-
-  const loader = useLoaderData() as UserDetail;
+  const loader = useLoaderData() as UserDetail
 
   const [startDate, setStartDate] = useState(() => {
     const currentDate = new Date()
     currentDate.setDate(currentDate.getDate() - 30)
     currentDate.setHours(currentDate.getHours() + 9)
+    console.log(currentDate.toISOString().slice(0, -8))
     return currentDate.toISOString().slice(0, -8)
   })
 
@@ -40,12 +40,14 @@ function SchedulePage() {
 
   const [userInfo, _setUserInfo] = useState<UserDetail>(loader)
 
-
-
   const param = new URLSearchParams(useLocation().search)
   const mode = param.get('mode')
-  
+
   function getSchedule() {
+    if (startDate > endDate){
+      alert("검색 시작 기간이 종료 기간보다 더 뒤에 있습니다.")
+      return      
+    }
     axios
       .post(API_SCH, scheduleRequestBody! as ScheduleRequestBody)
       .then((response) => {
@@ -55,7 +57,6 @@ function SchedulePage() {
   }
 
   const [scheduleList, setScheduleList] = useState<[]>([])
-
 
   let scheduleRequestBody = {
     assigneeInfos: [] as AssigneeType[],
@@ -70,11 +71,11 @@ function SchedulePage() {
       scheduleRequestBody.assigneeInfos = [
         {
           categoryCodeId: 5,
-          assigneeId: userInfo?.userId!,
+          assigneeId: userInfo?.userId,
         },
         {
           categoryCodeId: 6,
-          assigneeId: 1,
+          assigneeId: userInfo?.departmentId,
         },
         {
           categoryCodeId: 7,
@@ -86,7 +87,7 @@ function SchedulePage() {
       scheduleRequestBody.assigneeInfos = [
         {
           categoryCodeId: 5,
-          assigneeId: userInfo?.userId!,
+          assigneeId: userInfo?.userId,
         },
       ]
       break
@@ -94,7 +95,7 @@ function SchedulePage() {
       scheduleRequestBody.assigneeInfos = [
         {
           categoryCodeId: 6,
-          assigneeId: 1,
+          assigneeId: userInfo?.departmentId,
         },
       ]
       break
@@ -107,8 +108,6 @@ function SchedulePage() {
       ]
       break
   }
-
-  
 
   useEffect(() => {
     getSchedule()
