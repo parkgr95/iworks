@@ -1,6 +1,8 @@
 package com.example.iworks.domain.user.domain;
 
 
+import com.example.iworks.domain.admin.dto.adminUser.request.AdminUserCreateRequestDto;
+import com.example.iworks.domain.admin.dto.adminUser.request.AdminUserUpdateRequestDto;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.team.domain.TeamUser;
@@ -112,6 +114,19 @@ public class User {
          this.userIsDeleted = false;
          this.userCreatedAt = LocalDateTime.now();
          this.userUpdatedAt = LocalDateTime.now();
+    }
+
+    public User(AdminUserCreateRequestDto dto){
+        this.userEid = dto.getUserEid();
+        this.userNameFirst =dto.getUserNameFirst();
+        this.userNameLast = dto.getUserNameLast();
+        this.userEmail = dto.getUserEmail();
+        this.userTel = dto.getUserTel();
+        this.userAddress = dto.getUserAddress();
+        this.userGender = dto.getUserGender();
+        this.userIsDeleted = false;
+        this.userCreatedAt = LocalDateTime.now();
+        this.userUpdatedAt = LocalDateTime.now();
     }
 
     public void setRandomPassword(String password){
