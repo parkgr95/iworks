@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static com.example.iworks.domain.schedule.domain.QSchedule.schedule;
 import static com.example.iworks.domain.schedule.domain.QScheduleAssign.scheduleAssign;
-import static com.example.iworks.global.common.CodeDef.STATUS_OUT_OF_OFFICE_CODE_ID;
+import static com.example.iworks.global.common.CodeDef.*;
 
 
 @Repository
@@ -49,7 +49,7 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    }
    private BooleanExpression filterTask(boolean onlyTask){
       if (!onlyTask) return Expressions.TRUE;
-      return scheduleAssign.schedule.scheduleDivision.codeId.eq(STATUS_OUT_OF_OFFICE_CODE_ID);
+      return scheduleAssign.schedule.scheduleDivision.codeId.eq(SCHEDULE_DIVISION_TASK_CODE_ID);
    }
    private BooleanExpression eqCategoryCodeId (int categoryCodeId){
       return scheduleAssign.scheduleAssigneeCategory.codeId.eq(categoryCodeId);

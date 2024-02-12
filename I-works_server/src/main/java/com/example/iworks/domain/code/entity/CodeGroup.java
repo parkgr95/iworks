@@ -26,12 +26,12 @@ public class CodeGroup {
     private boolean codeGroupIsUsed = true; // 코드 그룹 사용 여부
 
     @Builder.Default
-    @OneToMany(mappedBy = "codeCodeGroup")
+    @OneToMany(mappedBy = "codeGroup")
     private List<Code> codeGroupCodes = new ArrayList<>();
 
     public void setCodes(Code code){ //if code.group == this if code.setCodeGroup(this)
         this.codeGroupCodes.add(code);
-        if(code.getCodeCodeGroup() != this){
+        if(code.getCodeGroup() != this){
             code.setCodeGroup(this);
         }
     }
