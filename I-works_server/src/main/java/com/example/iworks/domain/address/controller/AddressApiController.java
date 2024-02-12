@@ -2,12 +2,12 @@ package com.example.iworks.domain.address.controller;
 
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
 import com.example.iworks.domain.address.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/api/address")
@@ -53,8 +53,8 @@ public class AddressApiController {
         return addressService.deleteTeam(teamId,token);
     }
     @PostMapping("/team/user/{teamId}")
-    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody List<Integer> requestDto){
-        return addressService.addTeamUser(teamId,token,requestDto);
+    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserAddRequestDto users){
+        return addressService.addTeamUser(teamId,token,users);
     }
 
     @DeleteMapping("/team/user/{teamId}")
