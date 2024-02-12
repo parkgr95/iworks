@@ -26,7 +26,7 @@ function ScheduleSideBar() {
           <ListGroup.Item href="/schedule?mode=user" icon={RiUser3Line}>
             내 할 일
           </ListGroup.Item>
-          <ListGroup.Item href='/schedule?mode=department' icon={RiBuilding4Line}>
+          <ListGroup.Item href="/schedule?mode=department" icon={RiBuilding4Line}>
             부서 할 일
           </ListGroup.Item>
           <ListGroup.Item href="/schedule?mode=team" icon={RiGroupLine}>            

@@ -17,7 +17,7 @@ import {
   Select,
   Toast,
 } from 'flowbite-react'
-import { formDataToRequestData } from '../utils/api'
+import { API_URL, formDataToRequestData } from '../utils/api'
 import axios from 'axios'
 import { UserType } from '../interface/UserType'
 import { getAccessToken } from '../utils/auth'
@@ -28,7 +28,7 @@ import {
 } from '../utils/Address'
 import { AiOutlineClose } from "react-icons/ai"
 
-const API_URL = 'https://suhyeon.site/api/schedule'
+const SCH_URL = API_URL + '/schedule'
 
 const scheduleDivisionList: { [key: string]: string } = {
   행사: '1',
@@ -172,31 +172,29 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
 
     const scheduleFormData = new FormData(event.currentTarget)
 
-    let assigneeBelongs: AssigneeType[] = []
+    let assigneeInfos: AssigneeType[] = []
 
     for (const user of assigneeUserList) {
-      assigneeBelongs.push({ categoryCodeId: 5, assigneeId: user.userId })
+      assigneeInfos.push({ categoryCodeId: 5, assigneeId: user.userId })
     }
 
     for (const department of assigneeDepartmentList) {
-      assigneeBelongs.push({
+      assigneeInfos.push({
         categoryCodeId: 6,
         assigneeId: department.departmentId,
       })
     }
 
     for (const team of assigneeTeamList) {
-      assigneeBelongs.push({ categoryCodeId: 7, assigneeId: team.teamId })
+      assigneeInfos.push({ categoryCodeId: 7, assigneeId: team.teamId })
     }
 
     const scheduleRequestData: any = formDataToRequestData(scheduleFormData)
 
-    scheduleRequestData.assigneeBelongs = assigneeBelongs
-
-    console.log(scheduleRequestData)
+    scheduleRequestData.assigneeInfos = assigneeInfos
 
     axios
-      .post(API_URL, scheduleRequestData, {
+      .post(SCH_URL, scheduleRequestData, {
         headers: {
           Authorization: 'Bearer ' + getAccessToken(),
         },
@@ -204,6 +202,9 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
       .then((response) => {
         alert(response.data.data)
         formRef.current?.reset()
+        setAssigneeDepartmentList([])
+        setAssigneeUserList([])
+        setAssigneeTeamList([])
       })
       .catch((error) => {
         console.log(error.response.data.data)

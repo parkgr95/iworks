@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { useState, FormEvent } from 'react'
 import { useLoaderData, Form, redirect } from 'react-router-dom'
 import { TextInput, Label, Button } from 'flowbite-react'
-import { formDataToRequestData } from '../utils/api'
+import { API_URL, formDataToRequestData } from '../utils/api'
 import { getAccessToken } from '../utils/auth'
 
 interface UserDetailResponse {
@@ -22,7 +22,7 @@ interface UserDetailResponse {
   }
 }
 
-const API_URL = 'https://suhyeon.site/api/user/mypage'
+const MYPAGE_URL = API_URL + '/user/mypage'
 
 function MyPage() {
   const userDetailLoad = useLoaderData() as UserDetailResponse['data']
@@ -53,7 +53,7 @@ function MyPage() {
     const userDetailRequestData = formDataToRequestData(userDetailFormData)
 
     axios
-      .put(API_URL, userDetailRequestData, {
+      .put(MYPAGE_URL, userDetailRequestData, {
         headers: {
           Authorization: 'Bearer ' + getAccessToken(),
         },
@@ -92,7 +92,7 @@ function MyPage() {
         </div>
         <div className="grid grid-cols-2">
           <div className="text-center">직급</div>
-          <div>{userDetail.userPosition}</div>
+          <div>{userDetail.userPosition.slice(5)}</div>
         </div>
         <div className="grid grid-cols-2">
           <div className="text-center">성별</div>
@@ -148,25 +148,3 @@ function MyPage() {
 }
 
 export default MyPage
-
-async function myPageLoader() {
-  if (!getAccessToken()) {
-    return redirect('/user/login')
-  }
-  try {
-    const response: AxiosResponse<UserDetailResponse> = await axios.get(
-      API_URL,
-      {
-        headers: {
-          Authorization: 'Bearer ' + getAccessToken(),
-        },
-      },
-    )
-    return response.data.data
-  } catch (error) {
-    console.error(error)
-    return null
-  }
-}
-
-export { myPageLoader }

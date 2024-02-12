@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import RootLayout from './pages/RootLayout';
 import LoginPage from './pages/LoginPage';
 import AddressPage from "./pages/AddressPage";
-import MyPage, { myPageLoader } from "./pages/MyPage";
+import MyPage from "./pages/MyPage";
 import { logoutAction } from './pages/LogoutPage';
 import BoardPage from './pages/BoardPage';
 import BoardIndex from './pages/boards/BoardIndex';
@@ -12,6 +12,7 @@ import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
 import SchedulePage from './pages/SchedulePage';
+import { getUserDetailInfo } from './utils/User';
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
           {
             path:'mypage',
             element: <MyPage />,
-            loader: myPageLoader,
+            loader: getUserDetailInfo,
           },
         ],
       },
@@ -81,7 +82,7 @@ const router = createBrowserRouter([
       {
         path: 'schedule',
         element: <SchedulePage />,
-        // loader: scheduleLoader
+        loader: getUserDetailInfo
       }
     ]
   },
