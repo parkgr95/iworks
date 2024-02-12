@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.iworks.domain.board.domain.QBoard.board;
 import static com.example.iworks.domain.board.domain.QBookmark.bookmark;
@@ -28,7 +29,7 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<BoardGetResponseDto> findAllByCategory(Pageable pageable, Code boardCategoryCode, int boardOwnerId) {
+    public List<Board> findAllByCategory(Pageable pageable, Code boardCategoryCode, int boardOwnerId) {
         return queryFactory
                 .selectFrom(board)
                 .where(
@@ -38,15 +39,12 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
+                .fetch();
     }
 
     @Override
-    public BoardGetResponseDto findByCategory(int boardId, Code boardCategoryCode, int boardOwnerId) {
-        Board findBoard = queryFactory
+    public Board findByCategory(int boardId, Code boardCategoryCode, int boardOwnerId) {
+        return queryFactory
                 .selectFrom(board)
                 .where(
                         eqBoardCategoryCode(boardCategoryCode)
@@ -55,11 +53,10 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                                 .and(eqDeleted())
                 )
                 .fetchOne();
-        return findBoard != null ? new BoardGetResponseDto(findBoard) : null;
     }
 
     @Override
-    public List<BoardGetResponseDto> findAllByCreator(Pageable pageable, int boardCreatorId) {
+    public List<Board> findAllByCreator(Pageable pageable, int boardCreatorId) {
         return queryFactory
                 .selectFrom(board)
                 .where(
@@ -68,10 +65,35 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
+                .fetch();
+    }
+
+    @Override
+    public List<Board> findAllByKeyword(Pageable pageable, BoardSearchRequestDto keyword) {
+        return queryFactory
+                .selectFrom(board)
+                .where(
+                        eqBoardCreatorId(keyword.getBoardCreatorId())
+                                .or(eqBoardTitle(keyword.getBoardTitle()))
+                                .or(eqBoardContent(keyword.getBoardContent()))
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    @Override
+    public List<Board> findAllByKeywords(Pageable pageable, String keywords) {
+        return queryFactory
+                .selectFrom(board)
+                .where(
+                        eqBoardAndTitle(keywords, keywords)
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     @Override
@@ -87,40 +109,6 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-    }
-
-    @Override
-    public List<BoardGetResponseDto> findAllByKeyword(Pageable pageable, BoardSearchRequestDto keyword) {
-        return queryFactory
-                .selectFrom(board)
-                .where(
-                        eqBoardCreatorId(keyword.getBoardCreatorId())
-                                .or(eqBoardTitle(keyword.getBoardTitle()))
-                                .or(eqBoardContent(keyword.getBoardContent()))
-                                .and(eqDeleted())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
-    }
-
-    @Override
-    public List<BoardGetResponseDto> findAllByKeywords(Pageable pageable, String keywords) {
-        return queryFactory
-                .selectFrom(board)
-                .where(
-                        eqBoardAndTitle(keywords, keywords)
-                                .and(eqDeleted())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
     }
 
     private BooleanExpression eqBoardCategoryCode(Code boardCategoryCode) {
