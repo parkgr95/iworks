@@ -182,25 +182,21 @@ public class InitData {
 
             CodeGroup codeGroup5 = em.find(CodeGroup.class, 5);
             em.persist(Code.builder()
-                    .codeCode(401)
                     .codeName("업무")
                     .codeGroup(codeGroup5)
                     .build());
 
             em.persist(Code.builder()
-                    .codeCode(402)
                     .codeName("행사")
                     .codeGroup(codeGroup5)
                     .build());
 
             em.persist(Code.builder()
-                    .codeCode(403)
                     .codeName("개인일정(병가)")
                     .codeGroup(codeGroup5)
                     .build());
 
             em.persist(Code.builder()
-                    .codeCode(404)
                     .codeName("개인일정(휴가)")
                     .codeGroup(codeGroup5)
                     .build());

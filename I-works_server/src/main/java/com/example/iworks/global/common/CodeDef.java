@@ -25,6 +25,9 @@ public class CodeDef {
     public final static int POSITION_ADMIN_CODE_ID = 15;
 
     public final static int SCHEDULE_DIVISION_TASK_CODE_ID = 16;
+    public final static int SCHEDULE_DIVISION_EVENT_CODE_ID = 17;
+    public final static int SCHEDULE_DIVISION_SICK_CODE_ID = 18;
+    public final static int SCHEDULE_DIVISION_VACATION_CODE_ID = 19;
 
 
 
