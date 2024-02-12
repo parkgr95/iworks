@@ -16,7 +16,10 @@ public class TeamSearchRepositoryImpl implements  TeamSearchRepository{
         return jpaQueryFactory
                 .select(t)
                 .from(t)
-                .where(t.teamIsDeleted.isFalse())
+                .where(
+                        t.teamIsDeleted.isFalse()
+                                .and(t.teamName.eq(teamName))
+                )
                 .fetchOne();
     }
 

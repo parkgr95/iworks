@@ -1,6 +1,6 @@
 package com.example.iworks.domain.schedule.repository.scheduleAssign;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeBelong;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignGetRepository;
 import com.example.iworks.global.dto.DateCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static com.example.iworks.domain.schedule.domain.QSchedule.schedule;
 import static com.example.iworks.domain.schedule.domain.QScheduleAssign.scheduleAssign;
-import static com.example.iworks.global.common.CategoryCodeDef.CATEGORY_SCHEDULE_DIVISION_TASK_CODE_ID;
+import static com.example.iworks.global.common.CodeDef.*;
 
 
 @Repository
@@ -26,16 +26,17 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    private final JPAQueryFactory jpaQueryFactory;
 
    @Override
-   public List<ScheduleAssign> findScheduleAssignsBySearchParameter(List<AssigneeBelong> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
+   public List<ScheduleAssign> findScheduleAssignsBySearchParameter(List<AssigneeInfo> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
       Set<ScheduleAssign> foundScheduleAssignList = new HashSet<>();
 
-      for (AssigneeBelong requestDto : requestDtoList){
+      for (AssigneeInfo requestDto : requestDtoList){
          List<ScheduleAssign> foundScheduleAssign =
                  jpaQueryFactory
                          .selectFrom(scheduleAssign)
                          .join(scheduleAssign.schedule, schedule).fetchJoin()
                          .where(eqCategoryCodeId(requestDto.getCategoryCodeId())
                                  .and(eqAssigneeId(requestDto.getAssigneeId()))
+                                 ,schedule.scheduleIsFinish.eq(false)
                                  ,withInDate(dateCondition)
                                  ,filterTask(onlyTask)
                          )
@@ -48,7 +49,7 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    }
    private BooleanExpression filterTask(boolean onlyTask){
       if (!onlyTask) return Expressions.TRUE;
-      return scheduleAssign.schedule.scheduleDivision.codeId.eq(CATEGORY_SCHEDULE_DIVISION_TASK_CODE_ID);
+      return scheduleAssign.schedule.scheduleDivision.codeId.eq(SCHEDULE_DIVISION_TASK_CODE_ID);
    }
    private BooleanExpression eqCategoryCodeId (int categoryCodeId){
       return scheduleAssign.scheduleAssigneeCategory.codeId.eq(categoryCodeId);
@@ -58,7 +59,8 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    }
    private BooleanExpression withInDate (DateCondition dateCondition){
       if (dateCondition == null) return Expressions.TRUE;
-      return schedule.scheduleStartDate.between(dateCondition.getStartDate(), dateCondition.getEndDate());
+      return schedule.scheduleStartDate.loe(dateCondition.getEndDate())
+              .and(schedule.scheduleEndDate.goe(dateCondition.getStartDate()));
    }
 
 }

@@ -1,6 +1,6 @@
 package com.example.iworks.domain.file.domain;
 
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import jakarta.persistence.*;
 import lombok.*;
 

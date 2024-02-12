@@ -1,7 +1,8 @@
 package com.example.iworks.domain.address.controller;
 
-import com.example.iworks.domain.address.dto.AddressTeamCreateRequestDto;
-import com.example.iworks.domain.address.dto.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
 import com.example.iworks.domain.address.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,14 +42,19 @@ public class AddressApiController {
         return addressService.editTeam(teamId,token,requestDto);
     }
 
+    @GetMapping("/team/{teamId}")
+    public ResponseEntity<Map<String,Object>> getTeamInfo(@PathVariable(name = "teamId")int teamId){
+        return addressService.getTeamInfo(teamId);
+    }
+
     @DeleteMapping("/team/{teamId}")
     public ResponseEntity<Map<String,Object>> deleteTeam(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token){
 
         return addressService.deleteTeam(teamId,token);
     }
     @PostMapping("/team/user/{teamId}")
-    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody Map<String,Object> map){
-        return addressService.addTeamUser(teamId,token,(int)map.get("targetId"));
+    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserAddRequestDto users){
+        return addressService.addTeamUser(teamId,token,users);
     }
 
     @DeleteMapping("/team/user/{teamId}")

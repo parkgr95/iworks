@@ -3,7 +3,8 @@ package com.example.iworks.domain.schedule.controller;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
+import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,15 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final Response response;
+    private final JwtProvider jwtProvider;
 
 //    @ResponseStatus(HttpStatus.OK)
 //    public String createSchedule(@RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
     /** 할일 생성 */
-    @PostMapping("/")
-    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
-        String jwtToken = authorizationHeader.substring("Bearer ".length());
-        scheduleService.createSchedule(jwtToken, scheduleCreateRequestDto);
+    @PostMapping
+    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
+        int userId = jwtProvider.getUserId(authorizationToken);
+        scheduleService.createSchedule(userId, scheduleCreateRequestDto);
         return response.handleSuccess("할일 등록 성공");
     }
 
@@ -53,7 +55,7 @@ public class ScheduleController {
     }
 
     /** 할일 삭제 */
-    @PostMapping("/{scheduleId}/delete")
+    @GetMapping("/{scheduleId}/delete")
     public ResponseEntity<?> deleteSchedule(@PathVariable(name = "scheduleId") int scheduleId){
         scheduleService.deleteSchedule(scheduleId);
         return response.handleSuccess("할일 삭제 성공");
