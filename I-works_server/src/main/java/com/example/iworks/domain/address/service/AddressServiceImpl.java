@@ -1,12 +1,13 @@
 package com.example.iworks.domain.address.service;
 
-import com.example.iworks.domain.address.entity.Address;
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
 import com.example.iworks.domain.address.dto.response.AddressDepartmentResonseDto;
 import com.example.iworks.domain.address.dto.response.AddressTeamInfoResponseDto;
 import com.example.iworks.domain.address.dto.response.AddressTeamResponseDto;
 import com.example.iworks.domain.address.dto.response.AddressUserResponseDto;
+import com.example.iworks.domain.address.entity.Address;
 import com.example.iworks.domain.address.respository.AddressRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
@@ -17,9 +18,9 @@ import com.example.iworks.domain.team.repository.team.TeamSearchRepository;
 import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.domain.user.repository.custom.UserSearchRepository;
-import com.example.iworks.global.util.Response;
+import com.example.iworks.domain.user.repository.UserSearchRepository;
 import com.example.iworks.global.util.JwtProvider;
+import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -108,11 +109,13 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional
     @Override
-    public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, List<Integer> requestDto) {
+    public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, AddressTeamUserAddRequestDto requestDto) {
         int userId = jwtProvider.getUserId(token);
 
+        System.out.println("dto : "+requestDto.getUserIds());
+
         Team team = teamRepository.findByTeamId(teamId);
-        List<User> userList = userSearchRepository.getUserListByUserList(requestDto);
+        List<User> userList = userSearchRepository.getUserListByUserList(requestDto.getUserIds());
         System.out.println("userList : "+ userList);
         List<TeamUser> teamUserList = new ArrayList<>();
         if (userList.isEmpty()) {
