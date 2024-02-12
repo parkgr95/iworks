@@ -71,8 +71,8 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 .selectFrom(board)
                 .where(
                         eqBoardCreatorId(keyword.getBoardCreatorId())
-                                .or(eqBoardTitle(keyword.getBoardTitle()))
-                                .or(eqBoardContent(keyword.getBoardContent()))
+                                .or(likeBoardTitle(keyword.getBoardTitle()))
+                                .or(likeBoardContent(keyword.getBoardContent()))
                                 .and(eqDeleted())
                 )
                 .offset(pageable.getOffset())
@@ -85,7 +85,7 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
         return queryFactory
                 .selectFrom(board)
                 .where(
-                        eqBoardAndTitle(keywords, keywords)
+                        likeTitleOrContent(keywords, keywords)
                                 .and(eqDeleted())
                 )
                 .offset(pageable.getOffset())
@@ -100,7 +100,7 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 .innerJoin(bookmark)
                 .on(board.eq(bookmark.board))
                 .where(
-                        eqUser(userEid)
+                        eqUserEid(userEid)
                                 .and(eqDeleted())
                 )
                 .offset(pageable.getOffset())
@@ -124,19 +124,19 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
         return board.boardCreatorId.eq(boardCreatorId);
     }
 
-    private BooleanBuilder eqBoardAndTitle(String boardTitle, String boardContent) {
-        return eqBoardTitle(boardTitle).or(eqBoardContent(boardContent));
+    private BooleanBuilder likeTitleOrContent(String boardTitle, String boardContent) {
+        return new BooleanBuilder().or(likeBoardTitle(boardTitle)).or(likeBoardContent(boardContent));
     }
 
-    private BooleanBuilder eqBoardTitle(String boardTitle) {
-        return StringUtils.hasText(boardTitle) ? new BooleanBuilder(board.boardTitle.eq(boardTitle)) : new BooleanBuilder();
+    private BooleanBuilder likeBoardTitle(String boardTitle) {
+        return StringUtils.hasText(boardTitle) ? new BooleanBuilder(board.boardTitle.like("%" + boardTitle + "%")) : new BooleanBuilder();
     }
 
-    private BooleanBuilder eqBoardContent(String boardContent) {
-        return StringUtils.hasText(boardContent) ? new BooleanBuilder(board.boardContent.eq(boardContent)) : new BooleanBuilder();
+    private BooleanBuilder likeBoardContent(String boardContent) {
+        return StringUtils.hasText(boardContent) ? new BooleanBuilder(board.boardContent.like("%" + boardContent + "%")) : new BooleanBuilder();
     }
 
-    private BooleanExpression eqUser(String userEid) {
+    private BooleanExpression eqUserEid(String userEid) {
         return bookmark.user.userEid.eq(userEid);
     }
 
