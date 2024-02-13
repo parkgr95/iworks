@@ -99,7 +99,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         System.out.println("origin: " + origin);
         if(origin != null){
             origin.update(dto,bCryptPasswordEncoder);
-            return response.handleSuccess(new AdminUserResponseDto(origin));
+            return response.handleSuccess("회원 정보 수정 완료");
         }
 
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
@@ -112,7 +112,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         if(user != null){
             user.delete();
-            return response.handleSuccess(new AdminUserResponseDto(user));
+            return response.handleSuccess("회원 탈퇴 완료");
         }
 
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
