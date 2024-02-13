@@ -29,6 +29,12 @@ public class OpenViduUtil {
         return session;
     }
 
+    public Session createSession(String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
+        SessionProperties properties = new SessionProperties.Builder().customSessionId(sessionId).build();
+        Session session = openVidu.createSession(properties);
+        return session;
+    }
+
     public String connectSession(String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
                 .type(ConnectionType.WEBRTC)
