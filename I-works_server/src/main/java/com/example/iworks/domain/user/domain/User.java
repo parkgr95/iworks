@@ -176,7 +176,7 @@ public class User {
         this.userUpdatedAt = LocalDateTime.now();
     }
 
-    public void update(AdminUserUpdateRequestDto dto, BCryptPasswordEncoder encoder) {
+    public void update(AdminUserUpdateRequestDto dto) {
         if(dto.getUserAddress() != null){
             this.userAddress = dto.getUserAddress();
         }

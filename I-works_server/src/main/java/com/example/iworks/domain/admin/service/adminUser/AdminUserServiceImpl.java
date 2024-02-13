@@ -98,7 +98,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         User origin = userRepository.findByUserId(id);
         System.out.println("origin: " + origin);
         if(origin != null){
-            origin.update(dto,bCryptPasswordEncoder);
+            origin.update(dto);
             return response.handleSuccess("회원 정보 수정 완료");
         }
 
