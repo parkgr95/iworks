@@ -41,6 +41,9 @@ public interface BoardService {
     List<BoardGetResponseDto> getAllByKeywords(String keywords);
 
     //게시글 북마크 등록/삭제
-    void updateBookmark(int boardId, String userEid);
+    Boolean updateBookmark(int boardId, String userEid);
+
+    //북마크 된 게시글 전체 조회
+    List<BoardGetResponseDto> getAllByBookmark(String userEid);
 
 }

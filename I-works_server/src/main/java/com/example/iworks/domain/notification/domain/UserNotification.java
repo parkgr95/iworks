@@ -1,6 +1,6 @@
 package com.example.iworks.domain.notification.domain;
 
-import com.example.iworks.domain.board.domain.Board;
+import com.example.iworks.domain.board.entity.Board;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.user.domain.User;

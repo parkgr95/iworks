@@ -90,7 +90,7 @@ public class User {
 
     @Builder.Default
     @Column(name = "user_role", nullable = false)
-    private String userRole = "USER,ADMIN"; //권한
+    private String userRole = "ROLE_USER,ROLE_ADMIN"; //권한
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "user_status")
