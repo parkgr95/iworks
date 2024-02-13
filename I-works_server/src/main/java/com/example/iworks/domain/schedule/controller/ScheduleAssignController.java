@@ -1,10 +1,10 @@
 package com.example.iworks.domain.schedule.controller;
 
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameter;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeBelong;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.service.scheduleAssign.ScheduleAssignService;
 import com.example.iworks.global.dto.DateCondition;
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,12 @@ public class ScheduleAssignController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/get-by-assignees")
-    public ResponseEntity<?> getAllByAssignees(@RequestBody List<AssigneeBelong> searchParameterDto){
+    public ResponseEntity<?> getAllByAssignees(@RequestBody List<AssigneeInfo> searchParameterDto){
         return response.handleSuccess(scheduleAssignService.findByAssignees(searchParameterDto, null));
     }
     @PostMapping("/get-by-assignees-and-date")
     public ResponseEntity<?> getAllByAssigneesAndDate(@RequestBody ScheduleAssignSearchParameter searchParameterAndDate){
-        return response.handleSuccess(scheduleAssignService.findByAssignees(searchParameterAndDate.getAssigneeBelongs(), searchParameterAndDate.getDateCondition()));
+        return response.handleSuccess(scheduleAssignService.findByAssignees(searchParameterAndDate.getAssigneeInfos(), searchParameterAndDate.getDateCondition()));
     }
     @GetMapping("/")
     public ResponseEntity<?> getAllByUser(@RequestHeader("Authorization") String authorizationToken){

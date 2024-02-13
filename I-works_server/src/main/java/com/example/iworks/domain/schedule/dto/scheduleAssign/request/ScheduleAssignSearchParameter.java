@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 public class ScheduleAssignSearchParameter {
-    private List<AssigneeBelong> assigneeBelongs;
+    private List<AssigneeInfo> assigneeInfos;
     private DateCondition dateCondition;
 }
