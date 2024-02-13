@@ -14,7 +14,6 @@ public class AdminUserUpdateRequestDto {
     private String userNameFirst; // 유저 이름
     private String userNameLast; // 유저 성
     private String userEmail; // 이메일
-    private String userPassword; // 비밀번호
     private String userTel; // 전화번호
     private String userAddress; // 주소
     private String userGender; // 성별
