@@ -6,9 +6,16 @@ import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
 import com.example.iworks.domain.board.service.BoardService;
 import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/board")
@@ -19,14 +26,25 @@ public class BoardController {
 
     //게시글 등록
     @PostMapping("/")
-    public ResponseEntity<?> createBoard(@RequestBody BoardCreateRequestDto boardCreateRequestDto) {
+    public ResponseEntity<?> createBoard(@Validated @RequestBody BoardCreateRequestDto boardCreateRequestDto,
+                                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.info("error : {}", bindingResult);
+            return response.handleFail("게시글 등록 실패", getErrorMessages(bindingResult));
+        }
         boardService.createBoard(boardCreateRequestDto);
         return response.handleSuccess("게시글 등록 완료");
     }
 
     //게시글 수정
     @PutMapping("/update/{boardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable(name = "boardId") int boardId, @RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
+    public ResponseEntity<?> updateBoard(@Validated @PathVariable(name = "boardId") int boardId,
+                                         @RequestBody BoardUpdateRequestDto boardUpdateRequestDto,
+                                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.info("error : {}", bindingResult);
+            return response.handleFail("게시글 수정 실패", getErrorMessages(bindingResult));
+        }
         boardService.updateBoard(boardId, boardUpdateRequestDto);
         return response.handleSuccess("게시글 수정 완료");
     }
@@ -87,15 +105,28 @@ public class BoardController {
 
     //북마크 등록/삭제
     @PostMapping("/bookmark/{boardId}")
-    public ResponseEntity<?> updateBookmark(@PathVariable(name = "boardId") int boardId, @RequestParam(name = "userEid") String userEid) {
-        boardService.updateBookmark(boardId, userEid);
-        return response.handleSuccess("북마크 완료");
+    public ResponseEntity<?> updateBookmark(@PathVariable(name = "boardId") Integer boardId,
+                                            @RequestParam(name = "userEid") String userEid) {
+        Boolean isActivate = boardService.updateBookmark(boardId, userEid);
+        if (Boolean.TRUE.equals(isActivate)) {
+            return response.handleSuccess("북마크 등록 완료");
+        }
+        else {
+            return response.handleSuccess("북마크 해제 완료");
+        }
     }
 
     //북마크 된 게시글 전체 조회
     @GetMapping("/byBookmark")
     public ResponseEntity<?> getBookmarkedBoards(@RequestParam(name = "userEid") String userEid) {
         return response.handleSuccess(boardService.getAllByBookmark(userEid));
+    }
+
+    private static List<String> getErrorMessages(BindingResult bindingResult) {
+        return bindingResult.getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .toList();
     }
 
 }
