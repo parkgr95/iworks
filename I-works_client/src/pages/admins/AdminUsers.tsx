@@ -30,7 +30,7 @@ function AdminUsers() {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("")
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/address/user/all`)
+    axios.get(`https://suhyeon.site/api/admin/user/`)
       .then((res) => {
         setUserAll(res.data.data)
       })
