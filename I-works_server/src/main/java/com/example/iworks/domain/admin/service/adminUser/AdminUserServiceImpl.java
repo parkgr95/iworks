@@ -92,6 +92,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> updateUser(String token, AdminUserUpdateRequestDto dto) {
         int id = jwtProvider.getUserId(token);
@@ -105,6 +106,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> deleteUser(String token) {
         int id = jwtProvider.getUserId(token);
