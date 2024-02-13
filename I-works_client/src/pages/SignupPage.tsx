@@ -11,7 +11,7 @@ import { createPortal } from 'react-dom'
 import { Form } from 'react-router-dom'
 import axios from 'axios'
 import { TextInput, Button, Radio, Label, Select } from 'flowbite-react'
-import { formDataToRequestData } from '../utils/api'
+import { API_URL, formDataToRequestData } from '../utils/api'
 import { getDepartmentAllList } from '../utils/Address'
 import { getPositionCodeList } from '../utils/Code'
 
@@ -30,7 +30,7 @@ interface PositonInfo {
   codeName: string
 }
 
-const API_URL = 'https://suhyeon.site/api/user/join'
+const SIGNUP_URL = API_URL + '/user/join'
 
 const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
@@ -67,7 +67,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
     const signupRequestData = formDataToRequestData(signupFormData)
 
     axios
-      .post(API_URL, signupRequestData)
+      .post(SIGNUP_URL, signupRequestData)
       .then((response) => {
         alert(response.data.data.message)
         formRef.current?.reset()        

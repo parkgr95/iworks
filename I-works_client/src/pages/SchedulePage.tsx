@@ -8,7 +8,7 @@ import ScheduleList from '../components/ScheduleList'
 import { AssigneeType } from '../components/ScheduleCreate'
 import { UserDetail } from '../utils/User'
 
-const API_SCH = API_URL + '/schedule-assign/get-by-assignees-and-date'
+const SCH_URL = API_URL + '/schedule-assign/get-by-assignees-and-date'
 
 interface DateConditionType {
   startDate: string
@@ -49,7 +49,7 @@ function SchedulePage() {
       return      
     }
     axios
-      .post(API_SCH, scheduleRequestBody! as ScheduleRequestBody)
+      .post(SCH_URL, scheduleRequestBody! as ScheduleRequestBody)
       .then((response) => {
         setScheduleList(response.data.data)
       })
