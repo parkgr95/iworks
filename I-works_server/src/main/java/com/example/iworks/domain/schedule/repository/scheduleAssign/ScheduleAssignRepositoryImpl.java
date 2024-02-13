@@ -35,7 +35,6 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
                          .selectFrom(scheduleAssign)
                          .join(scheduleAssign.schedule, schedule).fetchJoin()
                          .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId())
-                                 ,schedule.scheduleIsFinish.eq(false)
                                  ,withInDate(dateCondition)
                                  ,filterTask(onlyTask)
                          )
