@@ -23,7 +23,7 @@ public class Team {
     @Column(name = "team_id")
     private int teamId; // 그룹 아이디
 
-    @Column(name = "team_name", length = 20, nullable = false)
+    @Column(name = "team_name", length = 20, nullable = false, unique = true)
     private String teamName; // 그룹명
 
     @Column(name = "team_leader", nullable = false)
