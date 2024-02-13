@@ -24,7 +24,7 @@ public class Department {
     @Column(name = "department_leader_id")
     private Integer departmentLeaderId; //부서 책임자 식별번호
 
-    @Column(name = "department_name", nullable = false)
+    @Column(name = "department_name", nullable = false, unique = true)
     private String departmentName; //부서 이름
 
     @Column(name = "department_desc")

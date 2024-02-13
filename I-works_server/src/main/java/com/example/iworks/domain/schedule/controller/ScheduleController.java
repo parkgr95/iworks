@@ -5,6 +5,8 @@ import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateReq
 import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
 import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class ScheduleController {
 //    public String createSchedule(@RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
     /** 할일 생성 */
     @PostMapping
-    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
+    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         int userId = jwtProvider.getUserId(authorizationToken);
         scheduleService.createSchedule(userId, scheduleCreateRequestDto);
         return response.handleSuccess("할일 등록 성공");
