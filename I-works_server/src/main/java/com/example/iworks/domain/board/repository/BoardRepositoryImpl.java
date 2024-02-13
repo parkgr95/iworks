@@ -101,6 +101,7 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 .on(board.eq(bookmark.board))
                 .where(
                         eqUserEid(userEid)
+                                .and(eqActive())
                                 .and(eqDeleted())
                 )
                 .offset(pageable.getOffset())
@@ -142,6 +143,10 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
 
     private BooleanExpression eqDeleted() {
         return board.boardIsDeleted.isNull().or(board.boardIsDeleted.eq(Boolean.FALSE));
+    }
+
+    private BooleanExpression eqActive() {
+        return bookmark.bookmarkIsActive.eq(Boolean.TRUE);
     }
 
 }
