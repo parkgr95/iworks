@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import AddressPage from "./pages/AddressPage";
 import MyPage from "./pages/MyPage";
 import { logoutAction } from './pages/LogoutPage';
+
 import BoardPage from './pages/BoardPage';
 import BoardIndex from './pages/boards/BoardIndex';
 import BoardList from './pages/boards/BoardList';
@@ -11,6 +12,10 @@ import BoardCreate from './pages/boards/BoardCreate';
 import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
+import BoardMy from './pages/boards/BoardMy';
+import BoardNew from './pages/boards/BoardNew';
+import BoardBookmark from './pages/boards/BoardBookmark';
+
 import SchedulePage from './pages/SchedulePage';
 import { getUserDetailInfo } from './utils/User';
 
@@ -71,6 +76,18 @@ const router = createBrowserRouter([
           {
             path: 'search/:searchKeyword',
             element: <BoardSearch />
+          },
+          {
+            path: 'my/:userId',
+            element: <BoardMy />
+          },
+          {
+            path: 'new',
+            element: <BoardNew />
+          },
+          {
+            path: 'bookmark/:userEid',
+            element: <BoardBookmark />
           },
         ]
       },

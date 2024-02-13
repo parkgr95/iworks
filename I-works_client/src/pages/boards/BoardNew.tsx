@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
 import PostType from "../../interface/BoardType"
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import dateUtils from "../../utils/dateUtils"
 
 interface UserType {
@@ -17,22 +17,29 @@ interface UserType {
   userEmail: string
 }
 
-function BoardList() {
-  const { boardCategoryCodeId='', boardOwnerId='' } = useParams<{boardCategoryCodeId: string, boardOwnerId: string}>()
+function BoardNew() {
   const [boardList, setBoardList] = useState<PostType[]>([])
   const [users, setUsers] = useState<UserType[]>([])
-  
+
   useEffect(() => {
-    async function getBoardList(boardCategoryCodeId: string, boardOwnerId: string) {
-      try {
-        const res = await axios.get(`https://suhyeon.site/api/board/byCategory?boardCategoryCodeId=${boardCategoryCodeId}&boardOwnerId=${boardOwnerId}`)
-        const boardListData = res.data.data
-        setBoardList(boardListData)
-      }
-      catch (err) {
+    axios.get(`https://suhyeon.site/api/board/`)
+      .then((res) => {
+        const allPosts: PostType[] = res.data.data;
+        const filteredPosts = allPosts.filter(post => {
+          // 게시물의 생성일
+          const postDate = post.boardCreatedAt ? new Date(post.boardCreatedAt) : null;
+          // 현재 날짜
+          const currentDate = new Date();
+          // 일주일 이전의 날짜 계산
+          const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+          // 게시물의 생성일이 일주일 이내인지 확인
+          return postDate && postDate >= oneWeekAgo;
+        });
+        setBoardList(filteredPosts);
+      })
+      .catch((err) => {
         console.log(err)
-      }
-    }
+      })
 
     async function getUsers() {
       try {
@@ -42,10 +49,9 @@ function BoardList() {
         console.log(err);
       }
     }
-    getBoardList(boardCategoryCodeId, boardOwnerId)
-    getUsers()
 
-  }, [boardCategoryCodeId, boardOwnerId])
+    getUsers()
+  }, [])
 
   return (
     <div className="">
@@ -70,5 +76,4 @@ function BoardList() {
   )
 }
 
-
-export default BoardList
+export default BoardNew
