@@ -131,7 +131,10 @@ function GroupUpdate() {
         if (!teamId) {
           console.log(res)
         }
-        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`, targetIdArray,
+        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`, 
+        { 
+          userIds: targetIdArray
+        },
           {
             headers: {
               Authorization: 'Bearer ' + getAccessToken(),
