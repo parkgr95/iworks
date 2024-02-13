@@ -1,6 +1,5 @@
 import axios from "axios"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-
 import { Form, useNavigate, useParams } from "react-router-dom"
 import { Button } from "flowbite-react"
 import { getAccessToken } from "../../utils/auth"
@@ -102,11 +101,15 @@ function GroupUpdate() {
     getGroupDetail()
   }, [groupId])
 
+  const targetIdArray = teamMemberData.map(user => user.userId)
+  const originIdArray = groupDetail.teamUsers.map(user => user.userDto.userId);
+  const newMembersIds = targetIdArray.filter(id => !originIdArray.includes(id));
+
   // 수정 요청
   function handleUpdate(event: FormEvent) {
     event.preventDefault()
     const teamLeader = loginedUser?.userId
-    const targetIdArray = teamMemberData.map(user => user.userId);
+
     if (!loginedUser) {
       return navigate(`/login`)
     }
@@ -115,10 +118,11 @@ function GroupUpdate() {
       alert("그룹 리더가 로그인한 사용자와 일치하지 않습니다.");
       return;
     }
+
     axios
       .put(`https://suhyeon.site/api/address/team/${groupId}`, {
         "teamName": teamName,
-        "teamLeader": teamLeader,
+        "teamLeaderId": teamLeader,
         "teamDescription": teamDescription
       },
         {
@@ -127,23 +131,25 @@ function GroupUpdate() {
           },
         })
       .then((res) => {
-        const teamId = res.data.data.teamId
-        if (!teamId) {
-          console.log(res)
-        }
-        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`, 
-        { 
-          userIds: targetIdArray
-        },
-          {
-            headers: {
-              Authorization: 'Bearer ' + getAccessToken(),
+        console.log(res.data);
+        if (newMembersIds.length > 0) {
+          return axios.post(`https://suhyeon.site/api/address/team/user/${groupId}`,
+            {
+              userIds: newMembersIds
             },
-          });
+            {
+              headers: {
+                Authorization: 'Bearer ' + getAccessToken(),
+              },
+            });
+        } else {
+          // 빈 프로미스 대신에 아무 값이나 반환하여 프로미스 형태로 반환
+          return Promise.resolve(null);
+        }
       })
       .then((res) => {
         navigate("../")
-        console.log(res.data)
+        console.log(res?.data); // null이나 다른 값에 대한 응답 확인
       })
       .catch((err) => {
         console.log(err)
@@ -160,13 +166,13 @@ function GroupUpdate() {
       return;
     }
     axios
-      .delete(`https://suhyeon.site/api/address/team/user/${groupId}`, 
-      {
-        data: { "targetId": userId },
-        headers: {
-          Authorization: 'Bearer ' + getAccessToken(),
-        },
-      })
+      .delete(`https://suhyeon.site/api/address/team/user/${groupId}`,
+        {
+          data: { "targetId": userId },
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        })
       .then(() => {
         const updatedTeamMembers = teamMemberData.filter(user => user.userId !== userId);
         setteamMemberData(updatedTeamMembers);
@@ -212,6 +218,11 @@ function GroupUpdate() {
       addSelectedUsersToTeamMembers(payload.selectedUsers);
     }
   };
+
+  function removeTeamMember(userId: number) {
+    const updatedTeamMembers = teamMemberData.filter(user => user.userId !== userId);
+    setteamMemberData(updatedTeamMembers);
+  }
 
   useEffect(() => {
     if (loginedUser) {
@@ -264,7 +275,15 @@ function GroupUpdate() {
                   <li className="flex justify-between bg-mainGray p-2 mb-2" key={user.userId}>
                     <div>{user.userNameLast}{user.userNameFirst} / {user.departmentName}</div>
                     {user.userId !== loginedUser?.userId && (
-                      <button onClick={() => deleteTeamMember(user.userId)}><RiDeleteBin2Line size={18} /></button>
+                      <button onClick={() => {
+                        if (originIdArray.includes(user.userId)) {
+                          deleteTeamMember(user.userId);
+                        } else {
+                          removeTeamMember(user.userId);
+                        }
+                      }}>
+                        <RiDeleteBin2Line size={18} />
+                      </button>
                     )}
                   </li>
                 ))}
@@ -275,7 +294,7 @@ function GroupUpdate() {
           )}
         </div>
         <div className="flex justify-end mt-4">
-          <Button className="bg-mainBlue mr-2">취소</Button>
+          <Button onClick={() => { navigate(`/address/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
           <Button onClick={handleUpdate} className="bg-mainGreen" type="submit">수정</Button>
         </div>
       </Form>
