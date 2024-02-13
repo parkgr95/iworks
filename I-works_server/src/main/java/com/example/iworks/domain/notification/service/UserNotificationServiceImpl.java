@@ -30,7 +30,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     private final ScheduleRepository scheduleRepository;
     private final MeetingRepository meetingRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void create(UserNotificationCreateRequestDto createRequestDto) {
 

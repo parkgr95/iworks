@@ -20,6 +20,7 @@ public class ScheduleCreateRequestDto {
     private LocalDateTime scheduleStartDate; //할 일의 시작일시
     private LocalDateTime scheduleEndDate; //할 일의 종료일시
     private String schedulePlace; //할 일의 장소
+    private Boolean isCreateMeeting; // 회의 생성 여부
     private LocalDateTime meetingDate; // 회의 일시
     private List<AssigneeInfo> assigneeInfos; // 담당자 카테고리 아이디, 담당자 아이디
 
@@ -37,9 +38,9 @@ public class ScheduleCreateRequestDto {
                 .build();
     }
 
-    public Meeting toMeetingEntity(){
+    public Meeting toMeetingEntity(String sessionId){
         return Meeting.builder()
-                .meetingCode("sample Code")
+                .meetingSessionId(sessionId)
                 .meetingDate(this.meetingDate)
                 .build();
     }

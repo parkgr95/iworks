@@ -15,6 +15,9 @@ import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.user.service.UserService;
 import com.example.iworks.global.enumtype.NotificationType;
+import com.example.iworks.global.util.OpenViduUtil;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
@@ -34,18 +37,24 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final UserRepository userRepository;
     private final UserNotificationService userNotificationService;
     private final UserService userService;
+    private final OpenViduUtil openViduUtil;
 
     @Transactional
     @Override
-    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
+    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
 
         // Prepare Relation Entity
         Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
-        Meeting meeting = createRequestDto.toMeetingEntity();
-
         User creator = userRepository.findByUserId(userId);
+
+        Meeting meeting = null;
+
+        if (createRequestDto.getIsCreateMeeting()){
+            String sessionId = "sample Session Id "; //openViduUtil.createSession();
+            meeting = createRequestDto.toMeetingEntity(sessionId);
+        }
 
         // Create Schedule
         Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
@@ -56,11 +65,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
         // Create Assignees Notification
-//        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
+        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
 
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
         try {
             System.out.println("ScheduleServiceImpl.createAssigneesNotification");
