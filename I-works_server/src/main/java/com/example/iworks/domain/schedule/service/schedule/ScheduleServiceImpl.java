@@ -55,7 +55,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
         // Create Assignees Notification
-        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
+//        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
 
     }
 

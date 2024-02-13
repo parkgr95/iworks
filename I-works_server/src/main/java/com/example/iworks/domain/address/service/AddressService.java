@@ -15,6 +15,7 @@ public interface AddressService {
     ResponseEntity<Map<String,Object>> selectDepartmentAll();
 
     ResponseEntity<Map<String,Object>> selectTeamAll();
+    ResponseEntity<Map<String,Object>> selectMyTeamAll(String token);
 
     ResponseEntity<Map<String, Object>> deleteTeam(int teamId, String token);
 

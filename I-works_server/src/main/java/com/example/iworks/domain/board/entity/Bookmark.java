@@ -1,4 +1,4 @@
-package com.example.iworks.domain.board.domain;
+package com.example.iworks.domain.board.entity;
 
 import com.example.iworks.domain.user.domain.User;
 import jakarta.persistence.*;
