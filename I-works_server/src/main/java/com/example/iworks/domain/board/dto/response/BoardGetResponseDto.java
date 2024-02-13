@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 @Getter
 public class BoardGetResponseDto {
 
-    private int boardId; //게시글 아이디
-    private int boardCategoryCodeId; //게시판 카테고리 아이디
-    private int boardOwnerId; //게시판 주체 아이디
-    private int boardCreatorId; //게시글 작성자 아이디
+    private Integer boardId; //게시글 아이디
+    private Integer boardCategoryCodeId; //게시판 카테고리 아이디
+    private Integer boardOwnerId; //게시판 주체 아이디
+    private Integer boardCreatorId; //게시글 작성자 아이디
     private String boardTitle; //게시글 제목
     private String boardContent; //게시글 내용
     private LocalDateTime boardCreatedAt; //게시글 작성 일시
