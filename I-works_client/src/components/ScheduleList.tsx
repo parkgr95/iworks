@@ -58,7 +58,7 @@ function ScheduleList(props: prop) {
 
   return (
     <div className="flex gap-4 items-stretch">
-      <div className="flex flex-col gap-2" style={{ width:'45vw', height:'75vh', overflow: 'scroll' }}>
+      <div className="flex flex-col gap-2" style={{height:'70vh', overflow: 'scroll' }}>
         {sortedList.map((schedule) => {
           return (
             <div
@@ -69,14 +69,14 @@ function ScheduleList(props: prop) {
               <div className="text-lg font-bold mb-2 truncate border-b-2 border-b-mainBlue ">
                 {schedule.scheduleTitle}
               </div>
-              <div>
+              <div className='truncate'>
                 시작 일시 : {schedule.scheduleStartDate.slice(0, 4)}년{' '}
                 {schedule.scheduleStartDate.slice(5, 7)}월{' '}
                 {schedule.scheduleStartDate.slice(8, 10)}일{' '}
                 {schedule.scheduleStartDate.slice(11, 13)}시{' '}
                 {schedule.scheduleStartDate.slice(14, 16)}분
               </div>
-              <div>
+              <div className='truncate'>
                 종료 일시 : {schedule.scheduleEndDate.slice(0, 4)}년{' '}
                 {schedule.scheduleEndDate.slice(5, 7)}월{' '}
                 {schedule.scheduleEndDate.slice(8, 10)}일{' '}

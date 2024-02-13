@@ -25,7 +25,7 @@ function SchedulePage() {
 
   const [startDate, setStartDate] = useState(() => {
     const currentDate = new Date()
-    currentDate.setDate(currentDate.getDate() - 30)
+    currentDate.setDate(currentDate.getDate())
     currentDate.setHours(currentDate.getHours() + 9)
     console.log(currentDate.toISOString().slice(0, -8))
     return currentDate.toISOString().slice(0, -8)
