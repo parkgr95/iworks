@@ -91,7 +91,7 @@ function ScheduleList(props: prop) {
         {scheduleDetailInfo ? (
           <ScheduleDetail scheduleDetailInfo={scheduleDetailInfo} />
         ) : (
-          <div className="text-center text-3xl font-bold border-2 border-mainGreen rounded-xl text-nowrap h-full pt-20" style={{width:'35vw'}}>
+          <div className="text-center text-xl font-bold border-2 border-mainGreen rounded-xl text-nowrap h-full p-12">
             스케줄을 선택해주세요
           </div>
         )}
