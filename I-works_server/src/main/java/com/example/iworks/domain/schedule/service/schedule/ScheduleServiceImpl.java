@@ -26,7 +26,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -35,6 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final UserNotificationService userNotificationService;
     private final UserService userService;
 
+    @Transactional
     @Override
     public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
 
