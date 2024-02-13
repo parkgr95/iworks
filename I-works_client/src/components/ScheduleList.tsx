@@ -7,7 +7,7 @@ interface prop {
   contents: any[]
 }
 
-interface ScheduleDetailType {
+export interface ScheduleDetailType {
   scheduleDivisionName: string
   scheduleTitle: string
   schedulePriority: string
@@ -48,8 +48,7 @@ function ScheduleList(props: prop) {
       .get(SCH_DEATIL_URL + `/${id}`)
       .then((response) => {
         const detailResponse = response.data.data
-        detailResponse.scheduleId = id
-        setScheduleDetailInfo(response.data.data)
+        setScheduleDetailInfo({ ...detailResponse, scheduleId: id });
       })
       .catch((_error) => {
         alert('스케줄 상세 불러오기 실패')

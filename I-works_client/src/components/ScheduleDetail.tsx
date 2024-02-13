@@ -2,14 +2,17 @@ import axios from 'axios'
 import { Button } from 'flowbite-react'
 import { RiEdit2Line } from 'react-icons/ri'
 import { API_URL } from '../utils/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function ScheduleDetail(props: any) {
   const scheduleDetailInfo = props.scheduleDetailInfo
-  const [isFinished, setIsFinished] = useState<boolean>(
-    scheduleDetailInfo.scheduleIsFinish,
-  )
+  const [isFinished, setIsFinished] = useState<boolean>()
 
+  useEffect(() =>{
+    setIsFinished(scheduleDetailInfo.scheduleIsFinish)
+  }, [scheduleDetailInfo])
+
+  console.log(scheduleDetailInfo.scheduleIsFinish)
   function handleFinish(id: number) {
     axios
       .post(API_URL + '/schedule' + `/${id}` + '/isFinish', !isFinished, {
@@ -67,21 +70,12 @@ function ScheduleDetail(props: any) {
         </p>
         {scheduleDetailInfo.scheduleCreatorName}
       </div>
-      {isFinished ? (
-        <Button
-          onClick={() => handleFinish(scheduleDetailInfo.scheduleId)}
-          className="bg-mainGreen"
-        >
-          미완료로 변경
-        </Button>
-      ) : (
-        <Button
-          onClick={() => handleFinish(scheduleDetailInfo.scheduleId)}
-          className="bg-mainGreen"
-        >
-          완료하기
-        </Button>
-      )}
+      <Button
+        onClick={() => handleFinish(scheduleDetailInfo.scheduleId)}
+        className="bg-mainGreen"
+      >
+        {isFinished ? '미완료로 변경' : '완료하기'}
+      </Button>
     </div>
   )
 }
