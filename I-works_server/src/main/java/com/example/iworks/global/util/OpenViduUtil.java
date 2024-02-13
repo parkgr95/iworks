@@ -15,7 +15,7 @@ public class OpenViduUtil {
         this.openVidu = new OpenVidu(OPENVIDU_SERVER_URL,SECRET_KEY);
     }
 
-    public Session createSession() throws OpenViduJavaClientException, OpenViduHttpException {
+    public String createSession() throws OpenViduJavaClientException, OpenViduHttpException {
         System.out.println(openVidu.getActiveSessions());
         for(Session session : openVidu.getActiveSessions()){
             System.out.println(session.getSessionId());
@@ -26,7 +26,7 @@ public class OpenViduUtil {
         System.out.println(properties);
         Session session = openVidu.createSession(properties);
         System.out.println("session : "+session);
-        return session;
+        return session.getSessionId();
     }
 
     public Session createSession(String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
