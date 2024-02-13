@@ -34,8 +34,7 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
                  jpaQueryFactory
                          .selectFrom(scheduleAssign)
                          .join(scheduleAssign.schedule, schedule).fetchJoin()
-                         .where(eqCategoryCodeId(requestDto.getCategoryCodeId())
-                                 .and(eqAssigneeId(requestDto.getAssigneeId()))
+                         .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId())
                                  ,schedule.scheduleIsFinish.eq(false)
                                  ,withInDate(dateCondition)
                                  ,filterTask(onlyTask)
@@ -56,6 +55,9 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    }
    private BooleanExpression eqAssigneeId (int assigneeId){
       return scheduleAssign.scheduleAssigneeId.eq(assigneeId);
+   }
+   private BooleanExpression eqAssignee(int categoryCodeId, int assigneeId){
+      return eqCategoryCodeId(categoryCodeId).and(eqAssigneeId(assigneeId));
    }
    private BooleanExpression withInDate (DateCondition dateCondition){
       if (dateCondition == null) return Expressions.TRUE;
