@@ -26,7 +26,7 @@ function GroupCreate() {
 
   // 그룹 이름, 그룹 설명
   const [teamName, setTeamName] = useState<string>('')
-  const [teamDescription, setTeamDescription] = useState<string>()
+  const [teamDescription, setTeamDescription] = useState<string>('')
   const [teamMemberData, setteamMemberData] = useState<UserData[]>([]);
 
   const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +68,10 @@ function GroupCreate() {
           console.log(res)
         }
         // 그룹리더가 아니면 동작 안함 ==> 리더 선택 창은 작성자가 되어야한다
-        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`, targetIdArray,
+        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`,
+        { 
+          userIds: targetIdArray
+        },
           {
             headers: {
               Authorization: 'Bearer ' + getAccessToken(),
@@ -76,14 +79,13 @@ function GroupCreate() {
           });
       })
       .then((res) => {
-        navigate("../")
+        navigate('/address/group')
         console.log(res.data)
       })
       .catch((err) => {
         console.log(err)
       })
   }
-  console.log(teamMemberData)
   // 팝업에서 선택된 사용자를 기존의 팀 멤버 데이터에 추가하는 함수
   const addSelectedUsersToTeamMembers = (selectedUsers: UserData[]) => {
     // 선택된 사용자와 기존의 팀 멤버 데이터를 병합하여 새로운 배열 생성

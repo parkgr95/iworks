@@ -157,8 +157,9 @@ function GroupUpdate() {
       return;
     }
     axios
-      .delete(`https://suhyeon.site/api/address/team/user/${groupId}`, {
-        params: { targetId: userId },
+      .delete(`https://suhyeon.site/api/address/team/user/${groupId}`, 
+      {
+        data: { "targetId": userId },
         headers: {
           Authorization: 'Bearer ' + getAccessToken(),
         },
@@ -170,6 +171,7 @@ function GroupUpdate() {
       })
       .catch((err) => {
         console.log(err);
+        console.log(userId)
       });
   }
 

@@ -25,10 +25,10 @@ function GroupList() {
 
   return (
     <div className="">
-      <h1 className="mb-4 text-xl font-semibold">그룹 목록</h1>
+      <h1 className="mb-4 text-2xl font-semibold">그룹 목록</h1>
       {teamList.map((team) => (
-        <div className="border-b-2 pb-2 mb-2 text-md" key={team.teamId}>
-            <Link to={`/address/group/${team.teamId}`}>{team.teamName}{team.teamId}</Link>
+        <div className="border-b-2 pb-2 mb-6 text-xl" key={team.teamId}>
+            <Link to={`/address/group/${team.teamId}`}>{team.teamName}</Link>
         </div>
       ))}
     </div>
