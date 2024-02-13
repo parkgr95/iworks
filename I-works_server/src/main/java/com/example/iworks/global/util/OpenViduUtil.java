@@ -1,8 +1,7 @@
 package com.example.iworks.global.util;
 
-import com.example.iworks.global.config.OpenViduConfig;
-import com.example.iworks.global.config.SecretKeyConfig;
 import io.openvidu.java.client.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,8 +10,9 @@ import java.util.List;
 public class OpenViduUtil {
     private final OpenVidu openVidu;
 
-    public OpenViduUtil(OpenViduConfig openViduConfig, SecretKeyConfig secretKeyConfig) {
-        openVidu = openViduConfig.getOpenVidu();
+
+    public OpenViduUtil(@Value("${openvidu.host}")String OPENVIDU_SERVER_URL, @Value("${openvidu.secret}") String SECRET_KEY) {
+        this.openVidu = new OpenVidu(OPENVIDU_SERVER_URL,SECRET_KEY);
     }
 
     public Session createSession() throws OpenViduJavaClientException, OpenViduHttpException {
