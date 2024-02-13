@@ -15,7 +15,7 @@ public class AdminUserController {
     private final AdminUserService adminService;
 
     // 유저 등록
-    @PostMapping("/")
+    @PostMapping("/join")
     public ResponseEntity<?> joinUser(@RequestBody AdminUserCreateRequestDto requestDto) {
         return adminService.registerUser(requestDto);
     }
@@ -27,7 +27,7 @@ public class AdminUserController {
     }
 
     // 유저 상세 조회
-    @GetMapping("/")
+    @GetMapping("/detail")
     public ResponseEntity<?> getUser(@RequestHeader("Authorization") String token) {
         return adminService.getUser(token);
     }

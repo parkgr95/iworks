@@ -27,6 +27,11 @@ public class AddressApiController {
         return addressService.selectTeamAll();
     }
 
+    @GetMapping("/team/my")
+    public ResponseEntity<Map<String,Object>> getMyTeamAll(@RequestHeader("Authorization") String token){
+        return addressService.selectMyTeamAll(token);
+    }
+
     @GetMapping("/user/all")
     public ResponseEntity<Map<String,Object>> getAddressAll(){
         return addressService.selectAddressAll();
@@ -53,8 +58,8 @@ public class AddressApiController {
         return addressService.deleteTeam(teamId,token);
     }
     @PostMapping("/team/user/{teamId}")
-    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserAddRequestDto users){
-        return addressService.addTeamUser(teamId,token,users);
+    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserAddRequestDto userIds){
+        return addressService.addTeamUser(teamId,token,userIds);
     }
 
     @DeleteMapping("/team/user/{teamId}")
