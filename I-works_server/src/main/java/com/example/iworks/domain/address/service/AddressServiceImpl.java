@@ -40,7 +40,7 @@ public class AddressServiceImpl implements AddressService {
     private final Response response;
     private final JwtProvider jwtProvider;
     private final TeamSearchRepository teamSearchRepository;
-
+    private final UserSearchRepository userSearchRepository;
 
     @Override
     public ResponseEntity<Map<String, Object>> selectAddressAll() {
@@ -108,8 +108,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional
     @Override
-    public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, List<Integer> requestDto) {
+    public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, AddressTeamUserAddRequestDto requestDto) {
         int userId = jwtProvider.getUserId(token);
+
+        System.out.println("dto : "+requestDto.getUserIds());
 
         Team team = teamRepository.findByTeamId(teamId);
         List<User> userList = userRepository.getUserListByUserIds(requestDto);
