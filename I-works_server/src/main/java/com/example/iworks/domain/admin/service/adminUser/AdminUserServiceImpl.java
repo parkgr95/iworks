@@ -92,19 +92,21 @@ public class AdminUserServiceImpl implements AdminUserService {
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> updateUser(String token, AdminUserUpdateRequestDto dto) {
         int id = jwtProvider.getUserId(token);
         User origin = userRepository.findByUserId(id);
         System.out.println("origin: " + origin);
         if(origin != null){
-            origin.update(dto,bCryptPasswordEncoder);
-            return response.handleSuccess(new AdminUserResponseDto(origin));
+            origin.update(dto);
+            return response.handleSuccess("회원 정보 수정 완료");
         }
 
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> deleteUser(String token) {
         int id = jwtProvider.getUserId(token);
@@ -112,7 +114,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         if(user != null){
             user.delete();
-            return response.handleSuccess(new AdminUserResponseDto(user));
+            return response.handleSuccess("회원 탈퇴 완료");
         }
 
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
