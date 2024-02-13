@@ -1,7 +1,7 @@
 package com.example.iworks.domain.board.service;
 
-import com.example.iworks.domain.board.domain.Board;
-import com.example.iworks.domain.board.domain.Bookmark;
+import com.example.iworks.domain.board.entity.Board;
+import com.example.iworks.domain.board.entity.Bookmark;
 import com.example.iworks.domain.board.dto.request.BoardCreateRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
@@ -73,27 +73,40 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<BoardGetResponseDto> getAllByCategory(int boardCategoryCodeId, int boardOwnerId) {
-        return boardRepository.findAllByCategory(pageRequest, findCode(boardCategoryCodeId), boardOwnerId);
+        return boardRepository.findAllByCategory(pageRequest, findCode(boardCategoryCodeId), boardOwnerId)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     @Override
     public BoardGetResponseDto getByCategory(int boardId, int boardCategoryCodeId, int boardOwnerId) {
-        return boardRepository.findByCategory(boardId, findCode(boardCategoryCodeId), boardOwnerId);
+        Board findBoard =  boardRepository.findByCategory(boardId, findCode(boardCategoryCodeId), boardOwnerId);
+        return findBoard != null ? new BoardGetResponseDto(findBoard) : null;
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByCreator(int boardCreatorId) {
-        return boardRepository.findAllByCreator(pageRequest, boardCreatorId);
+        return boardRepository.findAllByCreator(pageRequest, boardCreatorId)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByKeyword(BoardSearchRequestDto keyword) {
-        return boardRepository.findAllByKeyword(pageRequest, keyword);
+        return boardRepository.findAllByKeyword(pageRequest, keyword)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByKeywords(String keywords) {
-        return boardRepository.findAllByKeywords(pageRequest, keywords);
+        return boardRepository.findAllByKeywords(pageRequest, keywords)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     @Transactional
@@ -118,6 +131,14 @@ public class BoardServiceImpl implements BoardService{
         else {
             findBookmark.update();
         }
+    }
+
+    @Override
+    public List<BoardGetResponseDto> getAllByBookmark(String userEid) {
+        return boardRepository.findAllByBookmark(pageRequest, userEid)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     private Code findCode(int boardCategoryCodeId) {

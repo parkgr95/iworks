@@ -1,4 +1,4 @@
-package com.example.iworks.domain.board.domain;
+package com.example.iworks.domain.board.entity;
 
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
 import com.example.iworks.domain.code.entity.Code;
@@ -61,8 +61,12 @@ public class Board {
 
     public void update(BoardUpdateRequestDto requestBoard) {
         this.boardModifierId = requestBoard.getBoardModifierId();
-        this.boardTitle = requestBoard.getBoardTitle();
-        this.boardContent = requestBoard.getBoardContent();
+        if (requestBoard.getBoardTitle() != null && !requestBoard.getBoardTitle().isEmpty()) {
+            this.boardTitle = requestBoard.getBoardTitle();
+        }
+        if (requestBoard.getBoardContent() != null && !requestBoard.getBoardContent().isEmpty()) {
+            this.boardContent = requestBoard.getBoardContent();
+        }
         this.boardUpdatedAt = LocalDateTime.now();
     }
 
