@@ -18,7 +18,7 @@ public class CalenderController {
     private final JwtProvider jwtProvider;
 
     /** 캘린더 : 유저의 모든 할일*/
-    @GetMapping("/date")
+    @PostMapping("/date")
     public ResponseEntity<?> getAllByUserAndDate(@RequestHeader("Authorization") String authorizationToken, @RequestBody DateCondition dateCondition){
         int userId = jwtProvider.getUserId(authorizationToken);
         return response.handleSuccess(scheduleAssignService.findByUser(userId, dateCondition));

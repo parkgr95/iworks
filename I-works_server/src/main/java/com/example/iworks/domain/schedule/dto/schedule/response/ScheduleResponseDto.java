@@ -25,7 +25,7 @@ public class ScheduleResponseDto {
     private String schedulePlace;
 
     private LocalDateTime meetingDate; // 회의 일시
-    private String meetingCode; // 회의 참여 코드
+    private String meetingSessionId; // 회의 참여 세션 아이디
 
     private Integer scheduleCreatorId;
     private String scheduleCreatorName;
@@ -50,7 +50,7 @@ public class ScheduleResponseDto {
         Meeting scheduleMeeting = schedule.getScheduleMeeting();
         if (scheduleMeeting != null) {
             this.meetingDate = scheduleMeeting.getMeetingDate();
-            this.meetingCode = scheduleMeeting.getMeetingCode();
+            this.meetingSessionId = scheduleMeeting.getMeetingSessionId();
         }
 
         User scheduleCreator = schedule.getScheduleCreator();
