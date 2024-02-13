@@ -90,6 +90,13 @@ public class AddressServiceImpl implements AddressService {
         return response.handleSuccess(result);
     }
 
+    @Override
+    public ResponseEntity<Map<String, Object>> selectMyTeamAll(String token) {
+        int userId = jwtProvider.getUserId(token);
+        Stream<AddressTeamResponseDto> result = teamSearchRepository.findTeamAllByUserId(userId).stream().filter(team -> !team.getTeamIsDeleted()).map(AddressTeamResponseDto::new);
+        return response.handleSuccess(result);
+    }
+
     @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> deleteTeam(int teamId, String token) {
