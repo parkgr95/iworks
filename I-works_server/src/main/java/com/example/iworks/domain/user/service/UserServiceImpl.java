@@ -2,6 +2,7 @@ package com.example.iworks.domain.user.service;
 
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.dto.UserGetMyPageResponseDto;
 import com.example.iworks.domain.user.dto.UserJoinRequestDto;
@@ -12,14 +13,18 @@ import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.global.util.JwtProvider;
 import com.example.iworks.global.util.RandomPasswordUtil;
 import com.example.iworks.global.util.Response;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.example.iworks.global.common.CodeDef.*;
+import static com.example.iworks.global.common.CodeDef.TARGET_TEAM_CODE_ID;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -96,6 +101,49 @@ public class UserServiceImpl implements UserService{
 
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
+
+    @Override
+    public List<Integer> getUserIdsByAssigneeInfos(List<AssigneeInfo> assigneeInfos) {
+        Set<Integer> userIds = new HashSet<>();
+        for (AssigneeInfo assigneeInfo : assigneeInfos) {
+            if (assigneeInfo.getCategoryCodeId() == TARGET_ALL_CODE_ID) {
+                userIds.addAll(userRepository.findAll().stream().map(User::getUserId).collect(Collectors.toSet()));
+            }
+            if(assigneeInfo.getCategoryCodeId() == TARGET_USER_CODE_ID) {
+                userIds.add(assigneeInfo.getAssigneeId());
+            }
+            if (assigneeInfo.getCategoryCodeId() == TARGET_DEPARTMENT_CODE_ID) {
+                userIds.addAll( userRepository.findUsersByDepartmentId(assigneeInfo.getAssigneeId())
+                                    .stream().map(User::getUserId).collect(Collectors.toSet()));
+            }
+            if (assigneeInfo.getCategoryCodeId() == TARGET_TEAM_CODE_ID) {
+                userIds.addAll(userRepository.findUsersByTeamId(assigneeInfo.getAssigneeId())
+                                    .stream().map(User::getUserId).collect(Collectors.toSet()));
+            }
+        }
+        return new ArrayList<>(userIds);
+    }
+
+//    @Override
+//    public List<User> getUserListByAssigneeInfos(List<AssigneeInfo> assigneeInfos) {
+//        Set<User> userList = new HashSet<>();
+//        for (AssigneeInfo assigneeInfo : assigneeInfos) {
+//            if (assigneeInfo.getCategoryCodeId() == TARGET_ALL_CODE_ID) {
+//                return userRepository.findAll().stream().toList();
+//            }
+//            if(assigneeInfo.getCategoryCodeId() == TARGET_USER_CODE_ID) {
+//                userList.add(userRepository.findById(assigneeInfo.getAssigneeId()).orElse(null));
+//            }
+//            if (assigneeInfo.getCategoryCodeId() == TARGET_DEPARTMENT_CODE_ID) {
+//                userList.addAll(userRepository.findUsersByDepartmentId(assigneeInfo.getAssigneeId()));
+//            }
+//            if (assigneeInfo.getCategoryCodeId() == TARGET_TEAM_CODE_ID) {
+//                userList.addAll(userRepository.findUsersByTeamId(assigneeInfo.getAssigneeId()));
+//            }
+//        }
+//        return new ArrayList<>(userList);
+//    }
+
 
 
 }
