@@ -1,5 +1,6 @@
 package com.example.iworks.domain.address.service;
 
+import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
 import com.example.iworks.domain.address.entity.Address;
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
@@ -40,7 +41,7 @@ public class AddressServiceImpl implements AddressService {
     private final Response response;
     private final JwtProvider jwtProvider;
     private final TeamSearchRepository teamSearchRepository;
-    private final UserSearchRepository userSearchRepository;
+
 
     @Override
     public ResponseEntity<Map<String, Object>> selectAddressAll() {
@@ -114,7 +115,7 @@ public class AddressServiceImpl implements AddressService {
         System.out.println("dto : "+requestDto.getUserIds());
 
         Team team = teamRepository.findByTeamId(teamId);
-        List<User> userList = userRepository.getUserListByUserIds(requestDto);
+        List<User> userList = userRepository.getUserListByUserIds(requestDto.getUserIds());
         System.out.println("userList : "+ userList);
         List<TeamUser> teamUserList = new ArrayList<>();
         if (userList.isEmpty()) {
