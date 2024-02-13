@@ -26,8 +26,8 @@ public class Meeting {
     @Column(name = "meeting_date")
     private LocalDateTime meetingDate; // 회의 일시
 
-    @Column(name = "meeting_code", length = 2000)
-    private String meetingCode; // 회의 참여 코드
+    @Column(name = "meeting_sessionId", length = 2000)
+    private String meetingSessionId; // 회의 세션 아이디
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
