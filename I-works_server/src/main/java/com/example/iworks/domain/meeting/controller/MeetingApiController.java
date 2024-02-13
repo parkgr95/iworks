@@ -1,6 +1,6 @@
 package com.example.iworks.domain.meeting.controller;
 
-import com.example.iworks.global.model.Response;
+import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.OpenViduUtil;
 import io.openvidu.java.client.OpenViduException;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,8 @@ public class MeetingApiController {
             return response.handleSuccess(openViduUtil.createSession());
         }
         catch(OpenViduException e){
-            System.out.println(e);
-            return response.handleFail("방 생성 실패 code: " + e.getMessage());
+            System.out.println(e.getMessage());
+            return response.handleFail("방 생성 실패 code: " + e.getMessage(),null);
         }
     }
     @GetMapping("/info/{sessionId}")
@@ -39,7 +39,7 @@ public class MeetingApiController {
         try {
             return response.handleSuccess(openViduUtil.connectSession(sessionId));
         } catch (OpenViduException e) {
-            return response.handleFail(e.getMessage());
+            return response.handleFail(e.getMessage(),null);
         }
     }
 
