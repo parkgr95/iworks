@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { useState, FormEvent } from 'react'
-import { useLoaderData, Form, redirect } from 'react-router-dom'
+import { useLoaderData, Form } from 'react-router-dom'
 import { TextInput, Label, Button } from 'flowbite-react'
 import { API_URL, formDataToRequestData } from '../utils/api'
 import { getAccessToken } from '../utils/auth'
