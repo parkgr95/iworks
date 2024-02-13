@@ -31,15 +31,20 @@ public class MeetingApiController {
     }
     @GetMapping("/info/{sessionId}")
     public ResponseEntity<Map<String,Object>> getMeeting(@PathVariable(name = "sessionId") String sessionId) {
+        try{
         return response.handleSuccess(openViduUtil.getConnections(sessionId));
+
+        }catch (Exception e){
+            return response.handleFail("존재하지 않는 세션입니다.",null);
+        }
     }
 
     @GetMapping("/connect/{sessionId}")
     public ResponseEntity<Map<String,Object>> connectMeeting(@PathVariable(name = "sessionId") String sessionId){
         try {
             return response.handleSuccess(openViduUtil.connectSession(sessionId));
-        } catch (OpenViduException e) {
-            return response.handleFail(e.getMessage(),null);
+        } catch (Exception e) {
+            return response.handleFail("존재하지 않는 세션입니다.",null);
         }
     }
 

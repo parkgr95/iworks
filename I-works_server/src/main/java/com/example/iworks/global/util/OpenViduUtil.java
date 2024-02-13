@@ -36,7 +36,10 @@ public class OpenViduUtil {
                 .data("user_data")
                 .build();
         System.out.println(openVidu.getActiveSessions());
-        Session session = openVidu.getActiveSession(sessionId);;
+        Session session = openVidu.getActiveSession(sessionId);
+        if(session == null){
+
+        }
         System.out.println("session : "+ sessionId);
         Connection connection = session.createConnection();
         System.out.println("token : "+connection.getToken());
