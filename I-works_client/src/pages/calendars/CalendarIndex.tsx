@@ -1,22 +1,61 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	EventApi,
 	DateSelectArg,
 	EventClickArg,
 	EventContentArg,
+	EventInput,
 } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
+import axios from 'axios';
+import { getAccessToken } from '../../utils/auth';
 
 interface CalendarState {
 	weekendsVisible: boolean;
 	currentEvents: EventApi[];
 }
 
+interface ScheduleType {
+	scheduleId: number
+	scheduleAssigneeId: number
+	scheduleAssigneeCategoryId: number
+	scheduleAssigneeCategoryName: string
+	scheduleDivisionName: string
+	scheduleTitle: string
+	scheduleStartDate: string
+	scheduleEndDate: string
+}
+
 function CalendarIndex() {
+	const [initialEvent, setInitialEvent] = useState<EventInput[]>([])
+
+	useEffect(() => {
+		async function getScheduleList() {
+			try {
+				const res = await axios.post(`https://suhyeon.site/api/calender/date`, {
+					data: {
+						startDate: "2024-02-13T10:00:00",
+						endDate: "2024-05-01T18:00:00"
+					},
+					headers: {
+						Authorization: 'Bearer ' + getAccessToken(),
+					},
+				})
+				setInitialEvent(res.data.data)
+			}
+			catch (err) {
+				console.log(err)
+			}
+		}
+
+		getScheduleList()
+	}, [])
+
+
 
 	const [state, setState] = useState<CalendarState>({
 		weekendsVisible: true,
@@ -71,7 +110,7 @@ function CalendarIndex() {
 	// 		<i>{event.title}</i>
 	// 	</li>
 	// );
-	
+
 	return (
 		<div className=''>
 			<FullCalendar
@@ -87,7 +126,7 @@ function CalendarIndex() {
 				selectMirror={true}
 				dayMaxEvents={true}
 				weekends={state.weekendsVisible}
-				initialEvents={INITIAL_EVENTS}
+				initialEvents={initialEvent}
 				select={handleDateSelect}
 				eventContent={renderEventContent} // custom render function
 				eventClick={handleEventClick}
