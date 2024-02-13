@@ -35,8 +35,9 @@ public class Meeting {
             schedule.setMeeting(this);
         }
     }
-    public void updateMeeting(LocalDateTime meetingDate, String meetingCode){
+
+    public void updateMeeting(LocalDateTime meetingDate, String meetingSessionId){
         this.meetingDate = meetingDate;
-        this.meetingCode = meetingCode;
+        this.meetingSessionId = meetingSessionId;
     }
 }
