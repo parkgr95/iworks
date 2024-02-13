@@ -15,7 +15,7 @@ public class AdminUserController {
     private final AdminUserService adminService;
 
     // 유저 등록
-    @PostMapping("/")
+    @PostMapping("/join")
     public ResponseEntity<?> joinUser(@RequestBody AdminUserCreateRequestDto requestDto) {
         return adminService.registerUser(requestDto);
     }
