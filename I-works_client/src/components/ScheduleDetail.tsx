@@ -10,20 +10,22 @@ function ScheduleDetail(props: any) {
     scheduleDetailInfo.scheduleIsFinish,
   )
 
-  function handleFinish(id:number) {
+  function handleFinish(id: number) {
     axios
-    .post(API_URL +'/schedule'+`/${id}`+'/isFinish', !isFinished)
-    .then((response) => {
-      alert(response.data.data)
-      setIsFinished(prev => !prev)
+      .post(API_URL + '/schedule' + `/${id}` + '/isFinish', !isFinished, {
+        headers: { 'content-type': 'application/json' },
       })
-      .catch(_error => alert('완료 요청 실패'))
+      .then((response) => {
+        alert(response.data.data)
+        setIsFinished((prev) => !prev)
+      })
+      .catch((_error) => alert('완료 요청 실패'))
   }
 
   return (
     <div
       className="flex flex-col gap-8 border-2 border-mainGreen rounded-xl p-16"
-      style={{height: '70vh', overflow: 'scroll' }}
+      style={{ height: '70vh', overflow: 'scroll' }}
     >
       <div className="flex text-3xl font-bold pb-2 border-b-2 border-b-mainGreen justify-between">
         {scheduleDetailInfo.scheduleTitle}
@@ -65,9 +67,21 @@ function ScheduleDetail(props: any) {
         </p>
         {scheduleDetailInfo.scheduleCreatorName}
       </div>
-      {isFinished ? <Button onClick={() => handleFinish(scheduleDetailInfo.scheduleId)} className="bg-mainGreen">미완료로 변경</Button> :
-      <Button onClick={() => handleFinish(scheduleDetailInfo.scheduleId)} className="bg-mainGreen">완료하기</Button>
-       }
+      {isFinished ? (
+        <Button
+          onClick={() => handleFinish(scheduleDetailInfo.scheduleId)}
+          className="bg-mainGreen"
+        >
+          미완료로 변경
+        </Button>
+      ) : (
+        <Button
+          onClick={() => handleFinish(scheduleDetailInfo.scheduleId)}
+          className="bg-mainGreen"
+        >
+          완료하기
+        </Button>
+      )}
     </div>
   )
 }
