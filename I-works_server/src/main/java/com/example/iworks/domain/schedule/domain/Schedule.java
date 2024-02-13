@@ -1,10 +1,9 @@
 package com.example.iworks.domain.schedule.domain;
 
+import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.global.model.entity.Code;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,11 +42,10 @@ public class Schedule {
     @Builder.Default
     @Column(name = "schedule_content", columnDefinition = "TEXT" )
     private String scheduleContent = "this is content..."; //할 일 내용
-
-    @Builder.Default
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_start_date", nullable = false)
-    private LocalDateTime scheduleStartDate = LocalDateTime.now(); //할 일의 시작일시
+    private LocalDateTime scheduleStartDate; //할 일의 시작일시
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_end_date", nullable = false)
@@ -87,7 +85,7 @@ public class Schedule {
 
     @Builder.Default
     @Column(name = "schedule_is_deleted", nullable = false)
-    private Boolean scheduleIsDeleted = false;
+    private Boolean scheduleIsDeleted = false; //할일 삭제여부
 
     @Builder.Default
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향

@@ -1,27 +1,27 @@
 package com.example.iworks.domain.schedule.service.scheduleAssign;
 
+import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.response.ScheduleAssignResponseDto;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameterDto;
-import com.example.iworks.global.dto.SearchConditionDate;
+import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
+import com.example.iworks.global.dto.DateCondition;
 
 import java.util.List;
 
 public interface ScheduleAssignService {
 
     /** 캘린더 : 유저의 모든 소속에 대하여 업무배정 조회 */
-    List<ScheduleAssignResponseDto> findTaskByUser(int userId, SearchConditionDate searchConditionDate);
+    List<ScheduleAssignResponseDto> findTaskByUser(int userId, DateCondition dateCondition);
 
     /** 할일 : 유저의 모든 소속에 대하여 할일 배정 조회 */
-    List<ScheduleAssignResponseDto> findByUser(int userId, SearchConditionDate searchConditionDate);
+    List<ScheduleAssignResponseDto> findByUser(int userId, DateCondition dateCondition);
 
     /** 할일 생성에서 담당자 할일 배정 조회 */
-    List<ScheduleAssignResponseDto> findByAssignees(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate);
+    List<ScheduleAssignResponseDto> findByAssignees(List<AssigneeInfo> requestDtoList, DateCondition dateCondition);
 
     /** 유저의 모든 소속에 대한 할일 배정 검색 조건 조회*/
-    List<ScheduleAssignSearchParameterDto> getScheduleAssignSearchParameterDtoByUser(int userId);
+    List<AssigneeInfo> findUserBelongs(int userId);
 
     /** 할일 배정 검색 조건에 대한 할일 배정 및 할일 조회 */
-    List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList);
-    List<ScheduleAssignResponseDto> findScheduleAssignsBySearchParameter(List<ScheduleAssignSearchParameterDto> requestDtoList, SearchConditionDate searchConditionDate, boolean onlyTask);
+    List<ScheduleAssign> findScheduleAssignsBySearchParameter(List<AssigneeInfo> assigneeInfoList, DateCondition dateCondition, boolean onlyTask);
 
 }

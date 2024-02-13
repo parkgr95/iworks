@@ -1,7 +1,6 @@
 package com.example.iworks.domain.schedule.domain;
 
-import com.example.iworks.domain.schedule.domain.Schedule;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,12 +8,12 @@ import lombok.*;
 @Table(name = "schedule_assign")
 @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
-@ToString
+@EqualsAndHashCode
 public class ScheduleAssign {
 
     @Id
     @GeneratedValue
-    @Column(name = "schedule_assign_id", nullable = false)
+    @Column(name = "schedule_assign_id")
     private int scheduleAssignId;
 
     @ManyToOne(fetch = FetchType.LAZY)
