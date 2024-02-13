@@ -19,13 +19,14 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -34,7 +35,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final UserNotificationService userNotificationService;
     private final UserService userService;
 
-    @Transactional
     @Override
     public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
 
@@ -49,6 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         // Create Schedule
         Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
 
+        // Assign Users
         assignUsers(schedule, createRequestDto.getAssigneeInfos());
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
@@ -58,22 +59,26 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     }
 
-    private void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    protected void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
+        try {
+            System.out.println("ScheduleServiceImpl.createAssigneesNotification");
 
-        System.out.println("ScheduleServiceImpl.createAssigneesNotification");
+            //Find all user by assigneeInfos
+            List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
 
-        //Find all user by assigneeInfos
-        List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
-
-        System.out.println(" Find all userId by assigneeInfos -> " + userIds);
-        for ( int userId : userIds){
-            UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
-                    .scheduleId(savedSchedule.getScheduleId())
-                    .userId(userId)
-                    .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
-                    .notificationType(NotificationType.CREATE.toString())
-                    .build();
-            userNotificationService.create(notificationCreateRequestDto);
+            System.out.println(" Find all userId by assigneeInfos -> " + userIds);
+            for ( int userId : userIds) {
+                UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
+                        .scheduleId(savedSchedule.getScheduleId())
+                        .userId(userId)
+                        .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
+                        .notificationType(NotificationType.CREATE.toString())
+                        .build();
+                userNotificationService.create(notificationCreateRequestDto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
