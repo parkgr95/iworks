@@ -103,7 +103,9 @@ public class Schedule {
         }
     }
     public void isFinished(boolean isFinish){
-        scheduleIsFinish = isFinish;
+        this.scheduleIsFinish = isFinish;
+        this.scheduleFinishedAt = LocalDateTime.now();
+
     }
 
     public void updateSchedule(Code code, ScheduleUpdateRequestDto scheduleUpdateRequestDto){
