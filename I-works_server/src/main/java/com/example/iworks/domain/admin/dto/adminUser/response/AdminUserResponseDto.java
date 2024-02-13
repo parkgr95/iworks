@@ -5,6 +5,7 @@ import com.example.iworks.domain.user.domain.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class AdminUserResponseDto {
@@ -22,7 +23,7 @@ public class AdminUserResponseDto {
     private final LocalDateTime userUpdatedAt; // 수정일시
     private final LocalDateTime userDeletedAt; // 탈퇴일시
     private final Boolean userIsDeleted; // 탈퇴여부
-    private final String userRole; // 권한
+    private final List<String> userRole; // 권한
     private final Status userStaus; // 상태
 
     public AdminUserResponseDto(User user){
@@ -40,7 +41,7 @@ public class AdminUserResponseDto {
         this.userUpdatedAt = user.getUserUpdatedAt();
         this.userDeletedAt = user.getUserDeletedAt();
         this.userIsDeleted = user.getUserIsDeleted();
-        this.userRole = user.getUserRole();
+        this.userRole = user.getRoleList();
         this.userStaus = user.getUserStatus();
     }
 }
