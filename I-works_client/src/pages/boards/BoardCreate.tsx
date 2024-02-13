@@ -16,6 +16,7 @@ function BoardCreate() {
   const [boardContent, setBoardContent] = useState<string>()
   const [boardOwnerId, setBoardOwnerId] = useState<string>('')
   const [boardCategoryCodeId, setCategoryCodeId] = useState<string>('')
+  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
 
   const onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setBoardTitle(event.target.value)
@@ -23,6 +24,11 @@ function BoardCreate() {
   const onContentChange = (content: string) => {
     setBoardContent(content)
   }
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files;
+    setSelectedFiles(fileList);
+  };
 
   function handleCreate(event: FormEvent) {
     event.preventDefault()
@@ -40,6 +46,7 @@ function BoardCreate() {
         "boardIsDeleted": '0',
         "boardCategoryCodeId": boardCategoryCodeId,
         "boardOwnerId": boardOwnerId,
+        "boardFile": selectedFiles
       },         {
         headers: {
           Authorization: 'Bearer ' + getAccessToken(),
@@ -96,7 +103,7 @@ function BoardCreate() {
         </div>
         <div className="">
           <label className="mr-10" htmlFor="file">첨부파일 : </label>
-          <input className="h" type="file" name="" id="file" />
+          <input className="h" type="file" name="" id="file"   onChange={handleFileChange} multiple/>
         </div>
         <div className="mt-5">
           <ReactQuill

@@ -70,13 +70,13 @@ function BoardSideBar() {
         <div className="flex justify-center items-center w-full h-16 border-b-2 ">
           <ul className="flex justify-center">
             <li className="px-4">
-                <Link className="text-xs flex flex-col items-center" to="/board">
+                <Link className="text-xs flex flex-col items-center" to="/board/new">
                 <span className="font-bold text-lg">NEW</span>
                 <span>최신글</span>
                 </Link>
             </li>
             <li className="px-4">
-              <Link className="text-xs flex flex-col" to={`/board/bookmark/${loginedUser?.userId}`}>
+              <Link className="text-xs flex flex-col" to={`/board/bookmark/${loginedUser?.userEid}`}>
               <FaStar size={24} />
               <span className="mt-1">중요</span>
               </Link>

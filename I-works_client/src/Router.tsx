@@ -12,6 +12,8 @@ import BoardUpdate from './pages/boards/BoardUpdate';
 import BoardDetail from './pages/boards/BoardDetail';
 import BoardSearch from './pages/boards/BoardSearchPage';
 import BoardMy from './pages/boards/BoardMy';
+import BoardNew from './pages/boards/BoardNew';
+import BoardBookmark from './pages/boards/BoardBookmark';
 
 const router = createBrowserRouter([
   {
@@ -74,6 +76,14 @@ const router = createBrowserRouter([
           {
             path: 'my/:userId',
             element: <BoardMy />
+          },
+          {
+            path: 'new',
+            element: <BoardNew />
+          },
+          {
+            path: 'bookmark/:userEid',
+            element: <BoardBookmark />
           },
         ]
       },

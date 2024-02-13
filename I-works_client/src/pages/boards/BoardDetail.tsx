@@ -7,6 +7,8 @@ import { Button } from "flowbite-react"
 import PostType from "../../interface/BoardType"
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
+import { useUser } from "../../utils/userInfo"
+import BoardComment from "./BoardCommnet"
 
 interface UserType {
   userId: string
@@ -22,6 +24,7 @@ interface UserType {
 }
 
 function BoardDetail() {
+  const loginedUser = useUser()
   const { boardId = '' } = useParams<{ boardId: string }>()
   const [boardDetail, setBoardDetail] = useState<PostType>({
     boardId: '',
@@ -34,13 +37,14 @@ function BoardDetail() {
     boardCategoryCodeId: ''
   })
   const boardCategory: { [key: string]: string } = {
-    "1" : "공지게시판",
-    "2" : "자유게시판",
-    "3" : "부서게시판",
-    "4" : "그룹게시판",
+    "1": "공지게시판",
+    "2": "자유게시판",
+    "3": "부서게시판",
+    "4": "그룹게시판",
   };
   const [userName, setUserName] = useState<UserType>()
   const navigate = useNavigate()
+  const [isStarred, setIsStarred] = useState(false);
 
   useEffect(() => {
     // 상세 페이지 정보 받아오기
@@ -48,30 +52,47 @@ function BoardDetail() {
       try {
         const res = await axios.get(`https://suhyeon.site/api/board/${boardId}`)
         const boardDetailData = res.data.data
-
+  
         setBoardDetail(boardDetailData)
-        getUsers(boardDetail)
-      }
-      catch (err) {
+        getUsers(boardDetailData)
+      } catch (err) {
         console.log(err)
       }
     }
-
+  
     // 유저 목록 받아오기
     async function getUsers(boardDetail: PostType) {
       try {
         const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
         const users = res.data.data
         const filteredUser = users.find((user: UserType) => user.userId == boardDetail.boardCreatorId)
-
+  
         setUserName(filteredUser)
       } catch (err) {
         console.log(err);
       }
     }
-
-    getBoardDetail(boardId)
-  }, [boardId, boardDetail])
+  
+    // 북마크 목록 받아오기
+    async function getBookmarks(userEid: string | undefined) {
+      try {
+        if (userEid) {
+          const res = await axios.get(`https://suhyeon.site/api/board/byBookmark?userEid=${userEid}`)
+          const isStarred = res.data.data.some((post: PostType) => post.boardId == boardId);
+          if (isStarred) {
+            setIsStarred(true);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    
+    if (boardId) {
+      getBoardDetail(boardId);
+      getBookmarks(loginedUser?.userEid);
+    }
+  }, [boardId, loginedUser?.userEid]);
 
   const moveToUpdate = () => {
     navigate('/board/update/' + boardId)
@@ -93,15 +114,19 @@ function BoardDetail() {
       })
   }
 
-
   // // 북마크 기능
-  // function toggleStar() {
-  //   // 별표 상태 업데이트
-  //   setIsStarred(prevState => !prevState);
+  const toggleStar = () => {
+    setIsStarred(prevState => !prevState);
 
-  //   // 여기서 API 요청을 보내고 상태를 업데이트할 수 있음
-  //   // axios.put(...) 또는 필요한 API 요청을 보내고 상태를 업데이트하는 코드 작성
-  // }
+    axios
+      .post(`https://suhyeon.site/api/board/bookmark/${boardId}?userEid=${loginedUser?.userEid}`)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   return (
     <div className="flex flex-col">
@@ -110,8 +135,7 @@ function BoardDetail() {
       </div>
       <div className="flex justify-between items-center mb-4">
         <p className="text-3xl font-semibold">{boardDetail.boardTitle}</p>
-        <FaRegStar size={36}/>
-        <FaStar size={36} />
+        {isStarred ? <FaStar size={36} onClick={toggleStar} /> : <FaRegStar size={36} onClick={toggleStar} />}
       </div>
       <div className="mb-4">
         <div className="flex items-center">
@@ -130,7 +154,7 @@ function BoardDetail() {
         </div>
       </div>
       <div>
-        {/* <CommentCreate /> */}
+        <BoardComment boardId={boardId} />
       </div>
       <div>
 
