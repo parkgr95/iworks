@@ -19,6 +19,14 @@ import BoardBookmark from './pages/boards/BoardBookmark';
 import SchedulePage from './pages/SchedulePage';
 import { getUserDetailInfo } from './utils/User';
 
+import AddressIndex from './pages/addresses/AddressIndex';
+import AddressSelect from './components/AddressSelect';
+import AddressList from './pages/addresses/AddressList';
+import GroupCreate from './pages/addresses/GroupCreate';
+import GroupList from './pages/addresses/GroupList';
+import GroupDetail from './pages/addresses/GroupDetail';
+import GroupUpdate from './pages/addresses/GroupUpdate';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -37,7 +45,7 @@ const router = createBrowserRouter([
             action: logoutAction,
           },
           {
-            path:'mypage',
+            path: 'mypage',
             element: <MyPage />,
             loader: getUserDetailInfo,
           },
@@ -46,7 +54,33 @@ const router = createBrowserRouter([
       // 주소록 라우터
       {
         path: 'address',
-        element: <AddressPage />
+        element: <AddressPage />,
+        children: [
+          {
+            path: '',
+            element: <AddressIndex />
+          },
+          {
+            path: ':departmentId',
+            element: <AddressList />
+          },
+          {
+            path: 'create',
+            element: <GroupCreate />
+          },
+          {
+            path: 'group',
+            element: <GroupList />
+          },
+          {
+            path: 'group/:groupId',
+            element: <GroupDetail />
+          },
+          {
+            path: 'group/update/:groupId',
+            element: <GroupUpdate />
+          },
+        ]
       },
       // 게시판 라우터
       {
@@ -102,6 +136,11 @@ const router = createBrowserRouter([
         loader: getUserDetailInfo
       }
     ]
+  },
+  // 공통 라우터
+  {
+    path: '/popup/address/select',
+    element: <AddressSelect />
   },
 ]);
 

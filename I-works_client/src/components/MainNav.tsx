@@ -1,7 +1,7 @@
 import { Link, Form } from "react-router-dom"
 
 function MainNav() {
-  
+
   return (
     <nav className="max-full flex justify-between p-4 bg-mainBlue h-14">
       <div className="flex items-center space-x-3">
@@ -18,7 +18,7 @@ function MainNav() {
           <Link to="/address" className="block py-2 px-4">주소록</Link>
         </li>
         <li>
-          <Link to="/" className="block py-2 px-4">캘린더</Link>
+          <Link to="/calendar" className="block py-2 px-4">캘린더</Link>
         </li>
         <li>
           <Link to="/schedule?mode=all" className="block py-2 px-4">할 일</Link>
