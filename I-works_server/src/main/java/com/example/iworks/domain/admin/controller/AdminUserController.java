@@ -27,7 +27,7 @@ public class AdminUserController {
     }
 
     // 유저 상세 조회
-    @GetMapping("/")
+    @GetMapping("/detail")
     public ResponseEntity<?> getUser(@RequestHeader("Authorization") String token) {
         return adminService.getUser(token);
     }
