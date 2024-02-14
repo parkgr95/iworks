@@ -1,28 +1,26 @@
 package com.example.iworks.domain.schedule.service.schedule;
 
+import com.example.iworks.domain.code.entity.Code;
+import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
 import com.example.iworks.domain.notification.service.UserNotificationService;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
-import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.domain.code.entity.Code;
-import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.user.service.UserService;
 import com.example.iworks.global.enumtype.NotificationType;
 import com.example.iworks.global.util.OpenViduUtil;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -52,7 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Meeting meeting = null;
 
         if (createRequestDto.getIsCreateMeeting()){
-            String sessionId = "sample Session Id "; //openViduUtil.createSession();
+            String sessionId = openViduUtil.createSessionId();
             meeting = createRequestDto.toMeetingEntity(sessionId);
         }
 

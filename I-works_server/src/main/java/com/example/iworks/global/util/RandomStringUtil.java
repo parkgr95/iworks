@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 import java.util.regex.Pattern;
 
 @Component
-public class RandomPasswordUtil {
+public class RandomStringUtil {
     private static final char[] rndAllCharacters = new char[]{
             //number
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -37,5 +37,18 @@ public class RandomPasswordUtil {
             return getRandomPassword(length);    //비밀번호 조건(패턴)에 맞지 않는 경우 메서드 재실행
         }
         return randomPassword;
+    }
+
+    public String getRandomId(int length) {
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("ses_");
+        int rndAllCharactersLength = rndAllCharacters.length;
+        for (int i = 0; i < length; i++) {
+            stringBuilder.append(rndAllCharacters[random.nextInt(rndAllCharactersLength)]);
+        }
+
+        String randomId = stringBuilder.toString();
+        return randomId;
     }
 }
