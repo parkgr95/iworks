@@ -131,7 +131,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void deleteSchedule(Integer scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
-        scheduleRepository.delete(schedule);
+        schedule.delete();
+//        scheduleRepository.delete(schedule);
     }
 
 }
