@@ -41,7 +41,7 @@ public class BoardController {
     }
 
     //게시글 수정
-    @PutMapping("/update/{boardId}")
+    @PostMapping("/update/{boardId}")
     public ResponseEntity<?> updateBoard(@PathVariable(name = "boardId") int boardId,
                                          @RequestHeader("Authorization") String authorizationToken,
                                          @RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
@@ -51,7 +51,7 @@ public class BoardController {
     }
 
     //게시글 삭제
-    @PutMapping("/delete/{boardId}")
+    @PostMapping("/delete/{boardId}")
     public ResponseEntity<?> deleteBoard(@PathVariable(name = "boardId") int boardId,
                                          @RequestHeader("Authorization") String authorizationToken) {
         int userId = findUserId(authorizationToken);

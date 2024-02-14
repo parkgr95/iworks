@@ -63,15 +63,11 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<BoardGetResponseDto> getAll() {
-        List<BoardGetResponseDto> findBoards = boardRepository.findAll(pageRequest)
+        return boardRepository.findAll(pageRequest)
                 .stream()
                 .filter(board -> !Boolean.TRUE.equals(board.getBoardIsDeleted()))
                 .map(BoardGetResponseDto::new)
                 .toList();
-        if (findBoards.isEmpty()) {
-            throw new BoardException(BoardErrorCode.BOARD_NOT_EXIST);
-        }
-        return findBoards;
     }
 
     @Override
@@ -81,14 +77,10 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<BoardGetResponseDto> getAllByCategory(int boardCategoryCodeId, int boardOwnerId) {
-        List<BoardGetResponseDto> findBoards = boardRepository.findAllByCategory(pageRequest, findCode(boardCategoryCodeId), boardOwnerId)
+        return boardRepository.findAllByCategory(pageRequest, findCode(boardCategoryCodeId), boardOwnerId)
                 .stream()
                 .map(BoardGetResponseDto::new)
                 .toList();
-        if (findBoards.isEmpty()) {
-            throw new BoardException(BoardErrorCode.BOARD_BY_CATEGORY_NOT_EXIST);
-        }
-        return findBoards;
     }
 
     @Override
@@ -102,38 +94,27 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<BoardGetResponseDto> getAllByCreator(int boardCreatorId) {
-        List<BoardGetResponseDto> findBoards = boardRepository.findAllByCreator(pageRequest, boardCreatorId)
+         return boardRepository.findAllByCreator(pageRequest, boardCreatorId)
                 .stream()
                 .map(BoardGetResponseDto::new)
                 .toList();
-        if (findBoards.isEmpty()) {
-            throw new BoardException(BoardErrorCode.BOARD_BY_CREATOR_NOT_EXIST);
-        }
-        return findBoards;
+
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByKeyword(BoardSearchRequestDto keyword) {
-        List<BoardGetResponseDto> findBoards = boardRepository.findAllByKeyword(pageRequest, keyword)
+        return boardRepository.findAllByKeyword(pageRequest, keyword)
                 .stream()
                 .map(BoardGetResponseDto::new)
                 .toList();
-        if (findBoards.isEmpty()) {
-            throw new BoardException(BoardErrorCode.BOARD_BY_KEYWORD_NOT_EXIST);
-        }
-        return findBoards;
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByKeywords(String keywords) {
-        List<BoardGetResponseDto> findBoards = boardRepository.findAllByKeywords(pageRequest, keywords)
+        return boardRepository.findAllByKeywords(pageRequest, keywords)
                 .stream()
                 .map(BoardGetResponseDto::new)
                 .toList();
-        if (findBoards.isEmpty()) {
-            throw new BoardException(BoardErrorCode.BOARD_BY_KEYWORD_NOT_EXIST);
-        }
-        return findBoards;
     }
 
     @Transactional
@@ -156,14 +137,10 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<BoardGetResponseDto> getAllByBookmark(int userid) {
-        List<BoardGetResponseDto> findBoards = boardRepository.findAllByBookmark(pageRequest, userid)
+        return boardRepository.findAllByBookmark(pageRequest, userid)
                 .stream()
                 .map(BoardGetResponseDto::new)
                 .toList();
-        if (findBoards.isEmpty()) {
-            throw new BoardException(BoardErrorCode.BOARD_BY_BOOKMARK_NOT_EXIST);
-        }
-        return findBoards;
     }
 
     private Board findBoard(int boardId) {

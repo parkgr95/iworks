@@ -53,14 +53,10 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentGetResponseDto> getAllByBoard(int boardId) {
-        List<CommentGetResponseDto> findComments = commentRepository.findAllByBoard(pageRequest, boardId)
+        return commentRepository.findAllByBoard(pageRequest, boardId)
                 .stream()
                 .map(CommentGetResponseDto::new)
                 .toList();
-        if (findComments.isEmpty()) {
-            throw new CommentException(CommentErrorCode.COMMMENT_NOT_EXIST);
-        }
-        return findComments;
     }
 
     private Comment findComment(int commentId) {
