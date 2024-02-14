@@ -80,10 +80,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getUser(String token) {
-        int id = jwtProvider.getUserId(token);
-        System.out.println("token id : "+id);
-        User user= userRepository.findByUserId(id);
+    public ResponseEntity<Map<String, Object>> getUser(int userId) {
+        System.out.println("token id : "+userId);
+        User user= userRepository.findByUserId(userId);
         if(user.getUserEid() != null){
             AdminUserResponseDto dto = new AdminUserResponseDto(user);
             return response.handleSuccess(dto);
@@ -93,9 +92,8 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Transactional
     @Override
-    public ResponseEntity<Map<String, Object>> updateUser(String token, AdminUserUpdateRequestDto dto) {
-        int id = jwtProvider.getUserId(token);
-        User origin = userRepository.findByUserId(id);
+    public ResponseEntity<Map<String, Object>> updateUser(int userId, AdminUserUpdateRequestDto dto) {
+        User origin = userRepository.findByUserId(userId);
         System.out.println("origin: " + origin);
         if(origin != null){
             origin.update(dto);
@@ -107,9 +105,8 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Transactional
     @Override
-    public ResponseEntity<Map<String, Object>> deleteUser(String token) {
-        int id = jwtProvider.getUserId(token);
-        User user = userRepository.findByUserId(id);
+    public ResponseEntity<Map<String, Object>> deleteUser(int userId) {
+        User user = userRepository.findByUserId(userId);
 
         if(user != null){
             user.delete();
