@@ -14,8 +14,8 @@ interface UserData {
   userNameLast: string,
   departmentName: string,
   departmentId: string,
-  positionCodeName: null,
-  positionCodeId: null,
+  positionCodeName: string,
+  positionCodeId: string,
   userTel: string,
   userEmail: string
 }
@@ -46,11 +46,6 @@ function GroupCreate() {
       return navigate(`/login`)
     }
 
-    if (teamLeader !== loginedUser.userId) {
-      alert("그룹 리더가 로그인한 사용자와 일치하지 않습니다.");
-      return;
-    }
-
     axios
       .post("https://suhyeon.site/api/address/team/create", {
         "teamName": teamName,
@@ -65,9 +60,8 @@ function GroupCreate() {
       .then((res) => {
         const teamId = res.data.data.teamId
         if (!teamId) {
-          console.log(res)
+          alert("팀ID가 존재하지 않습니다.")
         }
-        // 그룹리더가 아니면 동작 안함 ==> 리더 선택 창은 작성자가 되어야한다
         return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`,
         { 
           userIds: targetIdArray
@@ -136,8 +130,8 @@ function GroupCreate() {
         userNameLast: loginedUser.userNameLast,
         departmentName: loginedUser.departmentName,
         departmentId: '',
-        positionCodeName: null,
-        positionCodeId: null,
+        positionCodeName: '',
+        positionCodeId: '',
         userTel: loginedUser.userTel,
         userEmail: loginedUser.userEmail
       };

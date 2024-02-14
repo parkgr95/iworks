@@ -53,7 +53,8 @@ function GroupUpdate() {
     teamLeader: 0,
     teamUsers: [],
   })
-  const [teamMemberData, setteamMemberData] = useState<UserData[]>([]);
+  const [teamMemberData, setteamMemberData] = useState<UserData[]>([])
+
   let groupLeaderName = ""
   if (groupDetail.teamLeader) {
     const leader = groupDetail.teamUsers.find(user => user.userDto.userId == groupDetail.teamLeader);
@@ -68,14 +69,13 @@ function GroupUpdate() {
   const onDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setTeamDescription(event.target.value)
   }
-
   // 기존 정보 받아오기
   useEffect(() => {
     async function getGroupDetail() {
       try {
         const res = await axios.get(`https://suhyeon.site/api/address/team/${groupId}`)
         const groupDetailData: GroupType = res.data.data
-
+        
         setgroupDetail(groupDetailData)
         setTeamName(groupDetailData.teamName)
         setTeamDescription(groupDetailData.teamDescription)
@@ -97,10 +97,10 @@ function GroupUpdate() {
         console.log(err)
       }
     }
-
+    
     getGroupDetail()
   }, [groupId])
-
+  
   const targetIdArray = teamMemberData.map(user => user.userId)
   const originIdArray = groupDetail.teamUsers.map(user => user.userDto.userId);
   const newMembersIds = targetIdArray.filter(id => !originIdArray.includes(id));
@@ -108,7 +108,7 @@ function GroupUpdate() {
   // 수정 요청
   function handleUpdate(event: FormEvent) {
     event.preventDefault()
-    const teamLeader = loginedUser?.userId
+    const teamLeader = groupDetail.teamLeader
 
     if (!loginedUser) {
       return navigate(`/login`)
@@ -176,10 +176,10 @@ function GroupUpdate() {
       .then(() => {
         const updatedTeamMembers = teamMemberData.filter(user => user.userId !== userId);
         setteamMemberData(updatedTeamMembers);
-        console.log('팀 멤버가 성공적으로 삭제되었습니다.');
+        alert('팀 멤버가 성공적으로 삭제되었습니다.')
       })
       .catch((err) => {
-        console.log(err);
+        alert(err.response.data.message)
         console.log(userId)
       });
   }
@@ -225,27 +225,10 @@ function GroupUpdate() {
   }
 
   useEffect(() => {
-    if (loginedUser) {
-      // 로그인한 사용자의 정보만 가진 객체를 생성
-      const user: UserData = {
-        userId: loginedUser.userId,
-        userEid: loginedUser.userEid,
-        userNameFirst: loginedUser.userNameFirst,
-        userNameLast: loginedUser.userNameLast,
-        departmentName: loginedUser.departmentName,
-        departmentId: '',
-        positionCodeName: null,
-        positionCodeId: null,
-        userTel: loginedUser.userTel,
-        userEmail: loginedUser.userEmail
-      };
-      // 로그인한 사용자 정보를 팀 멤버 데이터에 추가
-      setteamMemberData([user]);
-    }
     return () => {
       window.removeEventListener('message', handleMessage2);
     };
-  }, [loginedUser]);
+  }, []);
 
   return (
     <div>
@@ -274,7 +257,7 @@ function GroupUpdate() {
                 {teamMemberData.map((user) => (
                   <li className="flex justify-between bg-mainGray p-2 mb-2" key={user.userId}>
                     <div>{user.userNameLast}{user.userNameFirst} / {user.departmentName}</div>
-                    {user.userId !== loginedUser?.userId && (
+                    {user.userId !== groupDetail.teamLeader && (
                       <button onClick={() => {
                         if (originIdArray.includes(user.userId)) {
                           deleteTeamMember(user.userId);
@@ -294,8 +277,8 @@ function GroupUpdate() {
           )}
         </div>
         <div className="flex justify-end mt-4">
-          <Button onClick={() => { navigate(`/address/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
           <Button onClick={handleUpdate} className="bg-mainGreen" type="submit">수정</Button>
+          <Button onClick={() => { navigate(`/address/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
         </div>
       </Form>
     </div>

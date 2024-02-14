@@ -8,14 +8,15 @@ interface UserData {
   userNameLast: string,
   departmentName: string,
   departmentId: string,
-  positionCodeName: null,
-  positionCodeId: null,
+  positionCodeName: string,
+  positionCodeId: string,
   userTel: string,
   userEmail: string
 }
 
 
 function AddressIndex() {
+
   const [userAll, setUserAll] = useState<UserData[]>([])
 
   useEffect(() => {
@@ -64,7 +65,7 @@ function AddressIndex() {
                   </div>
                 </th>
                 <td className="px-6 py-4">
-                  {user.positionCodeName}
+                  {user.positionCodeName ? user.positionCodeName.substring(5) : ''}
                 </td>
                 <td className="px-6 py-4">
                   {user.departmentName}

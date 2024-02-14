@@ -9,22 +9,22 @@ interface UserData {
   userNameLast: string,
   departmentName: string,
   departmentId: string,
-  positionCodeName: null,
-  positionCodeId: null,
+  positionCodeName: string,
+  positionCodeId: string,
   userTel: string,
   userEmail: string
 }
 
 
 function AddressList() {
-  const { departmentId='' } = useParams<{departmentId: string}>()
+  const { departmentId = '' } = useParams<{ departmentId: string }>()
   const [userAll, setUserAll] = useState<UserData[]>([])
 
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/address/user/all`)
       .then((res) => {
         const data = res.data.data
-        const filteredData = departmentId? data.filter((user: UserData) => user.departmentId == departmentId): data
+        const filteredData = departmentId ? data.filter((user: UserData) => user.departmentId == departmentId) : data
         setUserAll(filteredData)
       })
       .catch((err) => {
@@ -64,7 +64,7 @@ function AddressList() {
                   </div>
                 </th>
                 <td className="px-6 py-4">
-                  {user.positionCodeName}
+                  {user.positionCodeName ? user.positionCodeName.substring(5) : ''}
                 </td>
                 <td className="px-6 py-4">
                   {user.departmentName}
