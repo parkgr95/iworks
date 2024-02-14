@@ -69,14 +69,13 @@ function GroupUpdate() {
   const onDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setTeamDescription(event.target.value)
   }
-
   // 기존 정보 받아오기
   useEffect(() => {
     async function getGroupDetail() {
       try {
         const res = await axios.get(`https://suhyeon.site/api/address/team/${groupId}`)
         const groupDetailData: GroupType = res.data.data
-
+        
         setgroupDetail(groupDetailData)
         setTeamName(groupDetailData.teamName)
         setTeamDescription(groupDetailData.teamDescription)
@@ -98,14 +97,20 @@ function GroupUpdate() {
         console.log(err)
       }
     }
-
+    
     getGroupDetail()
+    console.log('오류')
   }, [groupId])
-
+  
   const targetIdArray = teamMemberData.map(user => user.userId)
   const originIdArray = groupDetail.teamUsers.map(user => user.userDto.userId);
   const newMembersIds = targetIdArray.filter(id => !originIdArray.includes(id));
-
+  
+  console.log(groupDetail)
+  console.log(teamMemberData)
+  console.log(originIdArray)
+  console.log(targetIdArray)
+  console.log(newMembersIds)
   // 수정 요청
   function handleUpdate(event: FormEvent) {
     event.preventDefault()
@@ -149,7 +154,7 @@ function GroupUpdate() {
         }
       })
       .then((res) => {
-        navigate("/address/group")
+        navigate("../")
         console.log(res?.data); // null이나 다른 값에 대한 응답 확인
       })
       .catch((err) => {
@@ -177,16 +182,10 @@ function GroupUpdate() {
       .then(() => {
         const updatedTeamMembers = teamMemberData.filter(user => user.userId !== userId);
         setteamMemberData(updatedTeamMembers);
-        alert('팀 멤버가 성공적으로 삭제되었습니다.');
-        // groupDetail 업데이트
-        const updatedTeamUsers = groupDetail.teamUsers.filter(user => user.userDto.userId !== userId);
-        setgroupDetail(prevGroupDetail => ({
-          ...prevGroupDetail,
-          teamUsers: updatedTeamUsers
-        }));
+        alert('팀 멤버가 성공적으로 삭제되었습니다.')
       })
       .catch((err) => {
-        alert(err.response.data.message);
+        alert(err.response.data.message)
         console.log(userId)
       });
   }
