@@ -28,7 +28,7 @@ public class JwtProvider {
 
     public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, @Value("${jwt.secret}")String key) {
         this.redisTemplate = redisTemplate;
-        this.SECRET_KEY = new SecretKeySpec(key.getBytes(), SignatureAlgorithm.HS512.getJcaName());;
+        this.SECRET_KEY = new SecretKeySpec(key.getBytes(), SignatureAlgorithm.HS512.getJcaName());
     }
 
     public String createAccessToken(int id, List<String> role) {

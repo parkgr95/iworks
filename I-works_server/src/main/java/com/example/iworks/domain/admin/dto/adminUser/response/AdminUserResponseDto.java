@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 public class AdminUserResponseDto {
-    private int userId; // 유저 아이디
+    private final int userId; // 유저 아이디
     private final String departmentName; // 부서
     private final int departmentId;
     private final String userPosition; // 직급 코드 아이디
