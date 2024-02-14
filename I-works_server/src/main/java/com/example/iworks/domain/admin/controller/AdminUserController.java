@@ -27,20 +27,20 @@ public class AdminUserController {
     }
 
     // 유저 상세 조회
-    @GetMapping("/detail")
-    public ResponseEntity<?> getUser(@RequestHeader("Authorization") String token) {
-        return adminService.getUser(token);
+    @GetMapping("/detail/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable(name = "userId") int userId) {
+        return adminService.getUser(userId);
     }
 
     // 유저 정보 수정
-    @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String token, AdminUserUpdateRequestDto requestDto) {
-        return adminService.updateUser(token, requestDto);
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable(name = "userId") int userId, AdminUserUpdateRequestDto requestDto) {
+        return adminService.updateUser(userId, requestDto);
     }
 
     // 유저 삭제
-    @PutMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String token) {
-        return adminService.deleteUser(token);
+    @PutMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") int userId) {
+        return adminService.deleteUser(userId);
     }
 }
