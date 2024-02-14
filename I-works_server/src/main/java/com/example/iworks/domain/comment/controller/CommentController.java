@@ -46,7 +46,7 @@ public class CommentController {
     }
 
     //댓글 수정
-    @PutMapping("/update/{commentId}")
+    @PostMapping("/update/{commentId}")
     public ResponseEntity<?> updateComment(@PathVariable(name = "commentId") int commentId,
                                            @RequestHeader("Authorization") String authorizationToken,
                                            @RequestBody CommentUpdateRequestDto commentUpdateRequestDto) {
@@ -56,7 +56,7 @@ public class CommentController {
     }
 
     //댓글 삭제
-    @PutMapping("/delete/{commentId}")
+    @PostMapping("/delete/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable(name = "commentId") int commentId,
                                            @RequestHeader("Authorization") String authorizationToken) {
         int userId = findUserId(authorizationToken);
