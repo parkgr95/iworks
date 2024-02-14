@@ -17,13 +17,10 @@ import java.util.List;
 @Entity
 @Table(name = "schedule")
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-//@ToString
+@Builder @AllArgsConstructor @NoArgsConstructor
 public class Schedule {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
     private Integer scheduleId; // 할 일 아이디
 
@@ -91,9 +88,15 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
     private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할일 배정자
 
-    public void addScheduleAssigns(ScheduleAssign scheduleAssign){
+    public void addScheduleAssign(ScheduleAssign scheduleAssign){
         this.scheduleAssigns.add(scheduleAssign);
         scheduleAssign.setSchedule(this);
+    }
+    public void addScheduleAssignList(List<ScheduleAssign> scheduleAssignList){
+        this.scheduleAssigns.addAll(scheduleAssignList);
+        for (ScheduleAssign scheduleAssign : scheduleAssignList) {
+            scheduleAssign.setSchedule(this);
+        }
     }
 
     public void setMeeting(Meeting meeting){
