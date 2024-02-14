@@ -7,7 +7,12 @@ import java.util.Map;
 public interface CodeService {
 
     ResponseEntity<Map<String,Object>> getPositionCodeAll();
+
     ResponseEntity<Map<String,Object>> getCategoryCodeAll();
+
     ResponseEntity<Map<String,Object>> getStatusCodeAll();
+
     ResponseEntity<Map<String,Object>> getTargetCodeAll();
+
+    ResponseEntity<Map<String,Object>> getScheduleDivisionCodeAll();
 }
