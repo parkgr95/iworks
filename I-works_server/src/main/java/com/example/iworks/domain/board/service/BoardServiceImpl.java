@@ -6,18 +6,22 @@ import com.example.iworks.domain.board.dto.request.BoardCreateRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
 import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
+import com.example.iworks.domain.board.exception.BoardErrorCode;
+import com.example.iworks.domain.board.exception.BoardException;
 import com.example.iworks.domain.board.repository.BoardRepository;
 import com.example.iworks.domain.board.repository.BookmarkRepository;
+import com.example.iworks.domain.code.exception.CodeErrorCode;
+import com.example.iworks.domain.code.exception.CodeException;
 import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.domain.user.exception.UserErrorCode;
+import com.example.iworks.domain.user.exception.UserException;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.code.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -34,26 +38,27 @@ public class BoardServiceImpl implements BoardService{
     private final PageRequest pageRequest = PageRequest.of(0, 10);
 
     @Transactional
-    public void createBoard(BoardCreateRequestDto boardCreateRequestDto) {
-        boardRepository.save(
-                boardCreateRequestDto.toEntity(
-                        findCode(boardCreateRequestDto.getBoardCategoryCodeId())
-                )
-        );
+    public void createBoard(int userId, BoardCreateRequestDto boardCreateRequestDto) {
+        Code code = findCode(boardCreateRequestDto.getBoardCategoryCodeId());
+        boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
     }
 
     @Transactional
-    public void updateBoard(int boardId, BoardUpdateRequestDto boardUpdateRequestDto) {
-        Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글이 존재하지 않습니다."));
-        findBoard.update(boardUpdateRequestDto);
+    public void updateBoard(int boardId, int userId, BoardUpdateRequestDto boardUpdateRequestDto) {
+        Board board = findBoard(boardId);
+        if (board.getBoardCreatorId() != userId) {
+            throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
+        }
+        board.update(userId, boardUpdateRequestDto);
     }
 
     @Transactional
-    public void deleteBoard(int boardId) {
-        Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글이 존재하지 않습니다."));
-        findBoard.delete();
+    public void deleteBoard(int boardId, int userId) {
+        Board board = findBoard(boardId);
+        if (board.getBoardCreatorId() != userId) {
+            throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
+        }
+        board.delete();
     }
 
     @Override
@@ -64,17 +69,14 @@ public class BoardServiceImpl implements BoardService{
                 .map(BoardGetResponseDto::new)
                 .toList();
         if (findBoards.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글 목록이 존재하지 않습니다.");
+            throw new BoardException(BoardErrorCode.BOARD_NOT_EXIST);
         }
         return findBoards;
     }
 
     @Override
     public BoardGetResponseDto getBoard(int boardId) {
-        return boardRepository.findById(boardId)
-                .filter(board -> !Boolean.TRUE.equals(board.getBoardIsDeleted()))
-                .map(BoardGetResponseDto::new)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글이 존재하지 않습니다."));
+        return new BoardGetResponseDto(findBoard(boardId));
     }
 
     @Override
@@ -84,7 +86,7 @@ public class BoardServiceImpl implements BoardService{
                 .map(BoardGetResponseDto::new)
                 .toList();
         if (findBoards.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글 목록이 존재하지 않습니다.");
+            throw new BoardException(BoardErrorCode.BOARD_BY_CATEGORY_NOT_EXIST);
         }
         return findBoards;
     }
@@ -93,7 +95,7 @@ public class BoardServiceImpl implements BoardService{
     public BoardGetResponseDto getByCategory(int boardId, int boardCategoryCodeId, int boardOwnerId) {
         Board findBoard =  boardRepository.findByCategory(boardId, findCode(boardCategoryCodeId), boardOwnerId);
         if (findBoard == null) {
-            throw new IllegalStateException("해당 게시글이 존재하지 않습니다.");
+            throw new BoardException(BoardErrorCode.BOARD_BY_CATEGORY_NOT_EXIST);
         }
         return new BoardGetResponseDto(findBoard);
     }
@@ -105,7 +107,7 @@ public class BoardServiceImpl implements BoardService{
                 .map(BoardGetResponseDto::new)
                 .toList();
         if (findBoards.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글 목록이 존재하지 않습니다.");
+            throw new BoardException(BoardErrorCode.BOARD_BY_CREATOR_NOT_EXIST);
         }
         return findBoards;
     }
@@ -117,7 +119,7 @@ public class BoardServiceImpl implements BoardService{
                 .map(BoardGetResponseDto::new)
                 .toList();
         if (findBoards.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글 목록이 존재하지 않습니다.");
+            throw new BoardException(BoardErrorCode.BOARD_BY_KEYWORD_NOT_EXIST);
         }
         return findBoards;
     }
@@ -129,29 +131,20 @@ public class BoardServiceImpl implements BoardService{
                 .map(BoardGetResponseDto::new)
                 .toList();
         if (findBoards.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글 목록이 존재하지 않습니다.");
+            throw new BoardException(BoardErrorCode.BOARD_BY_KEYWORD_NOT_EXIST);
         }
         return findBoards;
     }
 
     @Transactional
     @Override
-    public Boolean updateBookmark(int boardId, String userEid) {
-        Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글이 존재하지 않습니다."));
+    public Boolean activateBookmark(int boardId, int userId) {
+        Board board = findBoard(boardId);
+        User user = findUser(userId);
 
-        User findUser = userRepository.findByUserEid(userEid);
-        if (findUser == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 유저가 존재하지 않습니다.");
-        }
-
-        Bookmark findBookmark = bookmarkRepository.findBookmarkByBoardAndUser(findBoard, findUser);
+        Bookmark findBookmark = bookmarkRepository.findBookmarkByBoardAndUser(board, user);
         if (findBookmark == null) {
-            Bookmark bookmark = Bookmark.builder()
-                    .board(findBoard)
-                    .user(findUser)
-                    .bookmarkIsActive(true)
-                    .build();
+            Bookmark bookmark = createBookmark(board, user);
             bookmarkRepository.save(bookmark);
             return true;
         }
@@ -162,20 +155,39 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public List<BoardGetResponseDto> getAllByBookmark(String userEid) {
-        List<BoardGetResponseDto> findBoards = boardRepository.findAllByBookmark(pageRequest, userEid)
+    public List<BoardGetResponseDto> getAllByBookmark(int userid) {
+        List<BoardGetResponseDto> findBoards = boardRepository.findAllByBookmark(pageRequest, userid)
                 .stream()
                 .map(BoardGetResponseDto::new)
                 .toList();
         if (findBoards.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 게시글 목록이 존재하지 않습니다.");
+            throw new BoardException(BoardErrorCode.BOARD_BY_BOOKMARK_NOT_EXIST);
         }
         return findBoards;
     }
 
+    private Board findBoard(int boardId) {
+        return boardRepository.findById(boardId)
+                .filter(board -> !Boolean.TRUE.equals(board.getBoardIsDeleted()))
+                .orElseThrow(() -> new BoardException(BoardErrorCode.BOARD_NOT_EXIST));
+    }
+
     private Code findCode(int boardCategoryCodeId) {
         return codeRepository.findById(boardCategoryCodeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 카테고리 값이 존재하지 않습니다."));
+                .orElseThrow(() -> new CodeException(CodeErrorCode.CODE_NOT_EXIST));
+    }
+
+    private User findUser(int userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_EXIST));
+    }
+
+    private static Bookmark createBookmark(Board board, User user) {
+        return Bookmark.builder()
+                .board(board)
+                .user(user)
+                .bookmarkIsActive(true)
+                .build();
     }
 
 }

@@ -59,8 +59,8 @@ public class Board {
     @Column(name = "board_is_deleted", columnDefinition = "boolean default false")
     private Boolean boardIsDeleted; //게시글 삭제 여부
 
-    public void update(BoardUpdateRequestDto requestBoard) {
-        this.boardModifierId = requestBoard.getBoardModifierId();
+    public void update(int userId, BoardUpdateRequestDto requestBoard) {
+        this.boardModifierId = userId;
         if (requestBoard.getBoardTitle() != null && !requestBoard.getBoardTitle().isEmpty()) {
             this.boardTitle = requestBoard.getBoardTitle();
         }
