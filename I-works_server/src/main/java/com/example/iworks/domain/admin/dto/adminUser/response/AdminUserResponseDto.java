@@ -11,6 +11,7 @@ import java.util.List;
 public class AdminUserResponseDto {
     private int userId; // 유저 아이디
     private final String departmentName; // 부서
+    private final int departmentId;
     private final String userPosition; // 직급 코드 아이디
     private final String userEid; // 사번
     private final String userNameFirst; // 유저 이름
@@ -28,6 +29,7 @@ public class AdminUserResponseDto {
 
     public AdminUserResponseDto(User user){
         this.userId = user.getUserId();
+        this.departmentId = user.getUserDepartment().getDepartmentId();
         this.departmentName = user.getUserDepartment().getDepartmentName();
         this.userPosition = user.getUserPositionCode().getCodeName();
         this.userEid = user.getUserEid();
