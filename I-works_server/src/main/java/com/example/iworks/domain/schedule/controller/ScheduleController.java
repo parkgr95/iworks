@@ -53,7 +53,7 @@ public class ScheduleController {
         return response.handleSuccess("할일 완료 여부 업데이트 성공");
     }
 
-    @GetMapping("/{scheduleId}/delete")
+    @PostMapping("/{scheduleId}/delete")
     public ResponseEntity<?> deleteSchedule(@PathVariable(name = "scheduleId") int scheduleId){
         scheduleService.deleteSchedule(scheduleId);
         return response.handleSuccess("할일 삭제 성공");
