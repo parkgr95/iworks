@@ -53,7 +53,8 @@ function GroupUpdate() {
     teamLeader: 0,
     teamUsers: [],
   })
-  const [teamMemberData, setteamMemberData] = useState<UserData[]>([]);
+  const [teamMemberData, setteamMemberData] = useState<UserData[]>([])
+
   let groupLeaderName = ""
   if (groupDetail.teamLeader) {
     const leader = groupDetail.teamUsers.find(user => user.userDto.userId == groupDetail.teamLeader);
@@ -148,7 +149,7 @@ function GroupUpdate() {
         }
       })
       .then((res) => {
-        navigate("../")
+        navigate("/address/group")
         console.log(res?.data); // null이나 다른 값에 대한 응답 확인
       })
       .catch((err) => {
@@ -177,9 +178,16 @@ function GroupUpdate() {
         const updatedTeamMembers = teamMemberData.filter(user => user.userId !== userId);
         setteamMemberData(updatedTeamMembers);
         alert('팀 멤버가 성공적으로 삭제되었습니다.');
+        // groupDetail 업데이트
+        const updatedTeamUsers = groupDetail.teamUsers.filter(user => user.userDto.userId !== userId);
+        setgroupDetail(prevGroupDetail => ({
+          ...prevGroupDetail,
+          teamUsers: updatedTeamUsers
+        }));
       })
       .catch((err) => {
         alert(err.response.data.message);
+        console.log(userId)
       });
   }
 
@@ -224,27 +232,10 @@ function GroupUpdate() {
   }
 
   useEffect(() => {
-    if (loginedUser) {
-      // 로그인한 사용자의 정보만 가진 객체를 생성
-      const user: UserData = {
-        userId: loginedUser.userId,
-        userEid: loginedUser.userEid,
-        userNameFirst: loginedUser.userNameFirst,
-        userNameLast: loginedUser.userNameLast,
-        departmentName: loginedUser.departmentName,
-        departmentId: '',
-        positionCodeName: null,
-        positionCodeId: null,
-        userTel: loginedUser.userTel,
-        userEmail: loginedUser.userEmail
-      };
-      // 로그인한 사용자 정보를 팀 멤버 데이터에 추가
-      setteamMemberData([user]);
-    }
     return () => {
       window.removeEventListener('message', handleMessage2);
     };
-  }, [loginedUser]);
+  }, []);
 
   return (
     <div>

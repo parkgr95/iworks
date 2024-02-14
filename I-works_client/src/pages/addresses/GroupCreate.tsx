@@ -14,8 +14,8 @@ interface UserData {
   userNameLast: string,
   departmentName: string,
   departmentId: string,
-  positionCodeName: null,
-  positionCodeId: null,
+  positionCodeName: string,
+  positionCodeId: string,
   userTel: string,
   userEmail: string
 }
@@ -130,8 +130,8 @@ function GroupCreate() {
         userNameLast: loginedUser.userNameLast,
         departmentName: loginedUser.departmentName,
         departmentId: '',
-        positionCodeName: null,
-        positionCodeId: null,
+        positionCodeName: '',
+        positionCodeId: '',
         userTel: loginedUser.userTel,
         userEmail: loginedUser.userEmail
       };
