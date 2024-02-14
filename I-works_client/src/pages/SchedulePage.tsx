@@ -1,5 +1,5 @@
 
-import { Form, useLocation } from 'react-router-dom'
+import { Form } from 'react-router-dom'
 import ScheduleSideBar from '../components/ScheduleSideBar'
 
 import { Button, TextInput } from 'flowbite-react'
