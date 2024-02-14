@@ -1,22 +1,24 @@
 package com.example.iworks.domain.schedule.service.schedule;
 
+import com.example.iworks.domain.code.entity.Code;
+import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
 import com.example.iworks.domain.notification.service.UserNotificationService;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
-import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
+import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.domain.code.entity.Code;
-import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.user.service.UserService;
 import com.example.iworks.global.enumtype.NotificationType;
+import com.example.iworks.global.util.OpenViduUtil;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,47 +35,58 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final UserRepository userRepository;
     private final UserNotificationService userNotificationService;
     private final UserService userService;
+    private final OpenViduUtil openViduUtil;
 
     @Transactional
     @Override
-    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
+    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
 
         // Prepare Relation Entity
         Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
-        Meeting meeting = createRequestDto.toMeetingEntity();
-
         User creator = userRepository.findByUserId(userId);
+
+        Meeting meeting = null;
+
+        if (createRequestDto.getIsCreateMeeting()){
+            String sessionId = openViduUtil.createSessionId();
+            meeting = createRequestDto.toMeetingEntity(sessionId);
+        }
 
         // Create Schedule
         Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
 
+        // Assign Users
         assignUsers(schedule, createRequestDto.getAssigneeInfos());
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
         // Create Assignees Notification
-//        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
+        createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
 
     }
 
-    private void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    protected void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
+        try {
+            System.out.println("ScheduleServiceImpl.createAssigneesNotification");
 
-        System.out.println("ScheduleServiceImpl.createAssigneesNotification");
+            //Find all user by assigneeInfos
+            List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
 
-        //Find all user by assigneeInfos
-        List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
-
-        System.out.println(" Find all userId by assigneeInfos -> " + userIds);
-        for ( int userId : userIds){
-            UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
-                    .scheduleId(savedSchedule.getScheduleId())
-                    .userId(userId)
-                    .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
-                    .notificationType(NotificationType.CREATE.toString())
-                    .build();
-            userNotificationService.create(notificationCreateRequestDto);
+            System.out.println(" Find all userId by assigneeInfos -> " + userIds);
+            for ( int userId : userIds) {
+                UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
+                        .scheduleId(savedSchedule.getScheduleId())
+                        .userId(userId)
+                        .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
+                        .notificationType(NotificationType.CREATE.toString())
+                        .build();
+                userNotificationService.create(notificationCreateRequestDto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

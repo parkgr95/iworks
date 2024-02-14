@@ -1,12 +1,14 @@
 package com.example.iworks.domain.comment.repository;
 
 
-import com.example.iworks.domain.comment.dto.response.CommentGetResponseDto;
-import org.springframework.data.domain.Page;
+import com.example.iworks.domain.comment.domain.Comment;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface CommentSearchRepository {
 
     //게시판 별 댓글 전체 조회
-    Page<CommentGetResponseDto> findAllByBoard(Pageable pageable, int boardId);
+    List<Comment> findAllByBoard(Pageable pageable, int boardId);
+
 }

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,9 +16,8 @@ public class AdminUserUpdateRequestDto {
     private String userNameFirst; // 유저 이름
     private String userNameLast; // 유저 성
     private String userEmail; // 이메일
-    private String userPassword; // 비밀번호
     private String userTel; // 전화번호
     private String userAddress; // 주소
     private String userGender; // 성별
-    private String userRole; // 권한
+    private ArrayList<String> userRole; // 권한
 }

@@ -14,11 +14,11 @@ public interface AdminUserService {
     ResponseEntity<Map<String, Object>> getUserAll();
 
     // 유저 상세 정보 조회
-    ResponseEntity<Map<String, Object>> getUser(String token);
+    ResponseEntity<Map<String, Object>> getUser(int userId);
 
     // 유저 정보 수정
-    ResponseEntity<Map<String, Object>> updateUser(String token, AdminUserUpdateRequestDto dto);
+    ResponseEntity<Map<String, Object>> updateUser(int userId, AdminUserUpdateRequestDto dto);
 
     // 유저 삭제
-    ResponseEntity<Map<String, Object>> deleteUser(String token);
+    ResponseEntity<Map<String, Object>> deleteUser(int userId);
 }

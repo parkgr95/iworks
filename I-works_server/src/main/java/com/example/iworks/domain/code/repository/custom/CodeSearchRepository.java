@@ -1,4 +1,4 @@
-package com.example.iworks.domain.code.repository;
+package com.example.iworks.domain.code.repository.custom;
 
 import com.example.iworks.domain.code.dto.CodeResponseDto;
 

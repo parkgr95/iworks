@@ -8,10 +8,9 @@ import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.domain.user.dto.UserGetMyPageResponseDto;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.util.JwtProvider;
-import com.example.iworks.global.util.RandomPasswordUtil;
+import com.example.iworks.global.util.RandomStringUtil;
 import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     private final DepartmentRepository departmentRepository;
     private final CodeRepository codeRepository;
     private final Response response;
-    private final RandomPasswordUtil randomPasswordUtil;
+    private final RandomStringUtil randomStringUtil;
     private final JwtProvider jwtProvider;
 
     @Transactional
@@ -66,7 +65,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         roleList.add(code.getCodeName());
 
         int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
-        String password = randomPasswordUtil.getRandomPassword(length);
+        String password = randomStringUtil.getRandomPassword(length);
         user.setRandomPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
         userRepository.save(user);
@@ -81,10 +80,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getUser(String token) {
-        int id = jwtProvider.getUserId(token);
-        System.out.println("token id : "+id);
-        User user= userRepository.findByUserId(id);
+    public ResponseEntity<Map<String, Object>> getUser(int userId) {
+        System.out.println("token id : "+userId);
+        User user= userRepository.findByUserId(userId);
         if(user.getUserEid() != null){
             AdminUserResponseDto dto = new AdminUserResponseDto(user);
             return response.handleSuccess(dto);
@@ -92,27 +90,27 @@ public class AdminUserServiceImpl implements AdminUserService {
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
+    @Transactional
     @Override
-    public ResponseEntity<Map<String, Object>> updateUser(String token, AdminUserUpdateRequestDto dto) {
-        int id = jwtProvider.getUserId(token);
-        User origin = userRepository.findByUserId(id);
+    public ResponseEntity<Map<String, Object>> updateUser(int userId, AdminUserUpdateRequestDto dto) {
+        User origin = userRepository.findByUserId(userId);
         System.out.println("origin: " + origin);
         if(origin != null){
-            origin.update(dto,bCryptPasswordEncoder);
-            return response.handleSuccess(new AdminUserResponseDto(origin));
+            origin.update(dto);
+            return response.handleSuccess("회원 정보 수정 완료");
         }
 
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
+    @Transactional
     @Override
-    public ResponseEntity<Map<String, Object>> deleteUser(String token) {
-        int id = jwtProvider.getUserId(token);
-        User user = userRepository.findByUserId(id);
+    public ResponseEntity<Map<String, Object>> deleteUser(int userId) {
+        User user = userRepository.findByUserId(userId);
 
         if(user != null){
             user.delete();
-            return response.handleSuccess(new AdminUserResponseDto(user));
+            return response.handleSuccess("회원 탈퇴 완료");
         }
 
         return response.handleFail("찾을 수 없는 사용자입니다.",null);

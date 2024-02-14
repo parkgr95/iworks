@@ -94,13 +94,14 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
     }
 
     @Override
-    public List<Board> findAllByBookmark(Pageable pageable, String userEid) {
+    public List<Board> findAllByBookmark(Pageable pageable, int userId) {
         return queryFactory
                 .selectFrom(board)
                 .innerJoin(bookmark)
                 .on(board.eq(bookmark.board))
                 .where(
-                        eqUserEid(userEid)
+                        eqUserId(userId)
+                                .and(eqActive())
                                 .and(eqDeleted())
                 )
                 .offset(pageable.getOffset())
@@ -136,12 +137,16 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
         return StringUtils.hasText(boardContent) ? new BooleanBuilder(board.boardContent.like("%" + boardContent + "%")) : new BooleanBuilder();
     }
 
-    private BooleanExpression eqUserEid(String userEid) {
-        return bookmark.user.userEid.eq(userEid);
+    private BooleanExpression eqUserId(int userId) {
+        return bookmark.user.userId.eq(userId);
     }
 
     private BooleanExpression eqDeleted() {
         return board.boardIsDeleted.isNull().or(board.boardIsDeleted.eq(Boolean.FALSE));
+    }
+
+    private BooleanExpression eqActive() {
+        return bookmark.bookmarkIsActive.eq(Boolean.TRUE);
     }
 
 }

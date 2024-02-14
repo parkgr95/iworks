@@ -14,6 +14,7 @@ import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,9 +30,12 @@ public class UserNotificationServiceImpl implements UserNotificationService {
     private final ScheduleRepository scheduleRepository;
     private final MeetingRepository meetingRepository;
 
-    @Transactional
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void create(UserNotificationCreateRequestDto createRequestDto) {
+
+//            throw new IllegalArgumentException("알림 생성 시 에러 발생");
+
         User receiver = userRepository.findById(createRequestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + createRequestDto.getUserId()));
 
@@ -50,7 +54,6 @@ public class UserNotificationServiceImpl implements UserNotificationService {
                     .orElseThrow(() -> new IllegalArgumentException("해당 회의가 없습니다. id=" + createRequestDto.getMeetingId()));
         }
         userNotificationRepository.save(createRequestDto.toEntity(receiver, board, schedule, meeting));
-
     }
 
     @Transactional

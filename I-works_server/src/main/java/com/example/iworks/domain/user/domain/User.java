@@ -176,15 +176,32 @@ public class User {
         this.userUpdatedAt = LocalDateTime.now();
     }
 
-    public void update(AdminUserUpdateRequestDto dto, BCryptPasswordEncoder encoder) {
-        if(dto.getUserAddress() != null){
-            this.userAddress = dto.getUserAddress();
+    public void update(AdminUserUpdateRequestDto dto) {
+
+        if(dto.getUserEid() != null){
+            this.userEid = dto.getUserEid();
+        }
+        if(dto.getUserNameFirst() != null){
+            this.userNameFirst = dto.getUserNameFirst();
+        }
+        if(dto.getUserNameLast() != null){
+            this.userNameLast = dto.getUserNameLast();
         }
         if(dto.getUserEmail() != null){
             this.userEmail = dto.getUserEmail();
         }
         if(dto.getUserTel() != null){
             this.userTel = dto.getUserTel();
+        }
+//        if(dto.getUserAddress() != null){
+//            this.userAddress = dto.getUserAddress();
+//        }
+        this.userAddress = dto.getUserAddress();
+        if(dto.getUserGender() != null){
+            this.userGender = dto.getUserGender();
+        }
+        if(dto.getUserRole() != null){
+            this.setRoleList(dto.getUserRole());
         }
         this.userUpdatedAt = LocalDateTime.now();
     }

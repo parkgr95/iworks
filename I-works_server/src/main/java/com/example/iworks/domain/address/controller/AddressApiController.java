@@ -3,6 +3,7 @@ package com.example.iworks.domain.address.controller;
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamUserRemoveRequestDto;
 import com.example.iworks.domain.address.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +64,8 @@ public class AddressApiController {
     }
 
     @DeleteMapping("/team/user/{teamId}")
-    public ResponseEntity<Map<String,Object>> removeTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody Map<String,Object> map){
-        return addressService.removeTeamUser(teamId,token,(int)map.get("targetId"));
+    public ResponseEntity<Map<String,Object>> removeTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserRemoveRequestDto requestDto){
+        return addressService.removeTeamUser(teamId,token,requestDto.getTargetId());
     }
 
 }
