@@ -1,6 +1,6 @@
 import axios from "axios"
 import { useState, useEffect, FormEvent } from "react"
-import PostType from "../../interface/BoardType"
+import PostType from "../../interface/ScheduleType"
 import dateUtils from "../../utils/dateUtils"
 import { Button } from "flowbite-react"
 import { useNavigate } from "react-router-dom"
@@ -23,6 +23,7 @@ function AdminSchedules() {
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
+    //axios.get(`https://suhyeon.site/api/admin/schedule/search?keyword=`)
     axios.get(`https://suhyeon.site/api/schedule/search?keyword=`)
       .then((res) => {
         setScheduleList(res.data.data)
@@ -45,22 +46,20 @@ function AdminSchedules() {
 
   const navigate = useNavigate()
   const moveToCreate = () => {
-    navigate(`/admin/boards/create`)
+    navigate(`/admin/schedule/create`)
   }
   const moveToUpdate = (boardId: string) => {
-    navigate(`/admin/boards/update/${boardId}`)
+    navigate(`/admin/schedules/update/${boardId}`)
   }
 
-  function deleteBoard(boardId:string, event: FormEvent) {
+  function deleteSchedule(shceduleId:string, event: FormEvent) {
     event.preventDefault()
-    const isConfirmed = window.confirm('게시물을 삭제하시겠습니까?');
+    const isConfirmed = window.confirm('해당 할 일을 삭제하시겠습니까?');
     if (!isConfirmed) {
       return; // 사용자가 취소한 경우 함수를 종료합니다.
     }
     axios
-      .put(`https://suhyeon.site/api/board/delete/${boardId}`, {
-        'boardIsDeleted': '1'
-      })
+      .post(`https://suhyeon.site/api/schedule/${shceduleId}/delete`)
       .then(() => {
         alert('삭제되었습니다.')
         window.location.reload()
@@ -120,7 +119,7 @@ function AdminSchedules() {
                 <td className="px-6 py-4">
                   <div className="flex">
                     <Button onClick={() => moveToUpdate(schedule.scheduleId)} className="bg-mainBlue">수정</Button>
-                    <Button onClick={(event) => deleteBoard(schedule.scheduleId, event)} className="bg-rose-700 ml-2">삭제</Button>
+                    <Button onClick={(event) => deleteSchedule(schedule.scheduleId, event)} className="bg-rose-700 ml-2">삭제</Button>
                   </div>
                 </td>
               </tr>

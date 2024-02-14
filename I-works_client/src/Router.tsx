@@ -21,6 +21,7 @@ import AdminSchedules from './pages/admins/AdminSchedules';
 import AdminUsersDetail from './pages/admins/AdminUsersDetail';
 import AdminBoardsUpdate from './pages/admins/AdminBoardsUpdate';
 import AdminBoardsCreate from './pages/admins/AdminBoardsCreate';
+import AdminSchedulesUpdate from './pages/admins/AdminSchedulesUpdate';
 
 const router = createBrowserRouter([
   {
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
           {
             path: 'schedules',
             element: <AdminSchedules />
+          },
+          {
+            path: 'schedules/update/:scheduleId',
+            element: <AdminSchedulesUpdate />
           },
         ]
       },
