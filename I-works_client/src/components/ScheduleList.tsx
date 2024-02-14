@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { API_URL } from '../utils/api'
 import ScheduleDetail from './ScheduleDetail'
 import axios from 'axios'
-import { Checkbox, Dropdown, Label, ToggleSwitch } from 'flowbite-react'
+import { Checkbox, Label, ToggleSwitch } from 'flowbite-react'
 import { ScheduleData } from '../utils/Schedule'
 
 export interface ScheduleDetailType {
