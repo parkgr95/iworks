@@ -23,7 +23,7 @@ function AdminBoards() {
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/board/`)
+    axios.get(`https://suhyeon.site/api/board`)
       .then((res) => {
         setBoardList(res.data.data)
       })

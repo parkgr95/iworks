@@ -33,7 +33,7 @@ function AdminBoardsCreate() {
     
     const plainTextContent = (boardContent || '').replace(/<[^>]+>/g, '');
     axios
-      .post("https://suhyeon.site/api/board/", {
+      .post("https://suhyeon.site/api/board", {
         "boardTitle": boardTitle,
         "boardContent": plainTextContent,
         "boardCreatorId": loginedUser.userId,
