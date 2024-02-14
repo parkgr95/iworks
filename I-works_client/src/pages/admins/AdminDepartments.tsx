@@ -2,6 +2,7 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import { Button } from "flowbite-react"
 import { useNavigate } from "react-router-dom"
+import AdminDepartmentsCreate from "./AdminDepartmentsCreate"
 
 interface DepartmentType {
   departmentCreatedAt: string
@@ -16,8 +17,32 @@ interface DepartmentType {
   departmentUpdatedAt: string
 }
 
+interface UserType {
+  userId: number
+  userEid: string
+  userNameFirst: string
+  userNameLast: string
+  departmentName: string
+  departmentId: string
+  positionCodeName: null
+  positionCodeId: null
+  userTel: string
+  userEmail: string
+}
+
 function AdminDepartments() {
   const [departmentList, setDepartmentList] = useState<DepartmentType[]>([])
+  const [users, setUsers] = useState<UserType[]>([])
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
 
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/admin/department/`)
@@ -28,6 +53,17 @@ function AdminDepartments() {
       .catch((err) => {
         console.log(err)
       })
+
+    async function getUsers() {
+      try {
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        setUsers(res.data.data)
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    getUsers()
   }, [])
 
   const navigate = useNavigate()
@@ -60,8 +96,14 @@ function AdminDepartments() {
   return (
     <>
       <div className="flex justify-between items-center text-2xl font-bold  mt-10">
-        <h1 className="text-2xl font-bold">게시판 관리</h1>
-        <Button className="bg-mainGreen" onClick={moveToCreate}>부서 생성</Button>
+        <h1 className="text-2xl font-bold">부서 관리</h1>
+        <Button onClick={openModal} className="bg-mainGreen text-white">
+          <span>부서 생성</span>
+        </Button>
+        <AdminDepartmentsCreate
+          show={modalIsOpen}
+          onClose={closeModal}
+        />
       </div>
       <div className="flex justify-between border-2 w- h-[32rem] mt-5">
         <div className="relative overflow-auto w-full">
@@ -86,7 +128,7 @@ function AdminDepartments() {
             </thead>
             <tbody>
               {departmentList.map((department) => {
-
+                const user: UserType | undefined = users.find((user) => user.userId == department.departmentLeaderId)
                 return (
                   <tr key={department.departmentId} className="cursor-pointer bg-white border-b hover:bg-gray-100">
                     <th scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap ">
@@ -98,16 +140,22 @@ function AdminDepartments() {
                       {department.departmentDesc}
                     </td>
                     <td className="px-6 py-4">
-                      {department.departmentLeaderId}
+                      {user ? user.userNameLast + user.userNameFirst : 'unKnown'}
                     </td>
                     <td className="px-6 py-4">
                       {department.departmentTelFirst + "-" + department.departmentTelMiddle + "-" + department.departmentTelLast}
                     </td>
                     <td className="px-6 py-4">
-                      {/* <div className="flex">
-                    <Button onClick={() => moveToUpdate(department.departmentLeaderId)} className="bg-mainBlue">수정</Button>
-                    <Button onClick={(event) => deleteBoard(department.departmentLeaderId, event)} className="bg-rose-700 ml-2">삭제</Button>
-                  </div> */}
+                      <div className="flex">
+                        <Button onClick={openModal} className="bg-mainBlue text-white">
+                          <span>수정</span>
+                        </Button>
+                        <AdminDepartmentsCreate
+                          show={modalIsOpen}
+                          onClose={closeModal}
+                        />
+                        {/* <Button onClick={(event) => deleteBoard(department.departmentLeaderId, event)} className="bg-rose-700 ml-2">삭제</Button> */}
+                      </div>
                     </td>
                   </tr>
                 )
