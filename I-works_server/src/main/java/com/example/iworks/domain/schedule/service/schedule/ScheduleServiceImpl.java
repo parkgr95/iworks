@@ -16,8 +16,6 @@ import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.user.service.UserService;
 import com.example.iworks.global.enumtype.NotificationType;
 import com.example.iworks.global.util.OpenViduUtil;
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +37,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
 
         // Prepare Relation Entity
         Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
