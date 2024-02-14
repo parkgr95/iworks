@@ -108,7 +108,7 @@ function GroupUpdate() {
   // 수정 요청
   function handleUpdate(event: FormEvent) {
     event.preventDefault()
-    const teamLeader = loginedUser?.userId
+    const teamLeader = groupDetail.teamLeader
 
     if (!loginedUser) {
       return navigate(`/login`)
@@ -176,11 +176,10 @@ function GroupUpdate() {
       .then(() => {
         const updatedTeamMembers = teamMemberData.filter(user => user.userId !== userId);
         setteamMemberData(updatedTeamMembers);
-        console.log('팀 멤버가 성공적으로 삭제되었습니다.');
+        alert('팀 멤버가 성공적으로 삭제되었습니다.');
       })
       .catch((err) => {
-        console.log(err);
-        console.log(userId)
+        alert(err.response.data.message);
       });
   }
 
