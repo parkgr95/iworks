@@ -99,18 +99,12 @@ function GroupUpdate() {
     }
     
     getGroupDetail()
-    console.log('오류')
   }, [groupId])
   
   const targetIdArray = teamMemberData.map(user => user.userId)
   const originIdArray = groupDetail.teamUsers.map(user => user.userDto.userId);
   const newMembersIds = targetIdArray.filter(id => !originIdArray.includes(id));
-  
-  console.log(groupDetail)
-  console.log(teamMemberData)
-  console.log(originIdArray)
-  console.log(targetIdArray)
-  console.log(newMembersIds)
+
   // 수정 요청
   function handleUpdate(event: FormEvent) {
     event.preventDefault()
@@ -283,8 +277,8 @@ function GroupUpdate() {
           )}
         </div>
         <div className="flex justify-end mt-4">
-          <Button onClick={() => { navigate(`/address/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
           <Button onClick={handleUpdate} className="bg-mainGreen" type="submit">수정</Button>
+          <Button onClick={() => { navigate(`/address/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
         </div>
       </Form>
     </div>
