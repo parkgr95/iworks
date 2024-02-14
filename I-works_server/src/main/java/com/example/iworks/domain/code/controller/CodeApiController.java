@@ -35,4 +35,9 @@ public class CodeApiController {
         return codeService.getPositionCodeAll();
     }
 
+    @GetMapping("/schedule-division")
+    public ResponseEntity<Map<String,Object>> getScheduleDivisionCodeAll(){
+        return codeService.getScheduleDivisionCodeAll();
+    }
+
 }
