@@ -11,13 +11,13 @@ import java.util.List;
 public interface BoardService {
 
     //게시글 등록
-    void createBoard(BoardCreateRequestDto boardCreateRequestDto);
+    void createBoard(int userId, BoardCreateRequestDto boardCreateRequestDto);
 
     //게시글 수정
-    void updateBoard(int boardId, BoardUpdateRequestDto boardUpdateRequestDto);
+    void updateBoard(int boardId, int userId, BoardUpdateRequestDto boardUpdateRequestDto);
 
     //게시글 삭제
-    void deleteBoard(int boardId);
+    void deleteBoard(int boardId, int userId);
 
     //게시글 전체 조회
     List<BoardGetResponseDto> getAll();
@@ -41,9 +41,9 @@ public interface BoardService {
     List<BoardGetResponseDto> getAllByKeywords(String keywords);
 
     //게시글 북마크 등록/삭제
-    Boolean updateBookmark(int boardId, String userEid);
+    Boolean activateBookmark(int boardId, int userId);
 
-    //북마크 된 게시글 전체 조회
-    List<BoardGetResponseDto> getAllByBookmark(String userEid);
+    //북마크 한 게시글 전체 조회
+    List<BoardGetResponseDto> getAllByBookmark(int userId);
 
 }
