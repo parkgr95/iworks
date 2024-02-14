@@ -17,13 +17,13 @@ public class Meeting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meeting_id", nullable = false)
+    @Column(name = "meeting_id")
     private int meetingId; // 회의방 아이디
 
     @OneToOne(mappedBy = "scheduleMeeting", fetch = FetchType.LAZY)
     private Schedule schedule; // 할 일 아이디(외래키)
 
-    @Column(name = "meeting_date")
+    @Column(name = "meeting_date", nullable = false)
     private LocalDateTime meetingDate; // 회의 일시
 
     @Column(name = "meeting_sessionId", length = 2000, nullable = false , unique = true)
