@@ -153,11 +153,11 @@ public class InitData {
 
             CodeGroup codeGroup4 = em.find(CodeGroup.class, 4);
 
-            test = Code.builder()
+            Code code_role_employee = Code.builder()
                     .codeName("ROLE_EMPLOYEE")
                     .codeGroup(codeGroup4)
                     .build();
-            em.persist(test);
+            em.persist(code_role_employee);
 
 
 
@@ -206,6 +206,7 @@ public class InitData {
                 String departmentName = "부서" + i;
                 Department department = Department.builder()
                         .departmentName(departmentName)
+                        .departmentLeaderId(1)
                         .build();
                 em.persist(department);
                 departmentList.add(department);
@@ -216,6 +217,7 @@ public class InitData {
                             .userPassword(makeRandomPassword())
                             .userEmail(userEmailSeq+++"")
                             .userNameFirst("유저"+userSeq)
+                            .userPositionCode(code_role_employee)
                             .userDepartment(department)
                             .build();
                     em.persist(user);
