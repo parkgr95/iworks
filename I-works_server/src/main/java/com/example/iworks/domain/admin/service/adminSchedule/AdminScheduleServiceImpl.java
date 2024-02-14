@@ -11,6 +11,7 @@ import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInf
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
+import com.example.iworks.global.util.OpenViduUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class AdminScheduleServiceImpl implements AdminScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
+    private final OpenViduUtil openViduUtil;
 
     @Transactional
     @Override
@@ -37,17 +39,22 @@ public class AdminScheduleServiceImpl implements AdminScheduleService {
         Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
 
-        Meeting meeting = createRequestDto.toMeetingEntity();
-
         User creator = userRepository.findByUserId(userId);
+
+        Meeting meeting = null;
+
+        if (createRequestDto.getIsCreateMeeting()){
+            String sessionId = openViduUtil.createSessionId();
+            meeting = createRequestDto.toMeetingEntity(sessionId);
+        }
 
         // Create Schedule
         Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
 
+        // Assign Users
         assignUsers(schedule, createRequestDto.getAssigneeInfos());
 
         Schedule savedSchedule = scheduleRepository.save(schedule);
-
     }
 
     private void assignUsers(Schedule schedule, List<AssigneeInfo> assigneeInfos){
