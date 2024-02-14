@@ -7,7 +7,7 @@ import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.global.util.RandomPasswordUtil;
+import com.example.iworks.global.util.RandomStringUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -29,7 +29,7 @@ import java.util.List;
 public class InitData {
 
     private final InitDataService initDataService;
-    private final static RandomPasswordUtil randomPasswordUtil  = new RandomPasswordUtil();
+    private final static RandomStringUtil RANDOM_STRING_UTIL = new RandomStringUtil();
 
     @PostConstruct
     public void init(){
@@ -39,7 +39,7 @@ public class InitData {
 
     private static String makeRandomPassword(){
         int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
-        return randomPasswordUtil.getRandomPassword(length);
+        return RANDOM_STRING_UTIL.getRandomPassword(length);
     }
     private static Long Eid = 1L; //락 걸기?
 

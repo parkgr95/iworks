@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ScheduleResponseDto {
 
+    private int scheduleId;
     private String scheduleDivisionName;
     private String scheduleTitle;
     private Character schedulePriority;
@@ -37,6 +38,7 @@ public class ScheduleResponseDto {
 
 
     public ScheduleResponseDto(Schedule schedule){
+        this.scheduleId = schedule.getScheduleId();
         this.scheduleDivisionName = schedule.getScheduleDivision().getCodeName();
         this.scheduleTitle = schedule.getScheduleTitle();
         this.schedulePriority = schedule.getSchedulePriority();
