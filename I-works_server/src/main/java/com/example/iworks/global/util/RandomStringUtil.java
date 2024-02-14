@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 import java.util.regex.Pattern;
 
 @Component
-public class RandomPasswordUtil {
+public class RandomStringUtil {
     private static final char[] rndAllCharacters = new char[]{
             //number
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -37,5 +37,24 @@ public class RandomPasswordUtil {
             return getRandomPassword(length);    //비밀번호 조건(패턴)에 맞지 않는 경우 메서드 재실행
         }
         return randomPassword;
+    }
+
+    public String getRandomId(int length) {
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int rndAllCharactersLength = rndAllCharacters.length;
+        for (int i = 0; i < length; i++) {
+            stringBuilder.append(rndAllCharacters[random.nextInt(rndAllCharactersLength)]);
+        }
+
+        String randomId = stringBuilder.toString();
+
+        // 최소 10자리에 대문자, 소문자, 숫자, 특수문자 각 1개 이상 포함
+        String pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{10,}";
+        if (!Pattern.matches(pattern, randomId)) {
+            return getRandomId(length);    //비밀번호 조건(패턴)에 맞지 않는 경우 메서드 재실행
+        }
+        return randomId;
     }
 }

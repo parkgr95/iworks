@@ -8,10 +8,9 @@ import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.domain.user.dto.UserGetMyPageResponseDto;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.util.JwtProvider;
-import com.example.iworks.global.util.RandomPasswordUtil;
+import com.example.iworks.global.util.RandomStringUtil;
 import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     private final DepartmentRepository departmentRepository;
     private final CodeRepository codeRepository;
     private final Response response;
-    private final RandomPasswordUtil randomPasswordUtil;
+    private final RandomStringUtil randomStringUtil;
     private final JwtProvider jwtProvider;
 
     @Transactional
@@ -66,7 +65,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         roleList.add(code.getCodeName());
 
         int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
-        String password = randomPasswordUtil.getRandomPassword(length);
+        String password = randomStringUtil.getRandomPassword(length);
         user.setRandomPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
         userRepository.save(user);

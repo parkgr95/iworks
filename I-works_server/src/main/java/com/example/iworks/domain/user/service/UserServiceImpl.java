@@ -11,9 +11,8 @@ import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.global.util.JwtProvider;
-import com.example.iworks.global.util.RandomPasswordUtil;
+import com.example.iworks.global.util.RandomStringUtil;
 import com.example.iworks.global.util.Response;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,7 +34,7 @@ public class UserServiceImpl implements UserService{
     private final DepartmentRepository departmentRepository;
     private final CodeRepository codeRepository;
     private final Response response;
-    private final RandomPasswordUtil randomPasswordUtil;
+    private final RandomStringUtil randomStringUtil;
     private final JwtProvider jwtProvider;
 
 
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService{
         roleList.add(code.getCodeName());
 
         int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
-        String password = randomPasswordUtil.getRandomPassword(length);
+        String password = randomStringUtil.getRandomPassword(length);
         user.setRandomPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
         userRepository.save(user);
