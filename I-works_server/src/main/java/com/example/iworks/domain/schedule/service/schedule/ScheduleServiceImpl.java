@@ -1,27 +1,32 @@
 package com.example.iworks.domain.schedule.service.schedule;
 
 import com.example.iworks.domain.code.entity.Code;
+import com.example.iworks.domain.code.exception.CodeErrorCode;
+import com.example.iworks.domain.code.exception.CodeException;
 import com.example.iworks.domain.code.repository.CodeRepository;
-import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
 import com.example.iworks.domain.notification.service.UserNotificationService;
 import com.example.iworks.domain.schedule.domain.Schedule;
+import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.domain.user.exception.UserException;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.user.service.UserService;
 import com.example.iworks.global.enumtype.NotificationType;
 import com.example.iworks.global.util.OpenViduUtil;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.iworks.domain.user.exception.UserErrorCode.USER_NOT_EXIST;
 
 @Service
 @RequiredArgsConstructor
@@ -39,61 +44,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
 
-        // Prepare Relation Entity
-        Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
-                .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
-
-        User creator = userRepository.findByUserId(userId);
-
-        Meeting meeting = null;
-
-        if (createRequestDto.getIsCreateMeeting()){
-            String sessionId = openViduUtil.createSessionId();
-            meeting = createRequestDto.toMeetingEntity(sessionId);
-        }
-
-        // Create Schedule
-        Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
-
-        // Assign Users
-        assignUsers(schedule, createRequestDto.getAssigneeInfos());
-
+        Code divisionCode = findCode(createRequestDto.getScheduleDivisionCodeId());
+        User creator = findUser(userId);
+        Schedule schedule = createRequestDto.toScheduleEntity(divisionCode, openViduUtil.createSessionId(), creator);
+        schedule.addScheduleAssignList(toScheduleAssignList(createRequestDto.getAssigneeInfos()));
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
-        // Create Assignees Notification
         createAssigneesNotification(createRequestDto.getAssigneeInfos(), savedSchedule);
-
-    }
-
-//    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
-        try {
-
-            //Find all user by assigneeInfos
-            List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
-
-            for ( int userId : userIds) {
-                UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
-                        .scheduleId(savedSchedule.getScheduleId())
-                        .userId(userId)
-                        .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
-                        .notificationType(NotificationType.CREATE.toString())
-                        .build();
-                userNotificationService.create(notificationCreateRequestDto);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void assignUsers(Schedule schedule, List<AssigneeInfo> assigneeInfos){
-        for (AssigneeInfo assigneeInfo : assigneeInfos) {
-
-            Code belongDivision = codeRepository.findById(assigneeInfo.getCategoryCodeId())
-                    .orElseThrow(() -> new EntityNotFoundException("Assignee Category not found"));
-
-            schedule.addScheduleAssigns(assigneeInfo.toScheduleAssignEntity(belongDivision));
-        }
     }
 
     @Override
@@ -116,7 +73,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         findSchedule.updateSchedule(findCode, scheduleUpdateRequestDto);
     }
 
-
     @Transactional
     @Override
     public void isFinishedSchedule(int scheduleId, boolean isFinish) {
@@ -130,7 +86,44 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void deleteSchedule(Integer scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
         schedule.delete();
-//        scheduleRepository.delete(schedule);
+    }
+
+    private List<ScheduleAssign> toScheduleAssignList(List<AssigneeInfo> assigneeInfos) {
+        List<ScheduleAssign> scheduleAssigns = new ArrayList<>();
+        for (AssigneeInfo assigneeInfo : assigneeInfos) {
+            scheduleAssigns.add(ScheduleAssign.builder()
+                    .scheduleAssigneeCategory(findCode(assigneeInfo.getCategoryCodeId()))
+                    .scheduleAssigneeId(assigneeInfo.getAssigneeId()).build());
+        }
+        return scheduleAssigns;
+    }
+    private void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
+
+        try {
+            List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
+
+            for ( int userId : userIds) {
+                UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
+                        .scheduleId(savedSchedule.getScheduleId())
+                        .userId(userId)
+                        .notificationContent("sample : 새로운 스케쥴이 생성되었습니다! ")
+                        .notificationType(NotificationType.CREATE.toString())
+                        .build();
+                userNotificationService.create(notificationCreateRequestDto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private User findUser(int userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(USER_NOT_EXIST));
+    }
+
+    private Code findCode(int codeId) {
+        return codeRepository.findById(codeId)
+                .orElseThrow(() -> new CodeException(CodeErrorCode.CODE_NOT_EXIST));
     }
 
 }

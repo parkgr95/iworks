@@ -44,8 +44,8 @@ public class ScheduleCreateRequestDto {
     @NotNull
     private List<AssigneeInfo> assigneeInfos; // 담당자 카테고리 아이디, 담당자 아이디
 
-    public Schedule toScheduleEntity(Code division, Meeting meeting, User creator){
-        return Schedule.builder()
+    public Schedule toScheduleEntity(Code division, String sessionId, User creator){
+        Schedule schedule = Schedule.builder()
                 .scheduleDivision(division)
                 .scheduleTitle(this.scheduleTitle)
                 .schedulePriority(this.schedulePriority)
@@ -53,16 +53,14 @@ public class ScheduleCreateRequestDto {
                 .scheduleStartDate(this.scheduleStartDate)
                 .scheduleEndDate(this.scheduleEndDate)
                 .schedulePlace(this.schedulePlace)
-                .scheduleMeeting(meeting)
                 .scheduleCreator(creator)
                 .build();
-    }
-
-    public Meeting toMeetingEntity(String sessionId){
-        return Meeting.builder()
-                .meetingSessionId(sessionId)
-                .meetingDate(this.meetingDate)
-                .build();
+        if (sessionId != null) {
+            schedule.setMeeting(Meeting.builder()
+                    .meetingSessionId(sessionId)
+                    .meetingDate(this.meetingDate).build());
+        }
+        return schedule;
     }
 
 }
