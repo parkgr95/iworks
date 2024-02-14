@@ -241,7 +241,7 @@ public class InitData {
                             .scheduleAssigneeCategory(codeDepartment)
                             .scheduleAssigneeId(department1.getDepartmentId())
                             .build();
-            scheduleByDepartment.addScheduleAssigns(scheduleAssignDept);
+            scheduleByDepartment.addScheduleAssign(scheduleAssignDept);
 
 
             //팀 데이터
@@ -273,7 +273,7 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(user.getUserId())
                                     .build();
-                    schedule.addScheduleAssigns(scheduleAssign);
+                    schedule.addScheduleAssign(scheduleAssign);
                 }
                 //모든 부서를 할일에 배정
                 for (Department department : departmentList){
@@ -283,7 +283,7 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(department.getDepartmentId())
                                     .build();
-                    schedule.addScheduleAssigns(scheduleAssign);
+                    schedule.addScheduleAssign(scheduleAssign);
 
                 }
             }

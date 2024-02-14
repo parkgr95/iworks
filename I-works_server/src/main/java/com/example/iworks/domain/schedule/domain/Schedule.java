@@ -5,10 +5,7 @@ import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +15,7 @@ import java.util.List;
 @Table(name = "schedule")
 @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
+@EqualsAndHashCode @ToString
 public class Schedule {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
