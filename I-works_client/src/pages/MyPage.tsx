@@ -92,7 +92,7 @@ function MyPage() {
         </div>
         <div className="grid grid-cols-2">
           <div className="text-center">직급</div>
-          <div>{userDetail.userPosition.slice(5)}</div>
+          <div>{userDetail.userPosition}</div>
         </div>
         <div className="grid grid-cols-2">
           <div className="text-center">성별</div>
