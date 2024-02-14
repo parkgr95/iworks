@@ -1,22 +1,15 @@
 package com.example.iworks.domain.schedule.controller;
 
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ScheduleAssignSearchParameter;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
-import com.example.iworks.domain.schedule.dto.scheduleAssign.request.ValidList;
 import com.example.iworks.domain.schedule.service.scheduleAssign.ScheduleAssignService;
 import com.example.iworks.global.dto.DateCondition;
 import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @Slf4j
 @RestController
