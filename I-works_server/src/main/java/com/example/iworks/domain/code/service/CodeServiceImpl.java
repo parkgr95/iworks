@@ -1,6 +1,6 @@
 package com.example.iworks.domain.code.service;
 
-import com.example.iworks.domain.code.repository.CodeSearchRepository;
+import com.example.iworks.domain.code.repository.custom.CodeSearchRepository;
 import com.example.iworks.global.common.CodeGroupDef;
 import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +34,10 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public ResponseEntity<Map<String, Object>> getTargetCodeAll() {
         return response.handleSuccess(codeSearchRepository.getCodeGroupAll(CodeGroupDef.CODE_GROUP_TARGET));
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> getScheduleDivisionCodeAll() {
+        return response.handleSuccess(codeSearchRepository.getCodeGroupAll(CodeGroupDef.CODE_GROUP_SCHEDULE_DIVISION));
     }
 }
