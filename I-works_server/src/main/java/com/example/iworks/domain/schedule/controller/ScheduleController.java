@@ -7,8 +7,10 @@ import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,7 +28,7 @@ public class ScheduleController {
 //    public String createSchedule(@RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
     /** 할일 생성 */
     @PostMapping
-    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @Validated @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         int userId = jwtProvider.getUserId(authorizationToken);
         scheduleService.createSchedule(userId, scheduleCreateRequestDto);
         return response.handleSuccess("할일 등록 성공");
@@ -62,6 +64,5 @@ public class ScheduleController {
         scheduleService.deleteSchedule(scheduleId);
         return response.handleSuccess("할일 삭제 성공");
     }
-
 
 }
