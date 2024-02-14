@@ -20,13 +20,17 @@ public class UserNotificationController {
     private final Response response;
     private final JwtProvider jwtProvider;
 
+    /**
+     * @deprecated 컨트롤러에서 알림 생성 로직을 처리하지 않는다.
+     */
+    @Deprecated
     @PostMapping
     public ResponseEntity<Map<String, Object>> createNotification(@RequestBody UserNotificationCreateRequestDto userNotificationCreateRequestDto) {
         userNotificationService.create(userNotificationCreateRequestDto);
         return response.handleSuccess("알림 생성 완료");
     }
 
-    @GetMapping("/{userNotificationId}/delete")
+    @PostMapping("/{userNotificationId}/delete")
     public ResponseEntity<Map<String, Object>> deleteNotification(@PathVariable("userNotificationId") int notificationId) {
         userNotificationService.delete(notificationId);
         return response.handleSuccess("알림 삭제 완료");

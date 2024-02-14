@@ -70,12 +70,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 //    @Transactional(propagation = Propagation.REQUIRES_NEW)
     protected void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
         try {
-            System.out.println("ScheduleServiceImpl.createAssigneesNotification");
 
             //Find all user by assigneeInfos
             List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
 
-            System.out.println(" Find all userId by assigneeInfos -> " + userIds);
             for ( int userId : userIds) {
                 UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
                         .scheduleId(savedSchedule.getScheduleId())
