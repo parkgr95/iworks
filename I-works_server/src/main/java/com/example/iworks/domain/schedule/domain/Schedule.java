@@ -119,4 +119,8 @@ public class Schedule {
         if (scheduleMeeting != null) this.scheduleMeeting.updateMeeting(scheduleUpdateRequestDto.getMeetingDate(), scheduleUpdateRequestDto.getMeetingCode());
     }
 
+    public void delete(){
+        this.scheduleIsDeleted = true;
+    }
+
 }
