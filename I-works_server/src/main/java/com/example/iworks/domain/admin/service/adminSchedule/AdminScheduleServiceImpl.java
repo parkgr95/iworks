@@ -27,65 +27,6 @@ import static java.util.stream.Collectors.toList;
 public class AdminScheduleServiceImpl implements AdminScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final CodeRepository codeRepository;
-    private final UserRepository userRepository;
-    private final OpenViduUtil openViduUtil;
-
-    @Transactional
-    @Override
-    public void createSchedule(int userId, ScheduleCreateRequestDto createRequestDto) {
-
-        // Prepare Relation Entity
-        Code division = codeRepository.findById(createRequestDto.getScheduleDivisionCodeId())
-                .orElseThrow(() -> new EntityNotFoundException("Schedule Division Code not found"));
-
-        User creator = userRepository.findByUserId(userId);
-
-        Meeting meeting = null;
-
-        if (createRequestDto.getIsCreateMeeting()){
-            String sessionId = openViduUtil.createSessionId();
-            meeting = createRequestDto.toMeetingEntity(sessionId);
-        }
-
-        // Create Schedule
-        Schedule schedule = createRequestDto.toScheduleEntity(division, meeting, creator);
-
-        // Assign Users
-        assignUsers(schedule, createRequestDto.getAssigneeInfos());
-
-        Schedule savedSchedule = scheduleRepository.save(schedule);
-    }
-
-    private void assignUsers(Schedule schedule, List<AssigneeInfo> assigneeInfos){
-        for (AssigneeInfo assigneeInfo : assigneeInfos) {
-
-            Code belongDivision = codeRepository.findById(assigneeInfo.getCategoryCodeId())
-                    .orElseThrow(() -> new EntityNotFoundException("Assignee Category not found"));
-
-            schedule.addScheduleAssigns(assigneeInfo.toScheduleAssignEntity(belongDivision));
-        }
-    }
-
-    @Override
-    public ScheduleResponseDto getSchedule(Integer scheduleId) {
-        Schedule foundSchedule = scheduleRepository.getReferenceById(scheduleId);
-        return new ScheduleResponseDto(foundSchedule);
-    }
-
-    @Override
-    public List<ScheduleResponseDto> searchByKeyword(String keyword) {
-        return scheduleRepository.findByKeyword(keyword);
-    }
-
-    @Transactional
-    @Override
-    public void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
-        int divisionCodeId = scheduleUpdateRequestDto.getScheduleDivisionCodeId();
-        Code findCode = codeRepository.findById(divisionCodeId).orElseThrow(IllegalArgumentException::new);
-        Schedule findSchedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
-        findSchedule.updateSchedule(findCode, scheduleUpdateRequestDto);
-    }
 
     @Override
     public List<ScheduleResponseDto> getScheduleAll() {
@@ -94,12 +35,4 @@ public class AdminScheduleServiceImpl implements AdminScheduleService {
                 .map(ScheduleResponseDto::new)
                 .collect(toList());
     }
-
-    @Transactional
-    @Override
-    public void deleteSchedule(Integer scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
-        scheduleRepository.delete(schedule);
-    }
-
 }

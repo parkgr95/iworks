@@ -9,15 +9,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface AdminScheduleService {
-    void createSchedule(int userId, ScheduleCreateRequestDto scheduleDto);
-
-    void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto);
-
     List<ScheduleResponseDto> getScheduleAll();
-
-    ScheduleResponseDto getSchedule(Integer scheduleId);
-
-    List<ScheduleResponseDto> searchByKeyword(String keyword);
-
-    void deleteSchedule(Integer scheduleId);
 }
