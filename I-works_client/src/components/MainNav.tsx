@@ -1,6 +1,18 @@
 import { Link, Form } from "react-router-dom"
+import { getDecoded } from "../utils/auth";
+
 
 function MainNav() {
+  let decoded = getDecoded();
+  let isAdmin = false;
+  if(decoded != null){
+    for(let role of decoded.role){
+      if(role == 'ROLE_ADMIN'){
+        isAdmin = true;
+      }
+    }
+  }
+
   
   return (
     <nav className="max-full flex justify-between p-4 bg-mainBlue h-14">
@@ -20,6 +32,11 @@ function MainNav() {
         <li>
           <Link to="/schedule" className="block py-2 px-4">캘린더</Link>
         </li>
+        {isAdmin && (
+          <li>
+          <Link to="/admin" className="block py-2 px-4">관리자</Link>
+        </li>
+        )}
         <li>
           <Link to="/user/mypage" className="block py-2 px-4">마이페이지</Link>
         </li>
