@@ -2,18 +2,23 @@ import { Button, ListGroup } from 'flowbite-react'
 import ScheduleCreate, { ScheduleCreateRef } from './ScheduleCreate'
 import { useRef } from 'react'
 import { RiBuilding4Line, RiUser3Line, RiGroupLine, RiListCheck } from "react-icons/ri";
-// import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-function ScheduleSideBar() {
+
+
+const listStyle = "flex p-3 pl-6 gap-2"
+
+function ScheduleSideBar(props:any) {
+
+  const handleMode = props.handleMode
+  const currentMode = props.currentMode
+
   const dialog = useRef<ScheduleCreateRef>(null)
 
   function handleModal() {
     dialog.current?.open()
   }
 
-  // 파라미터 가져오기
-  // const param = new URLSearchParams(useLocation().search)
-  // const mode = param.get('mode')
 
   return (
     <div className="flex h-full flex-col items-center border-r-2 m-0 px-3 position-absolute w-56 flex-shrink-0">
@@ -23,21 +28,21 @@ function ScheduleSideBar() {
           할 일 생성
         </Button>
       </div>
-      <div className="w-full my-2 pb-2">
-        <ListGroup className='' >
-          <ListGroup.Item href="/schedule?mode=all" icon={RiListCheck}>
-            전체 할 일
-          </ListGroup.Item>
-          <ListGroup.Item href="/schedule?mode=user" icon={RiUser3Line}>
-            내 할 일
-          </ListGroup.Item>
-          <ListGroup.Item href="/schedule?mode=department" icon={RiBuilding4Line}>
-            부서 할 일
-          </ListGroup.Item>
-          <ListGroup.Item href="/schedule?mode=team" icon={RiGroupLine}>            
-            팀 할 일
-          </ListGroup.Item>
-        </ListGroup>
+      <div className="w-full my-2 p-2">
+        <ul className='rounded-lg overflow-hidden border border-black' >
+          <li onClick={()=>handleMode('all')} className={listStyle + ' ' + (currentMode === "all" ?'text-white bg-mainGreen' : "border-b border-black")}>
+            <RiListCheck className='self-center'/>전체 할 일
+          </li>
+          <li onClick={()=>handleMode('user')} className={listStyle + ' ' + (currentMode === "user" ?'text-white bg-mainGreen' : "border-b border-black")}>
+            <RiUser3Line className='self-center' />내 할 일
+          </li>
+          <li onClick={()=>handleMode('department')} className={listStyle + ' ' + (currentMode === "department" ?'text-white bg-mainGreen' :"border-b border-black")}>
+            <RiBuilding4Line className='self-center'/>부서 할 일
+          </li>
+          <li onClick={()=>handleMode('team')} className={listStyle + ' ' + (currentMode === "team" ?'text-white bg-mainGreen' : "")}>            
+            <RiGroupLine className='self-center' />팀 할 일
+          </li>
+        </ul>
       </div>
     </div>
   )
