@@ -1,5 +1,7 @@
 package com.example.iworks.domain.user.service;
 
+import com.example.iworks.domain.code.entity.Code;
+import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
@@ -8,8 +10,6 @@ import com.example.iworks.domain.user.dto.UserGetMyPageResponseDto;
 import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.domain.code.entity.Code;
-import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.global.util.JwtProvider;
 import com.example.iworks.global.util.RandomStringUtil;
 import com.example.iworks.global.util.Response;
@@ -23,7 +23,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.iworks.global.common.CodeDef.*;
-import static com.example.iworks.global.common.CodeDef.TARGET_TEAM_CODE_ID;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -36,7 +35,6 @@ public class UserServiceImpl implements UserService{
     private final Response response;
     private final RandomStringUtil randomStringUtil;
     private final JwtProvider jwtProvider;
-
 
     @Transactional
     @Override
@@ -65,8 +63,19 @@ public class UserServiceImpl implements UserService{
         user.setDepartment(department);
         user.setPositionCode(code);
         ArrayList<String> roleList = new ArrayList<>();
-
-        roleList.add(code.getCodeName());
+        String role =null;
+        if(code.getCodeId() == POSITION_EMPLOYEE_CODE_ID){
+            role = "ROLE_EMPLOYEE";
+        }else if(code.getCodeId() == POSITION_LEADER_CODE_ID){
+            role = "ROLE_LEADER";
+        }else if(code.getCodeId() == POSITION_CEO_CODE_ID){
+            role = "ROLE_CEO";
+        }else if(code.getCodeId() == POSITION_ADMIN_CODE_ID){
+            role = "ROLE_ADMIN";
+        }else{
+            return response.handleFail("잘못된 직책 입력",null);
+        }
+        roleList.add(role);
 
         int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
         String password = randomStringUtil.getRandomPassword(length);
