@@ -14,11 +14,9 @@ public class OpenViduUtil {
 
     public String createSessionId(){
         String sessionId = null;
-        //DB에서 동일한 세션 ID가 있는지 확인.
         do{
-            randomStringUtil.getRandomId(10);
-        }while (isUnique(sessionId));
-        // 없으면 리턴
+            sessionId = randomStringUtil.getRandomId(10);
+        }while (!isUnique(sessionId));
         return sessionId;
     }
 
