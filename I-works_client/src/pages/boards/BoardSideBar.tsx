@@ -5,6 +5,7 @@ import axios from "axios"
 import { PiCaretDownThin } from "react-icons/pi";
 import { FaStar } from "react-icons/fa";
 import { useUser } from "../../utils/userInfo";
+import { getAccessToken } from "../../utils/auth";
 
 interface orginizationType {
   departmentName?: string,
@@ -44,15 +45,25 @@ function BoardSideBar() {
   // 부서, 팀 받아오기
   const [departmentList, setDepartmentList] = useState<orginizationType[]>([])
   const [teamList, setTeamList] = useState<orginizationType[]>([])
+  const [teamMy, setTeamMy] = useState<string[]>([])
 
   useEffect(() => {
     axios.all([
       axios.get('https://suhyeon.site/api/address/department/all'),
       axios.get('https://suhyeon.site/api/address/team/all'),
+      axios.get(`https://suhyeon.site/api/address/team/my`, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      }),
     ])
-      .then(axios.spread((departmentRes, teamRes) => {
+      .then(axios.spread((departmentRes, teamRes, teamMyRes) => {
         setDepartmentList(departmentRes.data.data);
         setTeamList(teamRes.data.data);
+        setTeamMy(teamMyRes.data.data)
+        const teamIds = teamMyRes.data.data.map((team: orginizationType) => team.teamId);
+        setTeamMy(teamIds);
+
       }))
       .catch((err) => {
         console.error(err)
@@ -70,15 +81,15 @@ function BoardSideBar() {
         <div className="flex justify-center items-center w-full h-16 border-b-2 ">
           <ul className="flex justify-center">
             <li className="px-4">
-                <Link className="text-xs flex flex-col items-center" to="/board/new">
+              <Link className="text-xs flex flex-col items-center" to="/board/new">
                 <span className="font-bold text-lg">NEW</span>
                 <span>최신글</span>
-                </Link>
+              </Link>
             </li>
             <li className="px-4">
-              <Link className="text-xs flex flex-col" to={`/board/bookmark/${loginedUser?.userEid}`}>
-              <FaStar size={24} />
-              <span className="mt-1">중요</span>
+              <Link className="text-xs flex flex-col" to={`/board/bookmark`}>
+                <FaStar size={24} />
+                <span className="mt-1">중요</span>
               </Link>
             </li>
             <li className="px-4">
@@ -125,11 +136,13 @@ function BoardSideBar() {
                 </div>
               </button>
               <ul id="dropdownTeam" className={`${teamOpen ? '' : 'hidden'} space-y-2`}>
-                {teamList.map((team) => (
-                  <li key={team.teamId}>
-                    <Link to={`/board/4/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">{team.teamName}게시판</Link>
-                  </li>
-                ))}
+                {teamList
+                  .filter(team => team.teamId && teamMy.includes(team.teamId))
+                  .map((team) => (
+                    <li key={team.teamId}>
+                      <Link to={`/board/4/${team.teamId}`} className="flex items-center w-full text-mainBlack pl-16 pt-2 text-sm">{team.teamName}게시판</Link>
+                    </li>
+                  ))}
               </ul>
             </li>
           </ul>

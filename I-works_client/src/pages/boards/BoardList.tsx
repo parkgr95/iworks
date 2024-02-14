@@ -18,10 +18,10 @@ interface UserType {
 }
 
 function BoardList() {
-  const { boardCategoryCodeId='', boardOwnerId='' } = useParams<{boardCategoryCodeId: string, boardOwnerId: string}>()
+  const { boardCategoryCodeId = '', boardOwnerId = '' } = useParams<{ boardCategoryCodeId: string, boardOwnerId: string }>()
   const [boardList, setBoardList] = useState<PostType[]>([])
   const [users, setUsers] = useState<UserType[]>([])
-  
+
   useEffect(() => {
     async function getBoardList(boardCategoryCodeId: string, boardOwnerId: string) {
       try {
@@ -30,7 +30,8 @@ function BoardList() {
         setBoardList(boardListData)
       }
       catch (err) {
-        console.log(err)
+        alert("게시글이 존재하지 않습니다.")
+        return
       }
     }
 
@@ -51,21 +52,22 @@ function BoardList() {
     <div className="">
       {boardList.map((article) => {
         const user: UserType | undefined = users.find((user) => user.userId == article.boardCreatorId)
-        
+
         return (
-        <div className="border-b-2 pb-2 mb-2" key={article.boardId}>
-          <div className="mb-2 text-md font-semibold">
-            <Link to={`/board/${article.boardId}`}>{article.boardTitle}</Link>
+          <div className="border-b-2 pb-2 mb-2" key={article.boardId}>
+            <div className="mb-2 text-md font-semibold">
+              <Link to={`/board/${article.boardId}`}>{article.boardTitle}</Link>
+            </div>
+            <div className="text-sm mb-2">
+              <p>{article.boardContent}</p>
+            </div>
+            <div className="flex justify-between text-xs w- ml-1">
+              <span>{user ? user.userNameLast + user.userNameFirst : 'unKnown'}</span>
+              <span>{dateUtils.formatDate(article.boardCreatedAt)}</span>
+            </div>
           </div>
-          <div className="text-sm mb-2">
-            <p>{article.boardContent}</p>
-          </div>
-          <div className="flex justify-between text-xs w- ml-1">
-            <span>{user ? user.userNameLast + user.userNameFirst : 'unKnown'}</span>
-            <span>{dateUtils.formatDate(article.boardCreatedAt)}</span>
-          </div>
-        </div>
-        )})}
+        )
+      })}
     </div>
   )
 }

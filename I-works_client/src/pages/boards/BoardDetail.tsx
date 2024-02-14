@@ -1,14 +1,14 @@
 import axios from "axios"
 import { FormEvent, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-// import CommentCreate from "./BoardCommnetCreate"
 import dateUtils from "../../utils/dateUtils"
 import { Button } from "flowbite-react"
 import PostType from "../../interface/BoardType"
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
-import { useUser } from "../../utils/userInfo"
 import BoardComment from "./BoardCommnet"
+import { getAccessToken } from "../../utils/auth"
+import { useUser } from "../../utils/userInfo"
 
 interface UserType {
   userId: string
@@ -52,74 +52,87 @@ function BoardDetail() {
       try {
         const res = await axios.get(`https://suhyeon.site/api/board/${boardId}`)
         const boardDetailData = res.data.data
-  
+
         setBoardDetail(boardDetailData)
         getUsers(boardDetailData)
       } catch (err) {
         console.log(err)
       }
     }
-  
+
     // 유저 목록 받아오기
     async function getUsers(boardDetail: PostType) {
       try {
         const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
         const users = res.data.data
         const filteredUser = users.find((user: UserType) => user.userId == boardDetail.boardCreatorId)
-  
+
         setUserName(filteredUser)
       } catch (err) {
         console.log(err);
       }
     }
-  
+
     // 북마크 목록 받아오기
-    async function getBookmarks(userEid: string | undefined) {
+    async function getBookmarks() {
       try {
-        if (userEid) {
-          const res = await axios.get(`https://suhyeon.site/api/board/byBookmark?userEid=${userEid}`)
-          const isStarred = res.data.data.some((post: PostType) => post.boardId == boardId);
-          if (isStarred) {
-            setIsStarred(true);
+        const res = await axios.get(`https://suhyeon.site/api/board/byBookmark`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
           }
+        })
+        const isStarred = res.data.data.some((post: PostType) => post.boardId == boardId);
+        if (isStarred) {
+          setIsStarred(true);
         }
-      } catch (err) {
+      }
+      catch (err) {
         console.log(err);
       }
     }
-    
+
     if (boardId) {
       getBoardDetail(boardId);
-      getBookmarks(loginedUser?.userEid);
+      getBookmarks();
     }
-  }, [boardId, loginedUser?.userEid]);
+  }, [boardId]);
 
   const moveToUpdate = () => {
     navigate('/board/update/' + boardId)
   }
 
   function deleteBoard(event: FormEvent) {
-    event.preventDefault()
-
-    axios
-      .put(`https://suhyeon.site/api/board/delete/${boardId}`, {
-        'boardIsDeleted': '1'
-      })
-      .then(() => {
-        alert('삭제되었습니다.')
-        navigate('/board/')
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    event.preventDefault();
+  
+    const isConfirmed = window.confirm('정말로 삭제하시겠습니까?');
+    if (isConfirmed) {
+      axios
+        .post(`https://suhyeon.site/api/board/delete/${boardId}`, {
+          'boardIsDeleted': '1'
+        }, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
+        .then(() => {
+          alert('삭제되었습니다.');
+          navigate('/board/');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   // // 북마크 기능
   const toggleStar = () => {
     setIsStarred(prevState => !prevState);
-
     axios
-      .post(`https://suhyeon.site/api/board/bookmark/${boardId}?userEid=${loginedUser?.userEid}`)
+      .post(`https://suhyeon.site/api/board/bookmark/${boardId}`, null, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      })
       .then((res) => {
         console.log(res.data)
       })
@@ -127,6 +140,8 @@ function BoardDetail() {
         console.log(err)
       })
   }
+
+  const showEditButtons = loginedUser?.userId === boardDetail.boardCreatorId;
 
   return (
     <div className="flex flex-col">
@@ -148,10 +163,13 @@ function BoardDetail() {
       </div>
       <div>
         <p>{boardDetail.boardContent}</p>
-        <div className="flex justify-end my-6">
+        {showEditButtons && (
+        <div className="flex justify-end mt-6">
           <Button className="" onClick={moveToUpdate}>수정</Button>
           <Button className="ml-4" onClick={deleteBoard}>삭제</Button>
         </div>
+      )}
+      <div className="mb-6"></div>
       </div>
       <div>
         <BoardComment boardId={boardId} />

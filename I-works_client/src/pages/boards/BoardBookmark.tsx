@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import PostType from "../../interface/BoardType"
 import { Link, useParams } from "react-router-dom"
 import dateUtils from "../../utils/dateUtils"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserType {
   userId: string
@@ -23,8 +24,11 @@ function BoardBookmark() {
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/board/byBookmark?userEid=${userEid}
-    `)
+    axios.get(`https://suhyeon.site/api/board/byBookmark`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      }
+    })
       .then((res) => {
         setBoardList(res.data.data)
       })

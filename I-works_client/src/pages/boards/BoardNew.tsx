@@ -22,7 +22,7 @@ function BoardNew() {
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/board/`)
+    axios.get(`https://suhyeon.site/api/board`)
       .then((res) => {
         const allPosts: PostType[] = res.data.data;
         const filteredPosts = allPosts.filter(post => {

@@ -120,7 +120,7 @@ const router = createBrowserRouter([
             element: <BoardNew />
           },
           {
-            path: 'bookmark/:userEid',
+            path: 'bookmark',
             element: <BoardBookmark />
           },
         ]
