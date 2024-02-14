@@ -32,6 +32,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
 
 //    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
+    @Transactional
     public void create(UserNotificationCreateRequestDto createRequestDto) {
 
 //            throw new IllegalArgumentException("알림 생성 시 에러 발생");
