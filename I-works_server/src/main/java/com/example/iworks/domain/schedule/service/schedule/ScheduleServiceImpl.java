@@ -1,7 +1,6 @@
 package com.example.iworks.domain.schedule.service.schedule;
 
 import com.example.iworks.domain.code.entity.Code;
-import com.example.iworks.domain.code.exception.CodeErrorCode;
 import com.example.iworks.domain.code.exception.CodeException;
 import com.example.iworks.domain.code.repository.CodeRepository;
 import com.example.iworks.domain.notification.dto.usernotification.request.UserNotificationCreateRequestDto;
@@ -12,6 +11,7 @@ import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateReq
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
+import com.example.iworks.domain.schedule.exception.ScheduleException;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.exception.UserException;
@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.iworks.domain.code.exception.CodeErrorCode.CODE_NOT_EXIST;
+import static com.example.iworks.domain.schedule.exception.ScheduleErrorCode.SCHEDULE_NOT_EXIST;
 import static com.example.iworks.domain.user.exception.UserErrorCode.USER_NOT_EXIST;
 
 @Service
@@ -55,8 +57,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto getSchedule(Integer scheduleId) {
-        Schedule foundSchedule = scheduleRepository.getReferenceById(scheduleId);
-        return new ScheduleResponseDto(foundSchedule);
+        return new ScheduleResponseDto(scheduleRepository.getReferenceById(scheduleId));
     }
 
     @Override
@@ -67,24 +68,22 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     @Override
     public void updateSchedule(int scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
-        int divisionCodeId = scheduleUpdateRequestDto.getScheduleDivisionCodeId();
-        Code findCode = codeRepository.findById(divisionCodeId).orElseThrow(IllegalArgumentException::new);
-        Schedule findSchedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
-        findSchedule.updateSchedule(findCode, scheduleUpdateRequestDto);
+        Code divisionCode = findCode(scheduleUpdateRequestDto.getScheduleDivisionCodeId());
+        Schedule findSchedule = findSchedule(scheduleId);
+        findSchedule.updateSchedule(divisionCode, scheduleUpdateRequestDto);
     }
 
     @Transactional
     @Override
     public void isFinishedSchedule(int scheduleId, boolean isFinish) {
-        Schedule findSchedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(IllegalAccessError::new);
+        Schedule findSchedule = findSchedule(scheduleId);
         findSchedule.isFinished(isFinish);
     }
 
     @Transactional
     @Override
     public void deleteSchedule(Integer scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(IllegalAccessError::new);
+        Schedule schedule = findSchedule(scheduleId);
         schedule.delete();
     }
 
@@ -98,10 +97,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleAssigns;
     }
     private void createAssigneesNotification(List<AssigneeInfo> assigneeInfos, Schedule savedSchedule) {
-
         try {
             List<Integer> userIds = userService.getUserIdsByAssigneeInfos(assigneeInfos);
-
             for ( int userId : userIds) {
                 UserNotificationCreateRequestDto notificationCreateRequestDto = UserNotificationCreateRequestDto.builder()
                         .scheduleId(savedSchedule.getScheduleId())
@@ -116,6 +113,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
+    private Schedule findSchedule(int scheduleId) {
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleException(SCHEDULE_NOT_EXIST));
+    }
+
     private User findUser(int userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(USER_NOT_EXIST));
@@ -123,7 +125,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private Code findCode(int codeId) {
         return codeRepository.findById(codeId)
-                .orElseThrow(() -> new CodeException(CodeErrorCode.CODE_NOT_EXIST));
+                .orElseThrow(() -> new CodeException(CODE_NOT_EXIST));
     }
 
 }

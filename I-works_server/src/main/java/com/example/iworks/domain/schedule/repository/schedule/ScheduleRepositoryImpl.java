@@ -6,13 +6,10 @@ import com.example.iworks.domain.schedule.repository.schedule.custom.ScheduleSea
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
-
 import static com.example.iworks.domain.schedule.domain.QSchedule.schedule;
 import static java.util.stream.Collectors.toList;
 
-//@Repository
 @RequiredArgsConstructor
 public class ScheduleRepositoryImpl implements ScheduleSearchRepository {
 
