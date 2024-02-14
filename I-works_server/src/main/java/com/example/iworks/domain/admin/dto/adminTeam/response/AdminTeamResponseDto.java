@@ -1,9 +1,11 @@
 package com.example.iworks.domain.admin.dto.adminTeam.response;
 
 import com.example.iworks.domain.team.domain.Team;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class AdminTeamResponseDto {
     private int teamId; // 팀 아이디
     private String teamName; // 팀명
