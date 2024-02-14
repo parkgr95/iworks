@@ -3,8 +3,11 @@ package com.example.iworks.domain.admin.controller;
 import com.example.iworks.domain.admin.service.adminSchedule.AdminScheduleService;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
+import com.example.iworks.domain.schedule.service.schedule.ScheduleService;
 import com.example.iworks.global.util.JwtProvider;
 import com.example.iworks.global.util.Response;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +19,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminScheduleController {
 
-    private final AdminScheduleService scheduleService;
+    private final ScheduleService scheduleService;
+    private final AdminScheduleService adminScheduleService;
     private final Response response;
     private final JwtProvider jwtProvider;
 
     /** 할일 생성 */
     @PostMapping
-    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto){
+    public ResponseEntity<?> createSchedule(@RequestHeader("Authorization") String authorizationToken, @RequestBody ScheduleCreateRequestDto scheduleCreateRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
         int userId = jwtProvider.getUserId(authorizationToken);
         scheduleService.createSchedule(userId, scheduleCreateRequestDto);
         return response.handleSuccess("할일 등록 성공");
@@ -31,7 +35,7 @@ public class AdminScheduleController {
     /** 할일 전체 조회 */
     @GetMapping("/")
     public ResponseEntity<Map<String,Object>> getScheduleAll(){
-        return response.handleSuccess(scheduleService.getScheduleAll());
+        return response.handleSuccess(adminScheduleService.getScheduleAll());
     }
 
     /** 할일 상세 조회 */
@@ -54,7 +58,7 @@ public class AdminScheduleController {
     }
 
     /** 할일 삭제 */
-    @GetMapping("/{scheduleId}/delete")
+    @PostMapping("/{scheduleId}/delete")
     public ResponseEntity<?> deleteSchedule(@PathVariable(name = "scheduleId") int scheduleId){
         scheduleService.deleteSchedule(scheduleId);
         return response.handleSuccess("할일 삭제 성공");
