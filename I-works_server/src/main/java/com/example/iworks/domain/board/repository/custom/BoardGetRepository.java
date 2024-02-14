@@ -17,7 +17,7 @@ public interface BoardGetRepository {
     //작성한 게시글 전체 조회
     List<Board> findAllByCreator(Pageable pageable, int boardCreatorId);
 
-    //북마크 된 게시글 전체 조회
-    List<Board> findAllByBookmark(Pageable pageable, String userEid);
+    //북마크 한 게시글 전체 조회
+    List<Board> findAllByBookmark(Pageable pageable, int userId);
 
 }
