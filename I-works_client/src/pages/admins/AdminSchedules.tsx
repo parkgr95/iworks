@@ -19,13 +19,13 @@ interface UserType {
 }
 
 function AdminSchedules() {
-  const [boardList, setBoardList] = useState<PostType[]>([])
+  const [scheduleList, setScheduleList] = useState<PostType[]>([])
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/board/`)
+    axios.get(`https://suhyeon.site/api/schedule/search?keyword=`)
       .then((res) => {
-        setBoardList(res.data.data)
+        setScheduleList(res.data.data)
       })
       .catch((err) => {
         console.log(err)
@@ -73,8 +73,8 @@ function AdminSchedules() {
   return (
 <>
   <div className="flex justify-between items-center text-2xl font-bold  mt-10">
-    <h1 className="text-2xl font-bold">게시판 관리</h1>
-    <Button className="bg-mainGreen" onClick={moveToCreate}>글 생성</Button>
+    <h1 className="text-2xl font-bold">할 일 관리</h1>
+    <Button className="bg-mainGreen" onClick={moveToCreate}>할 일 생성</Button>
   </div>
   <div className="flex justify-between border-2 w- h-[32rem] mt-5">
     <div className="relative overflow-auto w-full">
@@ -82,46 +82,45 @@ function AdminSchedules() {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="px-6 py-3">
-              제목
+              이름
             </th>
             <th scope="col" className="px-6 py-3">
               내용
             </th>
             <th scope="col" className="px-6 py-3">
-              작성자
+              생성자
             </th>
             <th scope="col" className="px-6 py-3">
-              작성일
+              담당자
             </th>
             <th scope="col" className="px-6 py-3">
-
             </th>
           </tr>
         </thead>
         <tbody>
-          {boardList.map((article) => {
-            const user: UserType | undefined = users.find((user) => user.userId == article.boardCreatorId)
+          {scheduleList.map((schedule) => {
+            const user: UserType | undefined = users.find((user) => user.userId == schedule.boardCreatorId)
 
             return (
-              <tr key={article.boardId} className="cursor-pointer bg-white border-b hover:bg-gray-100">
+              <tr key={schedule.boardId} className="cursor-pointer bg-white border-b hover:bg-gray-100">
                 <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                   <div className="ps-3">
-                  {article.boardTitle}
+                  {schedule.scheduleTitle}
                   </div>
                 </th>
                 <td className="px-6 py-4">
-                {article.boardContent}
+                {schedule.scheduleContent}
                 </td>
                 <td className="px-6 py-4">
-                {user ? user.userNameLast + user.userNameFirst : 'unKnown'}
+                {schedule.scheduleCreatorName}
                 </td>
                 <td className="px-6 py-4">
-                {dateUtils.formatDate(article.boardCreatedAt)}
+                {schedule.scheduleModifierName==null ? 'null' : schedule.scheduleModifierName}
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex">
-                    <Button onClick={() => moveToUpdate(article.boardId)} className="bg-mainBlue">수정</Button>
-                    <Button onClick={(event) => deleteBoard(article.boardId, event)} className="bg-rose-700 ml-2">삭제</Button>
+                    <Button onClick={() => moveToUpdate(schedule.scheduleId)} className="bg-mainBlue">수정</Button>
+                    <Button onClick={(event) => deleteBoard(schedule.scheduleId, event)} className="bg-rose-700 ml-2">삭제</Button>
                   </div>
                 </td>
               </tr>
