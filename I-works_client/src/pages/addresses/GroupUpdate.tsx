@@ -273,7 +273,7 @@ function GroupUpdate() {
                 {teamMemberData.map((user) => (
                   <li className="flex justify-between bg-mainGray p-2 mb-2" key={user.userId}>
                     <div>{user.userNameLast}{user.userNameFirst} / {user.departmentName}</div>
-                    {user.userId !== loginedUser?.userId && (
+                    {user.userId !== groupDetail.teamLeader && (
                       <button onClick={() => {
                         if (originIdArray.includes(user.userId)) {
                           deleteTeamMember(user.userId);
