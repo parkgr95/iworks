@@ -6,6 +6,7 @@ import com.example.iworks.global.util.Response;
 import com.example.iworks.global.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +20,7 @@ public class CalenderController {
 
     /** 캘린더 : 유저의 모든 할일*/
     @PostMapping("/date")
-    public ResponseEntity<?> getAllByUserAndDate(@RequestHeader("Authorization") String authorizationToken, @RequestBody DateCondition dateCondition){
+    public ResponseEntity<?> getAllByUserAndDate(@RequestHeader("Authorization") String authorizationToken, @Validated @RequestBody DateCondition dateCondition){
         int userId = jwtProvider.getUserId(authorizationToken);
         return response.handleSuccess(scheduleAssignService.findByUser(userId, dateCondition));
     }
