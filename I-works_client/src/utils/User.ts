@@ -1,31 +1,17 @@
-import { redirect } from 'react-router-dom'
 import { getAccessToken } from './auth'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { API_URL } from './api'
-import { DepartmentInfo, getDepartmentAllList } from './Address'
 
-export interface UserDetailResponse {
+export interface MyPageResponse {
   result: string
-  data: {
-    userId: number
-    userPosition: string
-    departmentName: string
-    userEid: string
-    userNameFirst: string
-    userNameLast: string
-    userEmail: string
-    userTel: string
-    userAddress: string
-    userGender: string
-    userPassword: string
-    departmentId: number
-  }
+  data: MyPageData
 }
 
-export interface UserDetail {
+export interface MyPageData {
   userId: number
-  userPosition: string
+  departmentId: number
   departmentName: string
+  userPosition: string
   userEid: string
   userNameFirst: string
   userNameLast: string
@@ -34,38 +20,50 @@ export interface UserDetail {
   userAddress: string
   userGender: string
   userPassword: string
-  departmentId: number
 }
 
-async function getUserDetailInfo() {
-  if (!getAccessToken()) {
-    return redirect('/user/login')
-  }
+export interface MyTeamDataListResponse {
+  result:string
+  data: TeamData[]
+}
+
+export interface TeamData {
+  teamName: string
+  teamId: number
+}
+
+const MY_PAGE_URL = API_URL + '/user/mypage'
+const MY_TEAM_URL = API_URL + '/address/team/my'
+
+
+async function getMyPageData() {
   try {
-    const response: AxiosResponse<UserDetailResponse> = await axios.get(
-      API_URL + '/user/mypage',
-      {
-        headers: {
-          Authorization: 'Bearer ' + getAccessToken(),
-        },
+    const response = await axios.get<MyPageResponse>(MY_PAGE_URL, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
       },
-    )
+    })
 
-    const userDetail = response.data.data
-
-    const deptResponse = (await getDepartmentAllList()) as DepartmentInfo[]
-
-    const departmentId = deptResponse.find(
-      (dept) => dept.departmentName == userDetail.departmentName,
-    ) as DepartmentInfo
-
-    userDetail.departmentId = departmentId.departmentId
-
-    return userDetail
-  } catch (error) {
-    console.error(error)
+    return response.data.data
+  } catch (_error) {
+    alert('마이페이지 데이터 불러오기 실패')
     return null
   }
 }
 
-export { getUserDetailInfo }
+async function getMyTeamList() {
+  try {
+    const response = await axios.get<MyTeamDataListResponse>(MY_TEAM_URL, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
+    return response.data.data
+  } catch(_error){
+    alert('내 팀 정보 불러오기 실패')
+    return null
+  }
+}
+
+
+export { getMyPageData, getMyTeamList }

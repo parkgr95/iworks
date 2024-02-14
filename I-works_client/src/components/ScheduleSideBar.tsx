@@ -2,6 +2,7 @@ import { Button, ListGroup } from 'flowbite-react'
 import ScheduleCreate, { ScheduleCreateRef } from './ScheduleCreate'
 import { useRef } from 'react'
 import { RiBuilding4Line, RiUser3Line, RiGroupLine, RiListCheck } from "react-icons/ri";
+// import { useLocation } from 'react-router-dom';
 
 function ScheduleSideBar() {
   const dialog = useRef<ScheduleCreateRef>(null)
@@ -9,6 +10,10 @@ function ScheduleSideBar() {
   function handleModal() {
     dialog.current?.open()
   }
+
+  // 파라미터 가져오기
+  // const param = new URLSearchParams(useLocation().search)
+  // const mode = param.get('mode')
 
   return (
     <div className="flex h-full flex-col items-center border-r-2 m-0 px-3 position-absolute w-56 flex-shrink-0">

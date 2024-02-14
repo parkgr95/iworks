@@ -16,6 +16,7 @@ import {
   Label,
   Select,
   Toast,
+  ToggleSwitch,
 } from 'flowbite-react'
 import { API_URL, formDataToRequestData } from '../utils/api'
 import axios from 'axios'
@@ -27,16 +28,9 @@ import {
   getUserAllList,
 } from '../utils/Address'
 import { AiOutlineClose } from 'react-icons/ai'
+import { CodeData, getScheduleDivisionCodeList } from '../utils/Code'
 
 const SCH_URL = API_URL + '/schedule'
-
-const scheduleDivisionList: { [key: string]: string } = {
-  행사: '1',
-  업무: '2',
-  '개인일정(병가)': '3',
-  '개인일정(외출)': '4',
-  '개인일정(휴가)': '5',
-}
 
 export interface ScheduleCreateRef {
   open: () => void
@@ -61,32 +55,46 @@ const labelClass = 'text-md font-bold p-1'
 const inputClass = 'mt-1'
 
 const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
+  // 모달
   const dialog = useRef<HTMLDialogElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
+  // 받아올 유저, 부서, 팀, 분류 리스트
   const [userList, setUserList] = useState<UserType[]>([])
   const [departmentList, setDepartmentList] = useState<DepartmentInfo[]>([])
   const [teamList, setTeamList] = useState<TeamInfo[]>([])
+  const [scheduleDivisionList, setScheduleDivisionList] = useState<CodeData[]>(
+    [],
+  )
 
+  // 입력한 담당 유저, 부서, 팀 리스트
   const [assigneeUserList, setAssigneeUserList] = useState<UserType[]>([])
   const [assigneeDepartmentList, setAssigneeDepartmentList] = useState<
     DepartmentInfo[]
   >([])
   const [assigneeTeamList, setAssigneeTeamList] = useState<TeamInfo[]>([])
 
+  // 화상 회의 생성 여부
+  const [toggleCreateMeeting, setToggleCreateMeeting] = useState<boolean>(false)
+
+  // 생성 위한 기본 정보 (부서, 팀, 유저, 분류 리스트) 받아오기
   useEffect(() => {
     const fetchData = async () => {
       const departmentResponse =
         (await getDepartmentAllList()) as DepartmentInfo[]
       const userResponse = (await getUserAllList()) as UserType[]
       const teamResponse = (await getTeamAllList()) as TeamInfo[]
+      const scheduleDivisionResponse =
+        (await getScheduleDivisionCodeList()) as CodeData[]
       setDepartmentList(departmentResponse)
       setUserList(userResponse)
       setTeamList(teamResponse)
+      setScheduleDivisionList(scheduleDivisionResponse)
     }
     fetchData()
   }, [])
 
+  // 모달창 관련
   useImperativeHandle(
     ref,
     () => ({
@@ -97,6 +105,7 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
     [],
   )
 
+  // 담당 추가 로직
   function handleAddAssignee(event: any, target: string) {
     if (event.target.value == 'none') {
       return
@@ -148,6 +157,7 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
     }
   }
 
+  // 담당 삭제 로직
   function handleDeleteAssignee(id: number, target: string) {
     if (target == 'user') {
       setAssigneeUserList((prev) => {
@@ -164,12 +174,14 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
     }
   }
 
+  // 엔터키로 제출 방지
   const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault() // 폼 제출을 방지합니다.
     }
   }
 
+  // 할일 생성 로직
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event?.preventDefault()
 
@@ -177,6 +189,7 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
 
     let assigneeInfos: AssigneeType[] = []
 
+    // 선택된 담당들을 하나의 리스트로 정리
     for (const user of assigneeUserList) {
       assigneeInfos.push({ categoryCodeId: 5, assigneeId: user.userId })
     }
@@ -192,9 +205,16 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
       assigneeInfos.push({ categoryCodeId: 7, assigneeId: team.teamId })
     }
 
+    // 폼데이터 변환
     const scheduleRequestData: any = formDataToRequestData(scheduleFormData)
 
+    // 담당자 및 회의 추가 여부 추가
     scheduleRequestData.assigneeInfos = assigneeInfos
+    scheduleRequestData.isCreateMeeting = toggleCreateMeeting
+
+    console.log(scheduleRequestData)
+
+    // 폼 전송
 
     axios
       .post(SCH_URL, scheduleRequestData, {
@@ -237,16 +257,16 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
             name="scheduleDivisionCodeId"
             required
           >
-            {Object.entries(scheduleDivisionList).map(
-              ([scheduleDivisionName, scheduleDivisionCodeId], _index) => (
+            {scheduleDivisionList.map((scheduleDivisionData) => {
+              return (
                 <option
-                  key={scheduleDivisionCodeId}
-                  value={scheduleDivisionCodeId}
+                  key={scheduleDivisionData.codeId}
+                  value={scheduleDivisionData.codeId}
                 >
-                  {scheduleDivisionName}
+                  {scheduleDivisionData.codeName}
                 </option>
-              ),
-            )}
+              )
+            })}
           </Select>
         </div>
 
@@ -348,7 +368,8 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
                   className="w-fit text-black text-sm my-2 px-2 py-1 bg-teal-100"
                   key={info.userId}
                 >
-                  {info.userNameLast + info.userNameFirst}{' '}({info.departmentName})
+                  {info.userNameLast + info.userNameFirst} (
+                  {info.departmentName})
                   <Button
                     onClick={() => handleDeleteAssignee(info.userId, 'user')}
                     className="size-6 p-0 ml-1 text-black bg-teal-100"
@@ -447,19 +468,31 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
           />
         </div>
 
-        {/* 회의 일시 */}
-        <div>
-          <Label className={labelClass} htmlFor="meetingDate">
-            회의 일시
-          </Label>
-          <TextInput
-            className={inputClass}
-            type="datetime-local"
-            name="meetingDate"
-            required
-            id="meetingDate"
+        {/* 회의 여부 */}
+        <div className="">
+          <ToggleSwitch
+            id="isCreateMeeting"
+            name="isCreateMeeting"
+            checked={toggleCreateMeeting}
+            label="화상 회의 여부"
+            onChange={setToggleCreateMeeting}
           />
         </div>
+
+        {/* 회의 일시 */}
+        {toggleCreateMeeting && (
+          <div>
+            <Label className={labelClass} htmlFor="meetingDate">
+              회의 일시
+            </Label>
+            <TextInput
+              className={inputClass}
+              type="datetime-local"
+              name="meetingDate"
+              id="meetingDate"
+            />
+          </div>
+        )}
 
         {/* 버튼 */}
         <Button className="bg-mainGreen mt-4" type="submit">

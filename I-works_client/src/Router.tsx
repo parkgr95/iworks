@@ -17,7 +17,7 @@ import BoardNew from './pages/boards/BoardNew';
 import BoardBookmark from './pages/boards/BoardBookmark';
 
 import SchedulePage from './pages/SchedulePage';
-import { getUserDetailInfo } from './utils/User';
+import { getMyPageData } from './utils/User';
 
 import AddressIndex from './pages/addresses/AddressIndex';
 import AddressSelect from './components/AddressSelect';
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
           {
             path: 'mypage',
             element: <MyPage />,
-            loader: getUserDetailInfo,
+            loader: getMyPageData,
           },
         ],
       },
@@ -133,7 +133,7 @@ const router = createBrowserRouter([
       {
         path: 'schedule',
         element: <SchedulePage />,
-        loader: getUserDetailInfo
+        loader: getMyPageData
       }
     ]
   },
