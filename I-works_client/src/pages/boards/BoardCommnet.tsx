@@ -3,6 +3,7 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { useUser } from "../../utils/userInfo";
 import { FaPencilAlt } from "react-icons/fa";
 import { BsArrowReturnRight } from "react-icons/bs";
+import { getAccessToken } from "../../utils/auth";
 
 interface Props {
   boardId: string;
@@ -16,7 +17,6 @@ interface UserType {
 
 interface CommentRequestBody {
   boardId: string;
-  commentCreatorId: number;
   commentDepth: string;
   commentContent: string;
   parentCommentId?: string;
@@ -44,29 +44,29 @@ function BoardComment({ boardId }: Props) {
   useEffect(() => {
     async function getComments() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/comment/byBoard/${boardId}`);
-        const commentsData = res.data.data.content;
-        setComments(commentsData);
+        const res = await axios.get(`https://suhyeon.site/api/comment/byBoard/${boardId}`)
+        const commentsData = res.data.data
+        console.log(res.data.data)
+        setComments(commentsData)
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
     }
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
-        setUsers(res.data.data);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`)
+        setUsers(res.data.data)
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
     }
-    getComments();
-    getUsers();
-  }, [boardId]);
-
+    getComments()
+    getUsers()
+  }, [boardId])
   const getComments = async () => {
     try {
       const res = await axios.get(`https://suhyeon.site/api/comment/byBoard/${boardId}`);
-      const commentsData = res.data.data.content;
+      const commentsData = res.data.data;
       setComments(commentsData);
     } catch (err) {
       console.log(err);
@@ -81,13 +81,17 @@ function BoardComment({ boardId }: Props) {
 
     const requestBody: CommentRequestBody = {
       "boardId": boardId,
-      "commentCreatorId": Number(loginedUser.userId), // Convert userId to number
       "commentDepth": "0",
       "commentContent": comment,
+      "parentCommentId": "0",
     };
 
     try {
-      const res = await axios.post("https://suhyeon.site/api/comment/", requestBody);
+      const res = await axios.post("https://suhyeon.site/api/comment", requestBody, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      })
       console.log(res.data);
       setComment('');
       // 새로운 댓글 추가 후 댓글 목록을 다시 불러옴
@@ -105,18 +109,22 @@ function BoardComment({ boardId }: Props) {
 
     const requestBody: CommentRequestBody = {
       "boardId": boardId,
-      "commentCreatorId": Number(loginedUser.userId), // Convert userId to number
       "commentDepth": "1",
       "commentContent": reply[parentId],
       "parentCommentId": parentId,
     };
 
     try {
-      const res = await axios.post("https://suhyeon.site/api/comment/", requestBody);
+      const res = await axios.post("https://suhyeon.site/api/comment", requestBody, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      });
       console.log(res.data);
       setReply({ ...reply, [parentId]: '' }); // 대댓글 입력 초기화
       // 대댓글 추가 후 댓글 목록을 다시 불러옴
       getComments();
+      setReplyVisible({ ...replyVisible, [parentId]: false });
     } catch (err) {
       console.log(err);
     }
@@ -165,7 +173,7 @@ function BoardComment({ boardId }: Props) {
       </form>
       <div>
         <h1 className="font-semibold text-lg mb-2">댓글</h1>
-        {comments.map((comment) => (
+        {comments?.map((comment) => (
           <div key={comment.commentId} className="mb-2 border-b-2">
             <div className="flex items-center">
               <p>
@@ -197,10 +205,10 @@ function BoardComment({ boardId }: Props) {
                 </form>
               </div>
             )}
-            {comments.filter((c) => c.parentCommentId === comment.commentId).map((reply) => (
+            {comments.filter((c) => c.parentCommentId === comment.commentId && c.commentDepth != "0").map((reply) => (
               <div key={reply.commentId} className="ml-4">
                 <p className="flex items-center">
-                  <BsArrowReturnRight className="mr-2" size={12}/>
+                  <BsArrowReturnRight className="mr-2" size={12} />
                   {getUserName(reply.commentCreatorId)} : {reply.commentContent}
                 </p>
               </div>

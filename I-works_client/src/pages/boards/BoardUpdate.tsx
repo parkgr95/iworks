@@ -6,6 +6,7 @@ import BoardModal from '../../components/BoardModal'
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import { Button } from 'flowbite-react'
+import { getAccessToken } from '../../utils/auth'
 
 const BoardUpdate = () => {
   const { boardId = '' } = useParams<{ boardId: string }>()
@@ -61,7 +62,11 @@ const BoardUpdate = () => {
     }
 
     axios
-      .put(`https://suhyeon.site/api/board/update/${boardId}`, updateBoard)
+      .post(`https://suhyeon.site/api/board/update/${boardId}`, updateBoard, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken()
+        }
+      })
       .then(() => {
         alert('수정되었습니다.')
         navigate('/board/' + boardId)
@@ -110,10 +115,6 @@ const BoardUpdate = () => {
         <div className="flex items-center my-2">
           <label className="mr-14" htmlFor="title">제목 : </label>
           <input onChange={onTitleChange} className="h-8 w-3/4" type="text" name="boardTitle" value={boardTitle} id="title" required />
-        </div>
-        <div className="">
-          <label className="mr-10" htmlFor="file">첨부파일 : </label>
-          <input className="h" type="file" name="" id="file" />
         </div>
         <div className="mt-5">
           <ReactQuill

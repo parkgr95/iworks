@@ -11,12 +11,10 @@ import { useUser } from "../../utils/userInfo"
 function BoardCreate() {
   const loginedUser = useUser()
   const navigate = useNavigate()
-  console.log(loginedUser)
   const [boardTitle, setBoardTitle] = useState<string>('')
   const [boardContent, setBoardContent] = useState<string>()
   const [boardOwnerId, setBoardOwnerId] = useState<string>('')
   const [boardCategoryCodeId, setCategoryCodeId] = useState<string>('')
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
 
   const onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setBoardTitle(event.target.value)
@@ -25,29 +23,23 @@ function BoardCreate() {
     setBoardContent(content)
   }
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const fileList = event.target.files;
-    setSelectedFiles(fileList);
-  };
-
   function handleCreate(event: FormEvent) {
     event.preventDefault()
     if (!loginedUser) {
       // 유저 정보가 없을 경우에 대한 처리
       return alert("로그인이 필요합니다.");
     }
-    
+
     const plainTextContent = (boardContent || '').replace(/<[^>]+>/g, '');
     axios
-      .post("https://suhyeon.site/api/board/", {
+      .post("https://suhyeon.site/api/board", {
         "boardTitle": boardTitle,
         "boardContent": plainTextContent,
-        "boardCreatorId": loginedUser.userId,
         "boardIsDeleted": '0',
         "boardCategoryCodeId": boardCategoryCodeId,
         "boardOwnerId": boardOwnerId,
-        "boardFile": selectedFiles
-      },         {
+        "boardFile": null
+      }, {
         headers: {
           Authorization: 'Bearer ' + getAccessToken(),
         },
@@ -100,10 +92,6 @@ function BoardCreate() {
         <div className="flex items-center my-2">
           <label className="mr-14" htmlFor="title">제목 : </label>
           <input onChange={onTitleChange} className="h-8 w-3/4" type="text" name="boardTitle" value={boardTitle} id="title" required />
-        </div>
-        <div className="">
-          <label className="mr-10" htmlFor="file">첨부파일 : </label>
-          <input className="h" type="file" name="" id="file"   onChange={handleFileChange} multiple/>
         </div>
         <div className="mt-5">
           <ReactQuill
