@@ -14,11 +14,10 @@ public interface UserRepository extends JpaRepository<User,Integer>, UserSearchR
 
     User findByUserId(int userId);
 
-    User findByUserEmail(String userEmail);
-
     @Query("select u from User u join u.userDepartment d where d.departmentId = :departmentId")
     List<User> findUsersByDepartmentId(@Param("departmentId") Integer departmentId);
 
     @Query("select u from User u join u.userTeamUsers tu where tu.teamUserTeam.teamId = :teamId")
     List<User> findUsersByTeamId(@Param("teamId") Integer teamId); //throws There's No data
+
 }
