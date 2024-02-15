@@ -1,49 +1,56 @@
 package com.example.iworks.domain.admin.controller;
 
-import com.example.iworks.domain.admin.dto.adminTeam.request.AdminTeamCreateRequestDto;
-import com.example.iworks.domain.admin.dto.adminTeam.request.AdminTeamUpdateRequestDto;
-import com.example.iworks.domain.admin.service.adminTeam.AdminTeamService;
-import com.example.iworks.global.util.Response;
+import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamUserRemoveRequestDto;
+import com.example.iworks.domain.address.service.AddressService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RequestMapping("/api/admin/team")
 @RestController
 @RequiredArgsConstructor
 public class AdminTeamController {
 
-    private final AdminTeamService adminService;
-    private final Response response;
+    private final AddressService addressService;
 
-    // 팀 등록
-    @PostMapping("/")
-    public ResponseEntity<?> createTeam(@RequestBody AdminTeamCreateRequestDto requestDto) {
-        adminService.createTeam(requestDto);
-        return response.handleSuccess("팀 등록 완료");
+    @GetMapping("/all")
+    public ResponseEntity<Map<String,Object>> getTeamAll(){
+        return addressService.selectTeamAll();
     }
 
-    // 팀 수정
+    @PostMapping("/create")
+    public ResponseEntity<Map<String,Object>> createTeam(@RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamCreateRequestDto requestDto){
+        return addressService.createTeam(token,requestDto);
+    }
+
     @PutMapping("/{teamId}")
-    public ResponseEntity<?> updateTeam(@PathVariable(name = "teamId") int teamId, @RequestBody AdminTeamUpdateRequestDto requestDto) {
-        adminService.updateTeam(teamId, requestDto);
-        return  response.handleSuccess("팀 수정 완료");
+    public ResponseEntity<Map<String,Object>> editTeam(@PathVariable(name = "teamId")int teamId,@RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamEditRequestDto requestDto){
+        return addressService.editTeam(teamId,token,requestDto);
     }
 
-    // 팀 삭제
-    @DeleteMapping("/{teamId}")
-    public ResponseEntity<?> deleteTeam(@PathVariable(name = "teamId") int teamId) {
-        adminService.deleteTeam(teamId);
-        return response.handleSuccess("팀 삭제 완료");
-    }
-
-    // 팀 전체 조회
-    @GetMapping("/")
-    public ResponseEntity<?> getTeamAll() {return response.handleSuccess(adminService.getTeamAll()); }
-
-    // 팀 세부 조회
     @GetMapping("/{teamId}")
-    public ResponseEntity<?> getTeam(@PathVariable(name = "teamId") int teamId) {
-        return adminService.getTeam(teamId);
+    public ResponseEntity<Map<String,Object>> getTeamInfo(@PathVariable(name = "teamId")int teamId){
+        return addressService.getTeamInfo(teamId);
+    }
+
+    @DeleteMapping("/{teamId}")
+    public ResponseEntity<Map<String,Object>> deleteTeam(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token){
+
+        return addressService.deleteTeam(teamId,token);
+    }
+    @PostMapping("/user/{teamId}")
+    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserAddRequestDto userIds){
+        return addressService.addTeamUser(teamId,token,userIds);
+    }
+
+    @DeleteMapping("/user/{teamId}")
+    public ResponseEntity<Map<String,Object>> removeTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserRemoveRequestDto requestDto){
+        return addressService.removeTeamUser(teamId,token,requestDto.getTargetId());
     }
 }
