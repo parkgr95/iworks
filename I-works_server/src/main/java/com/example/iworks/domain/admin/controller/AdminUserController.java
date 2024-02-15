@@ -34,7 +34,7 @@ public class AdminUserController {
 
     // 유저 정보 수정
     @PutMapping("/update/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable(name = "userId") int userId, AdminUserUpdateRequestDto requestDto) {
+    public ResponseEntity<?> updateUser(@PathVariable(name = "userId") int userId, @RequestBody AdminUserUpdateRequestDto requestDto) {
         return adminService.updateUser(userId, requestDto);
     }
 
