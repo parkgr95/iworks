@@ -23,7 +23,7 @@ public class AdminTeamController {
 
     @GetMapping("/all")
     public ResponseEntity<Map<String,Object>> getTeamAll(){
-        return addressService.selectTeamAll();
+        return adminTeamService.getTeamAll();
     }
 
     @PostMapping("/create")
