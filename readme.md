@@ -56,7 +56,7 @@ MySql
 ## Architecture
 
 [ERD](https://www.erdcloud.com/d/bmcCQb9ZDkHKXPB2w)  
-[API](https://www.notion.so/API-3da2a58192a34005b73e199717ae518c?pvs=4)
+[API](https://www.notion.so/API-61a0b229b77b42b2b576673793a0c7bd?pvs=4)
 
 
 
