@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 import { Form, useNavigate } from 'react-router-dom'
 import { Button, Card, TextInput } from 'flowbite-react'
 import iworks_logo from '../assets/iworks_logo.png'
+import { API_URL } from '../utils/api'
 
 interface LoginResponse {
   result: string
@@ -14,7 +15,7 @@ interface LoginResponse {
   }
 }
 
-const API_URL = 'https://suhyeon.site/api/user/login'
+const LOGIN_URL = API_URL + '/user/login'
 
 function LoginPage() {
   const [userEid, setUserEid] = useState<string>('')
@@ -44,7 +45,7 @@ function LoginPage() {
     event.preventDefault()
 
     try {
-      const response = await axios.post<LoginResponse>(API_URL, {
+      const response = await axios.post<LoginResponse>(LOGIN_URL, {
         userEid,
         userPassword,
       })
@@ -53,7 +54,7 @@ function LoginPage() {
       localStorage.setItem('refreshToken', response.data.data.refreshToken)
       navigate('/')
     } catch (error: any) {
-      alert(error.response.data.data)
+      alert(error.response.data.message)
     }
   }
 

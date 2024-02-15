@@ -17,14 +17,25 @@ interface UserType {
   userEmail: string
 }
 
-function BoardIndex() {
+function BoardNew() {
   const [boardList, setBoardList] = useState<PostType[]>([])
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/board`)
       .then((res) => {
-        setBoardList(res.data.data)
+        const allPosts: PostType[] = res.data.data;
+        const filteredPosts = allPosts.filter(post => {
+          // 게시물의 생성일
+          const postDate = post.boardCreatedAt ? new Date(post.boardCreatedAt) : null;
+          // 현재 날짜
+          const currentDate = new Date();
+          // 일주일 이전의 날짜 계산
+          const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+          // 게시물의 생성일이 일주일 이내인지 확인
+          return postDate && postDate >= oneWeekAgo;
+        });
+        setBoardList(filteredPosts);
       })
       .catch((err) => {
         console.log(err)
@@ -41,8 +52,6 @@ function BoardIndex() {
 
     getUsers()
   }, [])
-
-
 
   return (
     <div className="">
@@ -67,4 +76,4 @@ function BoardIndex() {
   )
 }
 
-export default BoardIndex
+export default BoardNew

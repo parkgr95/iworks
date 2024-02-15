@@ -1,97 +1,181 @@
 import axios from "axios"
 import { FormEvent, useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-
+import dateUtils from "../../utils/dateUtils"
 import { Button } from "flowbite-react"
+import PostType from "../../interface/BoardType"
+import { FaRegStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
+import BoardComment from "./BoardCommnet"
+import { getAccessToken } from "../../utils/auth"
+import { useUser } from "../../utils/userInfo"
 
+interface UserType {
+  userId: string
+  userEid: string
+  userNameFirst: string
+  userNameLast: string
+  departmentName: string
+  departmentId: string
+  positionCodeName: null
+  positionCodeId: null
+  userTel: string
+  userEmail: string
+}
 
 function BoardDetail() {
-  const { boardId = '' } = useParams<{boardId: string}>()
-  const [boardDetail, setBoardDetail] = useState<{ title: string, body: string }>({
-    title: '',
-    body: ''
+  const loginedUser = useUser()
+  const { boardId = '' } = useParams<{ boardId: string }>()
+  const [boardDetail, setBoardDetail] = useState<PostType>({
+    boardId: '',
+    boardTitle: '',
+    boardCreatorId: '',
+    boardModifierId: '',
+    boardContent: '',
+    boardCreatedAt: '',
+    boardUpdatedAt: '',
+    boardCategoryCodeId: ''
   })
+  const boardCategory: { [key: string]: string } = {
+    "1": "공지게시판",
+    "2": "자유게시판",
+    "3": "부서게시판",
+    "4": "그룹게시판",
+  };
+  const [userName, setUserName] = useState<UserType>()
   const navigate = useNavigate()
+  const [isStarred, setIsStarred] = useState(false);
 
   useEffect(() => {
+    // 상세 페이지 정보 받아오기
     async function getBoardDetail(boardId: string) {
       try {
-        const res = await axios.get(`https://dummyjson.com/posts/${boardId}`)
-        const boardDetailData = res.data
+        const res = await axios.get(`https://suhyeon.site/api/board/${boardId}`)
+        const boardDetailData = res.data.data
 
         setBoardDetail(boardDetailData)
-      }
-      catch (err) {
+        getUsers(boardDetailData)
+      } catch (err) {
         console.log(err)
       }
     }
-    getBoardDetail(boardId)
-  }, [boardId])
+
+    // 유저 목록 받아오기
+    async function getUsers(boardDetail: PostType) {
+      try {
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const users = res.data.data
+        const filteredUser = users.find((user: UserType) => user.userId == boardDetail.boardCreatorId)
+
+        setUserName(filteredUser)
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    // 북마크 목록 받아오기
+    async function getBookmarks() {
+      try {
+        const res = await axios.get(`https://suhyeon.site/api/board/byBookmark`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
+        const isStarred = res.data.data.some((post: PostType) => post.boardId == boardId);
+        if (isStarred) {
+          setIsStarred(true);
+        }
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+
+    if (boardId) {
+      getBoardDetail(boardId);
+      getBookmarks();
+    }
+  }, [boardId]);
 
   const moveToUpdate = () => {
     navigate('/board/update/' + boardId)
   }
 
   function deleteBoard(event: FormEvent) {
-    event.preventDefault()
+    event.preventDefault();
+  
+    const isConfirmed = window.confirm('정말로 삭제하시겠습니까?');
+    if (isConfirmed) {
+      axios
+        .post(`https://suhyeon.site/api/board/delete/${boardId}`, {
+          'boardIsDeleted': '1'
+        }, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
+        .then(() => {
+          alert('삭제되었습니다.');
+          navigate('/board/');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
 
+  // // 북마크 기능
+  const toggleStar = () => {
+    setIsStarred(prevState => !prevState);
     axios
-      .patch(`https://dummyjson.com/posts/${boardId}`, {
-        boardIsDeleted: 1
+      .post(`https://suhyeon.site/api/board/bookmark/${boardId}`, null, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
       })
-      .then(() => {
-        alert('삭제되었습니다.')
-        navigate('/board/')
+      .then((res) => {
+        console.log(res.data)
       })
       .catch((err) => {
         console.log(err)
       })
   }
 
-  // 북마크 기능
-  
+  const showEditButtons = loginedUser?.userId === boardDetail.boardCreatorId;
 
   return (
     <div className="flex flex-col">
       <div className="h-10 mb-4 text-sm text-gray-500 border-b-2">
-        <p>게시판 이름</p>
+        <p>{boardCategory[boardDetail.boardCategoryCodeId || ''] || 'Unknown Category'}</p>
       </div>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-3xl font-semibold">{boardDetail.title}</p>
-        {/* 로직 추가필요 */}
+        <p className="text-3xl font-semibold">{boardDetail.boardTitle}</p>
+        {isStarred ? <FaStar size={36} onClick={toggleStar} /> : <FaRegStar size={36} onClick={toggleStar} />}
       </div>
       <div className="mb-4">
         <div className="flex items-center">
-          <div className="h-10 w-10 pt-2">
-            <span>사진</span>
-          </div>
           <div className="flex flex-col">
-            <span>이름: </span>
-            <span>작성일: </span>
+            <span>이름: {userName?.userNameLast}{userName?.userNameFirst}</span>
+            <span>작성일: {dateUtils.formatDateTime(boardDetail.boardCreatedAt)}</span>
           </div>
         </div>
-        <p>수정일자: </p>
+        <p>최근 수정: {dateUtils.formatDateTime(boardDetail.boardUpdatedAt)}</p>
       </div>
       <div>
-        <p>{boardDetail.body}</p>
-        <div className="flex justify-end my-6">
+        <p>{boardDetail.boardContent}</p>
+        {showEditButtons && (
+        <div className="flex justify-end mt-6">
           <Button className="" onClick={moveToUpdate}>수정</Button>
           <Button className="ml-4" onClick={deleteBoard}>삭제</Button>
         </div>
+      )}
+      <div className="mb-6"></div>
       </div>
       <div>
-        <form>
-          <div className="w-full mb-4 border border-gray-200 rounded-sm bg-gray-50">
-            <div className="px-4 py-2 bg-white rounded-t-sm">
-              <textarea id="comment" rows={4} className="w-full px-0 text-sm text-gray-900 bg-white border-0" placeholder="댓글을 입력하세요" required></textarea>
-            </div>
-            <div className="flex items-center justify-end px-3 py-2 border-t">
-              <button type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-mainGreen rounded-lg hover:bg-blue-800">
-                Post comment
-              </button>
-            </div>
-          </div>
-        </form>
+        <BoardComment boardId={boardId} />
+      </div>
+      <div>
+
       </div>
 
     </div>

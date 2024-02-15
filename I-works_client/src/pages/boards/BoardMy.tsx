@@ -1,46 +1,47 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
 import PostType from "../../interface/BoardType"
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
+import dateUtils from "../../utils/dateUtils"
+import { useUser } from "../../utils/userInfo"
 
-function BoardBookMark() {
-  const { boardCreatorId='' } = useParams<{boardCreatorId: string}>()
-  const [myBoardList, setmyBoardList] = useState<PostType[]>([])
-  
+function BoardMy() {
+  const loginedUser = useUser()
+
+  const [boardList, setBoardList] = useState<PostType[]>([])
+
   useEffect(() => {
-    async function getBoardList(boardCreatorId: string) {
-      try {
-        const res = await axios.get(`${boardCreatorId}`)
-        const myBoardListData = res.data
-        setmyBoardList(myBoardListData)
-      }
-      catch (err) {
+    axios.get(`https://suhyeon.site/api/board`)
+      .then((res) => {
+        setBoardList(res.data.data)
+      })
+      .catch((err) => {
         console.log(err)
-      }
-    }
-    getBoardList(boardCreatorId)
-  }, [boardCreatorId])
+      })
+  }, [])
+
+  const MyArticles = boardList.filter(article => article.boardCreatorId == loginedUser?.userId);
 
   return (
     <div className="">
-      {myBoardList.map((article) => (
-        <div className="border-b-2 pb-2 mb-2" key={article.id}>
+      {MyArticles.map((article) => {
+        
+        return (
+        <div className="border-b-2 pb-2 mb-2" key={article.boardId}>
           <div className="mb-2 text-md font-semibold">
-            <Link to={`/board/${article.id}`}>{article.title}</Link>
+            <Link to={`/board/${article.boardId}`}>{article.boardTitle}</Link>
           </div>
           <div className="text-sm mb-2">
-            <p>{article.body}</p>
+            <p>{article.boardContent}</p>
           </div>
           <div className="flex justify-between text-xs w- ml-1">
-            <p>진창현</p>
-            <p>2024-01-13</p>
+            <span>{loginedUser ? loginedUser.userNameLast + loginedUser.userNameFirst : 'unKnown'}</span>
+            <span>{dateUtils.formatDate(article.boardCreatedAt)}</span>
           </div>
         </div>
-          )
-        )
-      }
+        )})}
     </div>
   )
 }
 
-export default BoardBookMark
+export default BoardMy
