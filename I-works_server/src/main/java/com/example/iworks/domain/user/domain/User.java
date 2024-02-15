@@ -149,9 +149,6 @@ public class User {
         if(dto.getUserAddress() != null){
             this.userAddress = dto.getUserAddress();
         }
-        if(dto.getUserEmail() != null){
-            this.userEmail = dto.getUserEmail();
-        }
         if(dto.getUserTel() != null){
             this.userTel = dto.getUserTel();
         }

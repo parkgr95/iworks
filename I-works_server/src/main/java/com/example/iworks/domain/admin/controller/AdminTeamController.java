@@ -6,6 +6,7 @@ import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDt
 import com.example.iworks.domain.address.dto.request.AddressTeamUserRemoveRequestDto;
 import com.example.iworks.domain.address.service.AddressService;
 
+import com.example.iworks.domain.admin.service.adminTeam.AdminTeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class AdminTeamController {
 
     private final AddressService addressService;
+    private final AdminTeamService adminTeamService;
 
     @GetMapping("/all")
     public ResponseEntity<Map<String,Object>> getTeamAll(){
@@ -30,8 +32,8 @@ public class AdminTeamController {
     }
 
     @PutMapping("/{teamId}")
-    public ResponseEntity<Map<String,Object>> editTeam(@PathVariable(name = "teamId")int teamId,@RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamEditRequestDto requestDto){
-        return addressService.editTeam(teamId,token,requestDto);
+    public ResponseEntity<Map<String,Object>> editTeam(@PathVariable(name = "teamId")int teamId, @RequestBody AddressTeamEditRequestDto requestDto){
+        return adminTeamService.editTeam(teamId,requestDto);
     }
 
     @GetMapping("/{teamId}")
@@ -40,17 +42,16 @@ public class AdminTeamController {
     }
 
     @DeleteMapping("/{teamId}")
-    public ResponseEntity<Map<String,Object>> deleteTeam(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token){
-
-        return addressService.deleteTeam(teamId,token);
+    public ResponseEntity<Map<String,Object>> deleteTeam(@PathVariable(name = "teamId")int teamId){
+        return adminTeamService.deleteTeam(teamId);
     }
     @PostMapping("/user/{teamId}")
-    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserAddRequestDto userIds){
-        return addressService.addTeamUser(teamId,token,userIds);
+    public ResponseEntity<Map<String,Object>> addTeamUser(@PathVariable(name = "teamId")int teamId, @RequestBody AddressTeamUserAddRequestDto userIds){
+        return adminTeamService.addTeamUser(teamId,userIds);
     }
 
     @DeleteMapping("/user/{teamId}")
-    public ResponseEntity<Map<String,Object>> removeTeamUser(@PathVariable(name = "teamId")int teamId, @RequestHeader(name = "Authorization")String token,@RequestBody AddressTeamUserRemoveRequestDto requestDto){
-        return addressService.removeTeamUser(teamId,token,requestDto.getTargetId());
+    public ResponseEntity<Map<String,Object>> removeTeamUser(@PathVariable(name = "teamId")int teamId, @RequestBody AddressTeamUserRemoveRequestDto requestDto){
+        return adminTeamService.removeTeamUser(teamId,requestDto.getTargetId());
     }
 }
