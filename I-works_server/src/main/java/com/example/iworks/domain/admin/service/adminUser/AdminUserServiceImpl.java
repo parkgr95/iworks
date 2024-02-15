@@ -39,7 +39,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> registerUser(AdminUserCreateRequestDto dto) {
-        if (userRepository.getAvailableUserByEid(dto.getUserEid())!=null){
+        if (userRepository.findByUserEid(dto.getUserEid())!=null){
             return response.handleFail("이미 존재하는 계정입니다.",null);
         }
 
