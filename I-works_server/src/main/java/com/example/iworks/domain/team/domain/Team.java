@@ -62,7 +62,7 @@ public class Team {
 
     public void addTeamUser(TeamUser teamUser) {
         teamUsers.add(teamUser);
-        teamUser.setTeamUserTeamId(this);
+        teamUser.setTeamUserTeam(this);
     }
 
 

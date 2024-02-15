@@ -5,6 +5,7 @@ import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.user.domain.User;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class ScheduleCreateRequestDto {
     private LocalDateTime meetingDate; // 회의 일시
 
     @NotNull
-    private List<AssigneeInfo> assigneeInfos; // 담당자 카테고리 아이디, 담당자 아이디
+    private List<@Valid AssigneeInfo> assigneeInfos; // 담당자 카테고리 아이디, 담당자 아이디
 
     public Schedule toScheduleEntity(Code division, String sessionId, User creator){
         Schedule schedule = Schedule.builder()
