@@ -3,11 +3,7 @@ package com.example.iworks.domain.schedule.dto.schedule.response;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.user.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 
 import java.time.LocalDateTime;
 

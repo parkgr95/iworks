@@ -1,6 +1,6 @@
 package com.example.iworks.domain.schedule.repository.scheduleAssign;
 
-import com.example.iworks.domain.schedule.domain.Schedule;
+import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.repository.scheduleAssign.custom.ScheduleAssignGetRepository;
 import com.example.iworks.global.dto.DateCondition;
@@ -18,7 +18,6 @@ import java.util.Set;
 import static com.example.iworks.domain.schedule.domain.QSchedule.schedule;
 import static com.example.iworks.domain.schedule.domain.QScheduleAssign.scheduleAssign;
 import static com.example.iworks.global.common.CodeDef.SCHEDULE_DIVISION_TASK_CODE_ID;
-import static com.querydsl.jpa.JPAExpressions.select;
 
 
 @Repository
@@ -28,27 +27,48 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
    private final JPAQueryFactory jpaQueryFactory;
 
    @Override
-   public List<Schedule> findScheduleAssignsBySearchParameter(List<AssigneeInfo> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
-      Set<Schedule> scheduleSet = new HashSet<>();
+   public List<ScheduleAssign> findScheduleAssignsBySearchParameter(List<AssigneeInfo> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
+      Set<ScheduleAssign> foundScheduleAssignList = new HashSet<>();
+
       for (AssigneeInfo requestDto : requestDtoList){
-         List<Schedule> foundSchedules =
+         List<ScheduleAssign> foundScheduleAssign =
                  jpaQueryFactory
-                         .selectFrom(schedule)
-                         .where(schedule.scheduleId.in(
-                                 select(scheduleAssign.schedule.scheduleId)
-                                         .from(scheduleAssign)
-                                         .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId())
-                                                         .and(notDeleted())
-                                                 ,withInDate(dateCondition)
-                                                 ,filterTask(onlyTask)
-                                         )
-                         ))
+                         .selectFrom(scheduleAssign)
+                         .join(scheduleAssign.schedule, schedule).fetchJoin()
+                         .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId())
+                                 ,withInDate(dateCondition)
+                                 ,filterTask(onlyTask)
+                         )
+                         .distinct()
                          .fetch();
 
-         scheduleSet.addAll(foundSchedules);
+         foundScheduleAssignList.addAll(foundScheduleAssign);
       }
-      return new ArrayList<>(scheduleSet);
+      return new ArrayList<>(foundScheduleAssignList);
    }
+
+//   @Override
+//   public List<Schedule> findScheduleAssignsBySearchParameter(List<AssigneeInfo> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
+//      Set<Schedule> scheduleSet = new HashSet<>();
+//      for (AssigneeInfo requestDto : requestDtoList){
+//         List<Schedule> foundSchedules =
+//                 jpaQueryFactory
+//                         .selectFrom(schedule)
+//                         .where(schedule.scheduleId.in(
+//                                 select(scheduleAssign.schedule.scheduleId)
+//                                         .from(scheduleAssign)
+//                                         .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId())
+//                                                         .and(notDeleted())
+//                                                 ,withInDate(dateCondition)
+//                                                 ,filterTask(onlyTask)
+//                                         )
+//                         ))
+//                         .fetch();
+//
+//         scheduleSet.addAll(foundSchedules);
+//      }
+//      return new ArrayList<>(scheduleSet);
+//   }
    private BooleanExpression filterTask(boolean onlyTask){
       if (!onlyTask) return Expressions.TRUE;
       return scheduleAssign.schedule.scheduleDivision.codeId.eq(SCHEDULE_DIVISION_TASK_CODE_ID);
