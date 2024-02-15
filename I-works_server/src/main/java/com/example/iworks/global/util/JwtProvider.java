@@ -6,12 +6,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtProvider {
@@ -62,12 +64,12 @@ public class JwtProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
                 .signWith(SECRET_KEY)
                 .compact();
-/*        redisTemplate.opsForValue().set(
-                refreshToken, //key
-                id, //value
+        redisTemplate.opsForValue().set(
+                String.valueOf(id), //key
+                refreshToken, //value
                 refreshExpTime,
                 TimeUnit.MILLISECONDS
-        );*/
+        );
 
         return refreshToken;
     }
@@ -95,11 +97,11 @@ public class JwtProvider {
         String type = (String)claims.get("type");
         if (type.equals("refresh")) {
             System.out.println("create refresh");
-/*            ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
-            String redisValue = stringValueOperations.get(refreshToken);
-            if (redisValue != null) {*/
+           ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
+            String redisValue = stringValueOperations.get(claims.get("id"));
+            if (redisValue != null) {
                 return claims.getExpiration().after(new Date());
-           // }
+            }
         }
         System.out.println("failed");
         return false;

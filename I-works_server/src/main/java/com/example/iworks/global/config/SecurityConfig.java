@@ -52,24 +52,19 @@ public class SecurityConfig {
                 // 특정 URL에 대한 권한 설정.
                 .authorizeHttpRequests((authorizeRequests) -> {
                     authorizeRequests
-                            .requestMatchers("/api/user/join").anonymous() // 나중에 어드민으로 바꿈
                             .requestMatchers("/api/user/login").anonymous()
 
-                            .requestMatchers("/api/user/**").authenticated()
-
-                            .requestMatchers("/api/user/join").permitAll()
-                            .requestMatchers("/api/user/login").permitAll()
+                            .requestMatchers("/api/**").authenticated()
 
                             .requestMatchers("/api/leader/**")
                             .hasAnyRole("ADMIN", "LEADER", "CEO")
 
-//                            .requestMatchers("/api/admin/**")
-//                            .hasRole("ADMIN")
+                            .requestMatchers("/api/admin/**")
+                            .hasRole("ADMIN")
 
                             .anyRequest().permitAll();
                 })
                 .authenticationManager(authenticationManager)
-                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedPage("/api/user/login"))
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(customAccessDeniedHandler))
                 .addFilterBefore(corsFilter, SecurityContextHolderFilter.class)
