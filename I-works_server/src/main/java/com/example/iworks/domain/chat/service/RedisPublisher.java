@@ -1,6 +1,6 @@
-package com.example.iworks.domain.chat.pubsub;
+package com.example.iworks.domain.chat.service;
 
-import com.example.iworks.domain.chat.domain.ChatMessage;
+import com.example.iworks.domain.chat.dto.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;

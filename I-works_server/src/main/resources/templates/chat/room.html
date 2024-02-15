@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Websocket Chat</title>
+    <title>Websocket 채팅</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <!-- CSS -->
@@ -10,6 +10,7 @@
         [v-cloak] {
             display: none;
         }
+
     </style>
 </head>
 <body>
@@ -29,8 +30,8 @@
         </div>
     </div>
     <ul class="list-group">
-        <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.roomId" v-on:click="enterRoom(item.roomId)">
-            {{item.name}}
+        <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.chatRoomId" v-on:click="enterRoom(item.chatRoomId)">
+            {{item.chatRoomName}}
         </li>
     </ul>
 </div>
@@ -57,19 +58,19 @@
         },
         methods: {
             findAllRoom: function() {
-                axios.get('/chat/rooms').then(response => { this.chatrooms = response.data; });
+                axios.get('/api/chat/room').then(response => { this.chatrooms = response.data.data; });
             },
             createRoom: function() {
                 if("" === this.room_name) {
                     alert("방 제목을 입력해 주십시요.");
-                    return;
+
                 } else {
                     var params = new URLSearchParams();
-                    params.append("name",this.room_name);
-                    axios.post('/chat/room', params)
+                    params.append("chatRoomName",this.room_name);
+                    axios.post('/api/chat/room', params)
                         .then(
                             response => {
-                                alert(response.data.name+"방 개설에 성공하였습니다.")
+                                alert(response.data.data.chatRoomName+"방 개설에 성공하였습니다.")
                                 this.room_name = '';
                                 this.findAllRoom();
                             }
@@ -81,7 +82,7 @@
                 var sender = prompt('대화명을 입력해 주세요.');
                 localStorage.setItem('wschat.sender',sender);
                 localStorage.setItem('wschat.roomId',roomId);
-                location.href="/chat/room/enter/"+roomId;
+                location.href="/api/chat/room/view/enter/"+roomId;
             }
         }
     });
