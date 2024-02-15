@@ -154,7 +154,7 @@ public class InitData {
             CodeGroup codeGroup4 = em.find(CodeGroup.class, 4);
 
             Code code_role_employee = Code.builder()
-                    .codeName("ROLE_EMPLOYEE")
+                    .codeName("사원")
                     .codeGroup(codeGroup4)
                     .build();
             em.persist(code_role_employee);
@@ -162,20 +162,20 @@ public class InitData {
 
 
             test = Code.builder()
-                    .codeName("ROLE_LEADER")
+                    .codeName("리더")
                     .codeGroup(codeGroup4)
                     .build();
             em.persist(test);
 
             test = Code.builder()
-                    .codeName("ROLE_CEO")
+                    .codeName("CEO")
                     .codeGroup(codeGroup4)
                     .build();
             em.persist(test);
 
 
             test = Code.builder()
-                    .codeName("ROLE_ADMIN")
+                    .codeName("관리자")
                     .codeGroup(codeGroup4)
                     .build();
             em.persist(test);

@@ -13,8 +13,7 @@ import java.util.List;
 @ToString
 public class CodeGroup {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code_group_id", nullable = false)
     private Integer codeGroupId; // 코드 그룹 아이디
 

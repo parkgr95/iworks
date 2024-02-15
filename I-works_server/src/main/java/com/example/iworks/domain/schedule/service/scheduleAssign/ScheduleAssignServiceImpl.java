@@ -6,6 +6,7 @@ import com.example.iworks.domain.schedule.repository.scheduleAssign.ScheduleAssi
 import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.domain.user.exception.UserException;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.dto.DateCondition;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.iworks.domain.user.exception.UserErrorCode.USER_NOT_EXIST;
 import static com.example.iworks.global.common.CodeDef.*;
 
 @Service
@@ -57,7 +59,7 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
     public List<AssigneeInfo> findUserBelongs(int userId) {
 
         List<AssigneeInfo> searchParameterDtoList = new ArrayList<>();
-        User user = userRepository.findById(userId).orElseThrow(IllegalAccessError::new);
+        User user = findUser(userId);
 
         searchParameterDtoList.add(new AssigneeInfo(TARGET_USER_CODE_ID, userId));
         searchParameterDtoList.add(new AssigneeInfo(TARGET_DEPARTMENT_CODE_ID, user.getUserDepartment().getDepartmentId()));
@@ -67,6 +69,11 @@ public class ScheduleAssignServiceImpl implements ScheduleAssignService{
             searchParameterDtoList.add(new AssigneeInfo(TARGET_TEAM_CODE_ID, teamUser.getTeamUserTeam().getTeamId()));
         }
         return searchParameterDtoList;
+    }
+
+    private User findUser(int userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(USER_NOT_EXIST));
     }
 
 
