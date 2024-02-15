@@ -3,7 +3,6 @@ import RootLayout from './pages/RootLayout';
 import LoginPage from './pages/LoginPage';
 import AddressPage from "./pages/AddressPage";
 import MyPage from "./pages/MyPage";
-import { logoutAction } from './pages/LogoutPage';
 
 import BoardPage from './pages/BoardPage';
 import BoardIndex from './pages/boards/BoardIndex';
@@ -39,10 +38,6 @@ const router = createBrowserRouter([
           {
             path: 'login',
             element: <LoginPage />,
-          },
-          {
-            path: 'logout',
-            action: logoutAction,
           },
           {
             path: 'mypage',

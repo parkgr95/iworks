@@ -1,4 +1,4 @@
-import { Link, Form, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useState } from "react";
 import { useUser } from "../utils/userInfo";
@@ -16,6 +16,12 @@ function MainNav() {
     setIsDropdownOpen(false);
   }
 
+  function handleLogout() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    return navigate('/user/login');
+  }
+  
   return (
     <nav className="max-full flex justify-between p-4 bg-mainBlue h-14">
       <div className="flex items-center space-x-3">
@@ -51,7 +57,7 @@ function MainNav() {
           {/* Dropdown menu */}
           {isDropdownOpen && (
             <div
-              className="z-50 absolute right-0 mt-3 w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+              className="z-4- absolute right-0 mt-3 w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
               id="user-dropdown"
               onClick={closeDropdown}
             >
@@ -65,9 +71,7 @@ function MainNav() {
                   <Link to="/user/mypage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">마이페이지</Link>
                 </li>
                 <li>
-                  <Form action="/user/logout" method="post">
-                    <button className="block w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그아웃</button>
-                  </Form>
+                  <button onClick={handleLogout} className="block w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그아웃</button>
                 </li>
                 <li>
                   <Link to="/admin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin</Link>
