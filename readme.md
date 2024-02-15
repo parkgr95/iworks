@@ -11,12 +11,12 @@
 | Backend | Backend | Backend | Backend | 
 |--|--|--|--|
 | <img src="" width=400px alt=""/> | <img src="" width=400px alt=""/> |<img src="" width=400px alt=""/>	|	
-| 권용재 | 박기련 | 이수현	|한지원|
+| [권용재](https://github.com/DevYJKwon) | [박기련](https://github.com/parkgr95) | [이수현](https://github.com/suhyeon06)	|[한지원](https://github.com/jiwon83)|
 
 | Frontend | Frontend |
 |--|--|
 |<img src="" width=400px alt=""/>|<img src="" width=400px alt=""/>	|	<img src="" width=400px alt=""/>|
-|김지용|진창현|
+|[김지용](https://github.com/gimjiyong)|[진창현](https://github.com/JDomynic)|
 
 ## 🛠️ PROJECT STACK
 
