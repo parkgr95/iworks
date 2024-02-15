@@ -19,15 +19,13 @@ public class AdminDepartmentController {
     // 부서 등록
     @PostMapping("/")
     public ResponseEntity<?> createDepartment(@RequestBody AdminDepartmentCreateRequestDto requestDto) {
-        adminService.createDepartment(requestDto);
-        return response.handleSuccess("부서 등록 완료");
+        return adminService.createDepartment(requestDto);
     }
 
     // 부서 수정
     @PutMapping("/{departmentId}")
     public ResponseEntity<?> updateDepartment(@PathVariable(name = "departmentId") int departmentId, @RequestBody AdminDepartmentUpdateRequestDto requestDto) {
-        adminService.updateDepartment(departmentId, requestDto);
-        return response.handleSuccess("부서 수정 완료");
+        return adminService.updateDepartment(departmentId, requestDto);
     }
 
     // 부서 전체 조회
@@ -39,6 +37,6 @@ public class AdminDepartmentController {
     // 부서 세부 조회
     @GetMapping("/{departmentId}")
     public ResponseEntity<?> getDepartment(@PathVariable(name = "departmentId") int departmentId) {
-        return response.handleSuccess(adminService.getDepartment(departmentId));
+        return adminService.getDepartment(departmentId);
     }
 }
