@@ -11,12 +11,12 @@ public enum ScheduleErrorCode implements ErrorCode {
     SCHEDULE_IS_DELETED(400, "SCHEDULE_03", "삭제된 할일입니다.");
 
     private final int statusCode;
-    private final String errorCode;
+    private final String result;
     private final String message;
 
-    ScheduleErrorCode(int statusCode, String errorCode, String message) {
+    ScheduleErrorCode(int statusCode, String result, String message) {
         this.statusCode = statusCode;
-        this.errorCode = errorCode;
+        this.result = result;
         this.message = message;
     }
 

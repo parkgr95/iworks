@@ -10,14 +10,14 @@ import org.springframework.http.ResponseEntity;
 @Builder
 public class GlobalExceptionResponseDto {
 
-    private String errorCode;
+    private String result;
     private String message;
 
     public static ResponseEntity<GlobalExceptionResponseDto> toResponse(GlobalException e) {
         return ResponseEntity
                 .status(e.getStatusCode())
                 .body(GlobalExceptionResponseDto.builder()
-                        .errorCode(e.getErrorCode())
+                        .result(e.getResult())
                         .message(e.getMessage())
                         .build()
                 );

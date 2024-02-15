@@ -6,16 +6,16 @@ import lombok.Getter;
 @Getter
 public enum CommentErrorCode implements ErrorCode {
 
-    COMMMENT_NOT_EXIST(400, "COMMMENT_01", "해당 게시글이 존재하지 않습니다.");
+    COMMMENT_NOT_EXIST(400, "error", "해당 댓글이 존재하지 않습니다.");
 
 
     private final int statusCode;
-    private final String errorCode;
+    private final String result;
     private final String message;
 
-    CommentErrorCode(int statusCode, String errorCode, String message) {
+    CommentErrorCode(int statusCode, String result, String message) {
         this.statusCode = statusCode;
-        this.errorCode = errorCode;
+        this.result = result;
         this.message = message;
     }
 
