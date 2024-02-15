@@ -11,6 +11,7 @@ import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleCreateReq
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.schedule.dto.schedule.response.ScheduleResponseDto;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
+import com.example.iworks.domain.schedule.exception.ScheduleErrorCode;
 import com.example.iworks.domain.schedule.exception.ScheduleException;
 import com.example.iworks.domain.schedule.repository.schedule.ScheduleRepository;
 import com.example.iworks.domain.user.domain.User;
@@ -57,7 +58,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto getSchedule(Integer scheduleId) {
-        return new ScheduleResponseDto(scheduleRepository.getReferenceById(scheduleId));
+        Schedule findSchedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_NOT_EXIST));
+        return new ScheduleResponseDto(findSchedule);
     }
 
     @Override
