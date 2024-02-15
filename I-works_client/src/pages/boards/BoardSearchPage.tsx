@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import axios from "axios"
 import PostType from "../../interface/BoardType"
 import dateUtils from "../../utils/dateUtils"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserType {
   userId: string
@@ -26,8 +27,16 @@ function BoardSearch() {
     console.log(searchKeyword)
     async function getSearchData() {
       try {
-        const userRes = await axios.get(`https://suhyeon.site/api/address/user/all`);
-        const searchRes = await axios.get(`https://suhyeon.site/api/board/total-search?keywords=${searchKeyword}`)
+        const userRes = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        });
+        const searchRes = await axios.get(`https://suhyeon.site/api/board/total-search?keywords=${searchKeyword}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         console.log(searchRes)
         setUsers(userRes.data.data)
         setSearchResult(searchRes.data.data)

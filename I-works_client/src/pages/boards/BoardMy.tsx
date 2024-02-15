@@ -4,6 +4,7 @@ import PostType from "../../interface/BoardType"
 import { Link } from "react-router-dom"
 import dateUtils from "../../utils/dateUtils"
 import { useUser } from "../../utils/userInfo"
+import { getAccessToken } from "../../utils/auth"
 
 function BoardMy() {
   const loginedUser = useUser()
@@ -11,7 +12,11 @@ function BoardMy() {
   const [boardList, setBoardList] = useState<PostType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/board`)
+    axios.get(`https://suhyeon.site/api/board`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      }
+    })
       .then((res) => {
         setBoardList(res.data.data)
       })

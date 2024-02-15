@@ -3,6 +3,7 @@ import { Outlet, Link, useNavigate } from "react-router-dom"
 import { Button } from "flowbite-react"
 import axios from "axios"
 import { PiCaretDownThin } from "react-icons/pi";
+import { getAccessToken } from "../../utils/auth";
 interface orginizationType {
   departmentName?: string,
   departmentId?: string,
@@ -38,7 +39,11 @@ function AddressSideBar() {
 
 
   useEffect(() => {
-    axios.get('https://suhyeon.site/api/address/department/all')
+    axios.get('https://suhyeon.site/api/address/department/all', {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      }
+    })
       .then((res) => {
         setDepartmentList(res.data.data);
       })

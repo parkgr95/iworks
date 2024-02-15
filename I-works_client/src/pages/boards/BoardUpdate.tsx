@@ -33,7 +33,11 @@ const BoardUpdate = () => {
   useEffect(() => {
     async function getBoardDetail(boardId: string) {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/board/${boardId}`)
+        const res = await axios.get(`https://suhyeon.site/api/board/${boardId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         const boardDetailData = res.data.data
 
         setBoardTitle(boardDetailData.boardTitle)

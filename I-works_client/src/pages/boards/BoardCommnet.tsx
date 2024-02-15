@@ -44,7 +44,11 @@ function BoardComment({ boardId }: Props) {
   useEffect(() => {
     async function getComments() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/comment/byBoard/${boardId}`)
+        const res = await axios.get(`https://suhyeon.site/api/comment/byBoard/${boardId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         const commentsData = res.data.data
         console.log(res.data.data)
         setComments(commentsData)
@@ -54,7 +58,11 @@ function BoardComment({ boardId }: Props) {
     }
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`)
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         setUsers(res.data.data)
       } catch (err) {
         console.log(err)
@@ -65,7 +73,11 @@ function BoardComment({ boardId }: Props) {
   }, [boardId])
   const getComments = async () => {
     try {
-      const res = await axios.get(`https://suhyeon.site/api/comment/byBoard/${boardId}`);
+      const res = await axios.get(`https://suhyeon.site/api/comment/byBoard/${boardId}`, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      });
       const commentsData = res.data.data;
       setComments(commentsData);
     } catch (err) {

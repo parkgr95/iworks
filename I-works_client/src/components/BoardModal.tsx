@@ -1,6 +1,7 @@
 import { Modal } from "flowbite-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { getAccessToken } from "../utils/auth";
 
 interface BoardModalProps {
   show: boolean;
@@ -24,8 +25,16 @@ const BoardModal: React.FC<BoardModalProps> = ({ show, onClose, onSelect }) => {
   useEffect(() => {
     if (show) {
       axios.all([
-        axios.get('https://suhyeon.site/api/address/department/all'),
-        axios.get('https://suhyeon.site/api/address/team/all'),
+        axios.get('https://suhyeon.site/api/address/department/all', {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        }),
+        axios.get('https://suhyeon.site/api/address/team/all', {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        }),
       ])
         .then(axios.spread((departmentRes, teamRes) => {
           setDepartmentList(departmentRes.data.data);

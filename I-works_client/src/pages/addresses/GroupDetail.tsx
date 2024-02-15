@@ -40,7 +40,11 @@ function GroupDetail() {
     // 상세 페이지 정보 받아오기
     async function getGroupDetail() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/team/${groupId}`)
+        const res = await axios.get(`https://suhyeon.site/api/address/team/${groupId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         setgroupDetail(res.data.data)
       }
       catch (err) {

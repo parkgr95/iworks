@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserData {
   userId: string,
@@ -20,7 +21,11 @@ function AddressIndex() {
   const [userAll, setUserAll] = useState<UserData[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/address/user/all`)
+    axios.get(`https://suhyeon.site/api/address/user/all`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      }
+    })
       .then((res) => {
         setUserAll(res.data.data)
       })

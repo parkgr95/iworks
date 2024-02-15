@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
 import { useParams } from "react-router"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserData {
   userId: string,
@@ -21,7 +22,11 @@ function AddressList() {
   const [userAll, setUserAll] = useState<UserData[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/address/user/all`)
+    axios.get(`https://suhyeon.site/api/address/user/all`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      }
+    })
       .then((res) => {
         const data = res.data.data
         const filteredData = departmentId ? data.filter((user: UserData) => user.departmentId == departmentId) : data

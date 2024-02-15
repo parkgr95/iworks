@@ -50,7 +50,11 @@ function BoardDetail() {
     // 상세 페이지 정보 받아오기
     async function getBoardDetail(boardId: string) {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/board/${boardId}`)
+        const res = await axios.get(`https://suhyeon.site/api/board/${boardId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         const boardDetailData = res.data.data
 
         setBoardDetail(boardDetailData)
@@ -63,7 +67,11 @@ function BoardDetail() {
     // 유저 목록 받아오기
     async function getUsers(boardDetail: PostType) {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        });
         const users = res.data.data
         const filteredUser = users.find((user: UserType) => user.userId == boardDetail.boardCreatorId)
 

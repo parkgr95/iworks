@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import PostType from "../../interface/BoardType"
 import { Link, useParams } from "react-router-dom"
 import dateUtils from "../../utils/dateUtils"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserType {
   userId: string
@@ -25,7 +26,11 @@ function BoardList() {
   useEffect(() => {
     async function getBoardList(boardCategoryCodeId: string, boardOwnerId: string) {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/board/byCategory?boardCategoryCodeId=${boardCategoryCodeId}&boardOwnerId=${boardOwnerId}`)
+        const res = await axios.get(`https://suhyeon.site/api/board/byCategory?boardCategoryCodeId=${boardCategoryCodeId}&boardOwnerId=${boardOwnerId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         const boardListData = res.data.data
         setBoardList(boardListData)
       }
@@ -37,7 +42,11 @@ function BoardList() {
 
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        });
         setUsers(res.data.data)
       } catch (err) {
         console.log(err);

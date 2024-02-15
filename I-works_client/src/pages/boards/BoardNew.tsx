@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import PostType from "../../interface/BoardType"
 import { Link } from "react-router-dom"
 import dateUtils from "../../utils/dateUtils"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserType {
   userId: string
@@ -22,7 +23,11 @@ function BoardNew() {
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/board`)
+    axios.get(`https://suhyeon.site/api/board` , {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      }
+    })
       .then((res) => {
         const allPosts: PostType[] = res.data.data;
         const filteredPosts = allPosts.filter(post => {
@@ -43,7 +48,11 @@ function BoardNew() {
 
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        });
         setUsers(res.data.data)
       } catch (err) {
         console.log(err);

@@ -38,7 +38,11 @@ function BoardBookmark() {
 
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        });
         setUsers(res.data.data)
       } catch (err) {
         console.log(err);

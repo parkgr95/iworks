@@ -49,8 +49,16 @@ function BoardSideBar() {
 
   useEffect(() => {
     axios.all([
-      axios.get('https://suhyeon.site/api/address/department/all'),
-      axios.get('https://suhyeon.site/api/address/team/all'),
+      axios.get('https://suhyeon.site/api/address/department/all', {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      }),
+      axios.get('https://suhyeon.site/api/address/team/all', {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      }),
       axios.get(`https://suhyeon.site/api/address/team/my`, {
         headers: {
           Authorization: 'Bearer ' + getAccessToken(),

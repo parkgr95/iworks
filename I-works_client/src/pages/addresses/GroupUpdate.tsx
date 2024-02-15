@@ -73,7 +73,11 @@ function GroupUpdate() {
   useEffect(() => {
     async function getGroupDetail() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/team/${groupId}`)
+        const res = await axios.get(`https://suhyeon.site/api/address/team/${groupId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         const groupDetailData: GroupType = res.data.data
         
         setgroupDetail(groupDetailData)

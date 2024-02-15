@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import { getAccessToken } from "../../utils/auth"
 
 interface GroupType {
   teamId: string
@@ -13,7 +14,11 @@ function GroupList() {
   useEffect(() => {
     async function getTeamList() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/team/all`)
+        const res = await axios.get(`https://suhyeon.site/api/address/team/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          }
+        })
         setTeamList(res.data.data)
       }
       catch (err) {
