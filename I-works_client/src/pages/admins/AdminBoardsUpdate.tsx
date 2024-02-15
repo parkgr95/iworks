@@ -3,8 +3,8 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams, Form } from 'react-router-dom'
 
 import BoardModal from '../../components/BoardModal'
-import ReactQuill from "react-quill"
-import "react-quill/dist/quill.snow.css"
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import { Button } from 'flowbite-react'
 
 const AdminBoardsUpdate = () => {
@@ -39,8 +39,7 @@ const AdminBoardsUpdate = () => {
         setBoardContent(boardDetailData.boardContent)
         setBoardOwnerId(boardDetailData.boardOwnerId)
         setCategoryCodeId(boardDetailData.boardCategoryId)
-      }
-      catch (err) {
+      } catch (err) {
         console.log(err)
       }
     }
@@ -50,16 +49,16 @@ const AdminBoardsUpdate = () => {
 
   function handleUpdate(event: FormEvent) {
     event.preventDefault()
-    const plainTextContent = (boardContent || '').replace(/<[^>]+>/g, '');
+    const plainTextContent = (boardContent || '').replace(/<[^>]+>/g, '')
     const updateBoard = {
-      "boardTitle": boardTitle,
-      "boardContent": plainTextContent,
-      "boardCreatorId": '1',
-      "boardIsDeleted": '0',
-      "boardCategoryCodeId": boardCategoryCodeId,
-      "boardOwnerId": boardOwnerId,
+      boardTitle: boardTitle,
+      boardContent: plainTextContent,
+      boardCreatorId: '1',
+      boardIsDeleted: '0',
+      boardCategoryCodeId: boardCategoryCodeId,
+      boardOwnerId: boardOwnerId,
     }
-
+    console.log(updateBoard)
     axios
       .put(`https://suhyeon.site/api/board/update/${boardId}`, updateBoard)
       .then(() => {
@@ -72,22 +71,26 @@ const AdminBoardsUpdate = () => {
   }
 
   // 모달창 구현
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedBoard, setselectedBoard] = useState<string | null>(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [selectedBoard, setselectedBoard] = useState<string | null>(null)
 
   const openModal = () => {
-    setModalIsOpen(true);
-  };
+    setModalIsOpen(true)
+  }
 
   const closeModal = () => {
-    setModalIsOpen(false);
-  };
+    setModalIsOpen(false)
+  }
 
-  const handleSelectBoard = (boardName: string, boardOwnerId: string, boardCategoryCodeId: string) => {
-    setselectedBoard(boardName);
+  const handleSelectBoard = (
+    boardName: string,
+    boardOwnerId: string,
+    boardCategoryCodeId: string,
+  ) => {
+    setselectedBoard(boardName)
     setBoardOwnerId(boardOwnerId)
     setCategoryCodeId(boardCategoryCodeId)
-  };
+  }
 
   return (
     <div>
@@ -97,7 +100,11 @@ const AdminBoardsUpdate = () => {
       <Form className="flex flex-col" onSubmit={handleUpdate}>
         <div className="flex items-center">
           <span>게시판 : </span>
-          <Button className="ml-8 h-8 w-auto bg-mainGray text-black" type="button" onClick={openModal}>
+          <Button
+            className="ml-8 h-8 w-auto bg-mainGray text-black"
+            type="button"
+            onClick={openModal}
+          >
             게시판 선택
           </Button>
           <p className="ml-2">{selectedBoard}</p>
@@ -108,16 +115,28 @@ const AdminBoardsUpdate = () => {
           />
         </div>
         <div className="flex items-center my-2">
-          <label className="mr-14" htmlFor="title">제목 : </label>
-          <input onChange={onTitleChange} className="h-8 w-3/4" type="text" name="boardTitle" value={boardTitle} id="title" required />
+          <label className="mr-14" htmlFor="title">
+            제목 :{' '}
+          </label>
+          <input
+            onChange={onTitleChange}
+            className="h-8 w-3/4"
+            type="text"
+            name="boardTitle"
+            value={boardTitle}
+            id="title"
+            required
+          />
         </div>
         <div className="">
-          <label className="mr-10" htmlFor="file">첨부파일 : </label>
+          <label className="mr-10" htmlFor="file">
+            첨부파일 :{' '}
+          </label>
           <input className="h" type="file" name="" id="file" />
         </div>
         <div className="mt-5">
           <ReactQuill
-            style={{ height: "300px" }}
+            style={{ height: '300px' }}
             theme="snow"
             // modules={modules}
             // formats={formats}
@@ -127,8 +146,10 @@ const AdminBoardsUpdate = () => {
           />
         </div>
         <br />
-        <div className='flex justify-end mt-10 '>
-          <Button className='bg-mainGreen mr-4' type='submit'>수정</Button>
+        <div className="flex justify-end mt-10 ">
+          <Button className="bg-mainGreen mr-4" type="submit">
+            수정
+          </Button>
           <Button onClick={backToIndex}>취소</Button>
         </div>
       </Form>

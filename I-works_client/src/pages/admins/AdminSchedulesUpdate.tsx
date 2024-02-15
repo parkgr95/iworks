@@ -28,7 +28,7 @@ interface ScheduleType {
 
 const AdminSchedulesUpdate = () => {
   const { scheduleId = '' } = useParams<{ scheduleId: string }>()
-
+  // const [formState, setFormState] = useState<ScheduleEditForm>()
   const navigate = useNavigate()
   const backToIndex = () => {
     navigate('/admin/schedules')
@@ -245,5 +245,4 @@ const AdminSchedulesUpdate = () => {
     </div >
   )
 }
-
 export default AdminSchedulesUpdate
