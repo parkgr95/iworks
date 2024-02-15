@@ -29,4 +29,11 @@ public class UserSearchRepositoryImpl implements UserSearchRepository{
                 .where(user.userEmail.eq(email).and(user.userIsDeleted.isFalse())).fetchOne();
     }
 
+    @Override
+    public User getAvailableUserByEid(String eid) {
+        return jpaQueryFactory
+                .selectFrom(user)
+                .where(user.userEmail.eq(eid).and(user.userIsDeleted.isFalse())).fetchOne();
+    }
+
 }

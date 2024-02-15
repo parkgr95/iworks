@@ -8,4 +8,6 @@ public interface UserSearchRepository {
     List<User> getUserListByUserIds(List<Integer> dto);
 
     User getAvailableUserByEmail(String email);
+
+    User getAvailableUserByEid(String eid);
 }
