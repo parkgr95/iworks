@@ -76,7 +76,6 @@ function AdminUsersDetail() {
       })
 
     getGroupDetail()
-    console.log("ss")
   }, [userId])
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -131,7 +130,7 @@ function AdminUsersDetail() {
             <div className="">사번 : {userDetail?.userEid}</div>
           </div>
           <div>
-            <div className="">활성화 여부 : {userDetail?.userIsDeleted ? "활성화" : "비활성화"}</div>
+            <div className="">활성화 여부 : {userDetail?.userIsDeleted ? "비활성화" : "활성화"}</div>
           </div>
           <div>
             <Label htmlFor="userNameLast">성 / </Label>

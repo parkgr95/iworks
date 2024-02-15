@@ -71,7 +71,8 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
       .then((response) => {
         alert("회원가입 성공!")
         console.log(response.data)
-        formRef.current?.reset()        
+        formRef.current?.reset()
+        dialog.current?.close()
       })
       .catch((error) => {
         console.log(error)
@@ -110,7 +111,7 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
           <Label className="text-lg">직급</Label>
           <Select name="userPositionCodeId" required >
             {positionList.map((positonInfo : PositonInfo ) => {
-              return <option key={positonInfo.codeId} value={positonInfo.codeId}>{positonInfo.codeName.slice(5)}</option>
+              return <option key={positonInfo.codeId} value={positonInfo.codeId}>{positonInfo.codeName}</option>
             })}
           </Select>
         </div>

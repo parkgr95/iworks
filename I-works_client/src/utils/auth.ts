@@ -17,14 +17,13 @@ function tokenLoader () {
   return null
 }
 
-function getDecoded(){
+function getDecoded(): { role: string[] | null } | null {
   const token = getAccessToken();
-  if(token != null){
-    const decoded = jwtDecode(token);
-    return decoded
+  if (token != null) {
+    const decoded = jwtDecode(token) as { role: string[] | null };
+    return decoded;
   }
   return null;
 }
-
 
 export { getAccessToken, tokenLoader,getDecoded }

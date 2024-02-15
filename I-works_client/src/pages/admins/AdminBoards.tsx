@@ -4,6 +4,7 @@ import PostType from "../../interface/BoardType"
 import dateUtils from "../../utils/dateUtils"
 import { Button } from "flowbite-react"
 import { useNavigate } from "react-router-dom"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserType {
   userId: string
@@ -23,8 +24,7 @@ function AdminBoards() {
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    // axios.get(`https://suhyeon.site/api/admin/board/`)
-    axios.get(`https://suhyeon.site/api/board`)
+    axios.get(`https://suhyeon.site/api/admin/board`)
       .then((res) => {
         setBoardList(res.data.data)
       })
@@ -59,8 +59,12 @@ function AdminBoards() {
       return; // 사용자가 취소한 경우 함수를 종료합니다.
     }
     axios
-      .put(`https://suhyeon.site/api/board/delete/${boardId}`, {
+      .post(`https://suhyeon.site/api/admin/board/delete/${boardId}`, {
         'boardIsDeleted': '1'
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
       })
       .then(() => {
         alert('삭제되었습니다.')

@@ -100,6 +100,7 @@ const AdminDepartmentsUpdate: React.FC<ModalProps> = ({ show, onClose, departmen
       })
       .then((res) => {
         navigate("/admin/departments")
+        window.location.reload()
         onClose()
         console.log(res.data)
       })

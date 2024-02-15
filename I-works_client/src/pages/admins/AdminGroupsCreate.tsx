@@ -42,31 +42,32 @@ function AdminGroupsCreate() {
     const targetIdArray = teamMemberData.map(user => user.userId);
 
     axios
-      .post("https://suhyeon.site/api/admin/team/", {
+      .post("https://suhyeon.site/api/admin/team/create", {
         "teamName": teamName,
         "teamLeader": teamLeader,
         "teamDescription": teamDescription
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
       })
       .then((res) => {
         const teamId = res.data.data.teamId
+        console.log(teamId)
         if (!teamId) {
           alert("팀ID가 존재하지 않습니다.")
         }
-        return axios.post(`https://suhyeon.site/api/address/team/user/${teamId}`,
+        return axios.post(`https://suhyeon.site/api/admin//team/user/${teamId}`,
           {
             userIds: targetIdArray
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + getAccessToken(),
-            },
-          });
+          })
       })
       .then((res) => {
         navigate('/admin/groups')
         console.log(res.data)
       })
       .catch((err) => {
+        console.log(targetIdArray)
         console.log(err)
       })
   }

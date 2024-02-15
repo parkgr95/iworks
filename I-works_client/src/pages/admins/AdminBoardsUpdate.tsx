@@ -6,6 +6,7 @@ import BoardModal from '../../components/BoardModal'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { Button } from 'flowbite-react'
+import { getAccessToken } from '../../utils/auth'
 
 const AdminBoardsUpdate = () => {
   const { boardId = '' } = useParams<{ boardId: string }>()
@@ -60,7 +61,11 @@ const AdminBoardsUpdate = () => {
     }
     console.log(updateBoard)
     axios
-      .put(`https://suhyeon.site/api/board/update/${boardId}`, updateBoard)
+      .post(`https://suhyeon.site/api/admin/board/update/${boardId}`, updateBoard, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      })
       .then(() => {
         alert('수정되었습니다.')
         navigate('/admin/boards/')

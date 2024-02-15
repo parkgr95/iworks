@@ -3,17 +3,9 @@ import { getDecoded } from "../utils/auth";
 
 
 function MainNav() {
-  let decoded = getDecoded();
-  let isAdmin = false;
-  if(decoded != null){
-    for(let role of decoded.role){
-      if(role == 'ROLE_ADMIN'){
-        isAdmin = true;
-      }
-    }
-  }
+  const decoded = getDecoded();
+  const isAdmin = decoded?.role?.includes('ROLE_ADMIN') ?? false;
 
-  
   return (
     <nav className="max-full flex justify-between p-4 bg-mainBlue h-14">
       <div className="flex items-center space-x-3">

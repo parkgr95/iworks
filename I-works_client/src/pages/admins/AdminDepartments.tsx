@@ -48,7 +48,7 @@ function AdminDepartments() {
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/admin/department/`)
       .then((res) => {
-        setDepartmentList(res.data.data);
+        setDepartmentList(res.data.data.body.data);
       })
       .catch((err) => {
         console.log(err);
@@ -123,7 +123,7 @@ function AdminDepartments() {
                         <Button onClick={() => openModal(department.departmentId)} className="bg-mainBlue text-white">
                           <span>수정</span>
                         </Button>
-                        <span className="ml-4 font-semibold">{ department.departmentIsUsed ? "활성화" : "비활성화" }</span>
+                        <span className="ml-4 font-semibold">{department.departmentIsUsed ? "활성화" : "비활성화"}</span>
                       </div>
                     </td>
                   </tr>

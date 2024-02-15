@@ -76,6 +76,7 @@ const AdminDepartmentsCreate: React.FC<ModalProps> = ({ show, onClose }) => {
       })
       .then((res) => {
         navigate("/admin/departments")
+        window.location.reload()
         onClose()
         console.log(res)
       })

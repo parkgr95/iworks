@@ -108,7 +108,7 @@ function AdminGroupsUpdate() {
     const teamLeader = groupDetail.teamLeader
 
     axios
-      .put(`https://suhyeon.site/api/address/team/${groupId}`, {
+      .put(`https://suhyeon.site/api/admin/team/${groupId}`, {
         "teamName": teamName,
         "teamLeaderId": teamLeader,
         "teamDescription": teamDescription
@@ -121,7 +121,7 @@ function AdminGroupsUpdate() {
       .then((res) => {
         console.log(res.data);
         if (newMembersIds.length > 0) {
-          return axios.post(`https://suhyeon.site/api/address/team/user/${groupId}`,
+          return axios.post(`https://suhyeon.site/api/admin/team/user/${groupId}`,
             {
               userIds: newMembersIds
             },
@@ -151,7 +151,7 @@ function AdminGroupsUpdate() {
     }
 
     axios
-      .delete(`https://suhyeon.site/api/address/team/user/${groupId}`,
+      .delete(`https://suhyeon.site/api/admin/team/user/${groupId}`,
         {
           data: { "targetId": userId },
           headers: {
@@ -263,7 +263,7 @@ function AdminGroupsUpdate() {
         </div>
         <div className="flex justify-end mt-4">
           <Button onClick={handleUpdate} className="bg-mainGreen" type="submit">수정</Button>
-          <Button onClick={() => { navigate(`/address/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
+          <Button onClick={() => { navigate(`/admin/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
         </div>
       </Form>
     </div>

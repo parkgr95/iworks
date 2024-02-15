@@ -32,9 +32,8 @@ function AdminDepartments() {
   const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/team/`).then((res) => {
+    axios.get(`https://suhyeon.site/api/admin/team/all`).then((res) => {
         setGroupList(res.data.data);
-        console.log(res.data.data)
       })
       .catch((err) => {
         console.log(err);
