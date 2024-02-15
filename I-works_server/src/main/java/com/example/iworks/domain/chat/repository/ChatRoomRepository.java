@@ -1,7 +1,7 @@
 package com.example.iworks.domain.chat.repository;
 
-import com.example.iworks.domain.chat.domain.ChatRoom;
-import com.example.iworks.domain.chat.pubsub.RedisSubscriber;
+import com.example.iworks.domain.chat.dto.ChatRoom;
+import com.example.iworks.domain.chat.service.RedisSubscriber;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
@@ -16,10 +16,12 @@ import java.util.*;
 @Repository
 public class ChatRoomRepository {
 
+    private static final String CHAT_ROOM = "CHAT_ROOM";
+
     private final RedisMessageListenerContainer redisMessageListener;
     private final RedisSubscriber redisSubscriber;
-    private static final String CHAT_ROOMS = "CHAT_ROOM";
     private final RedisTemplate<String, Object> redisTemplate;
+
     private HashOperations<String, String, ChatRoom> opsHashChatRoom;
     private Map<String, ChannelTopic> topics;
 
@@ -29,30 +31,30 @@ public class ChatRoomRepository {
         topics = new HashMap<>();
     }
 
-    public List<ChatRoom> findAllRoom() {
-        return opsHashChatRoom.values(CHAT_ROOMS);
+    public List<ChatRoom> findAll() {
+        return opsHashChatRoom.values(CHAT_ROOM);
     }
 
-    public ChatRoom findRoomById(String id) {
-        return opsHashChatRoom.get(CHAT_ROOMS, id);
+    public ChatRoom findChatRoomById(String chatRoomId) {
+        return opsHashChatRoom.get(CHAT_ROOM, chatRoomId);
     }
 
-    public ChatRoom createChatRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
-        opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
+    public ChatRoom createChatRoom(String chatRoomName) {
+        ChatRoom chatRoom = ChatRoom.create(chatRoomName);
+        opsHashChatRoom.put(CHAT_ROOM, chatRoom.getChatRoomId(), chatRoom);
         return chatRoom;
     }
 
-    public void enterChatRoom(String roomId) {
-        ChannelTopic topic = topics.get(roomId);
-        if (topic == null) {
-            topic = new ChannelTopic(roomId);
-            redisMessageListener.addMessageListener(redisSubscriber, topic);
-            topics.put(roomId, topic);
-        }
+    public void enterChatRoom(String chatRoomId) {
+        topics.computeIfAbsent(chatRoomId, id -> {
+            ChannelTopic newTopic = new ChannelTopic(id);
+            redisMessageListener.addMessageListener(redisSubscriber, newTopic);
+            return newTopic;
+        });
     }
 
-    public ChannelTopic getTopic(String roomId) {
-        return topics.get(roomId);
+    public ChannelTopic getTopic(String chatRoomId) {
+        return topics.get(chatRoomId);
     }
+
 }

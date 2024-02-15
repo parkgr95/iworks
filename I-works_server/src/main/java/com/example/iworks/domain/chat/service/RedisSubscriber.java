@@ -1,6 +1,6 @@
-package com.example.iworks.domain.chat.pubsub;
+package com.example.iworks.domain.chat.service;
 
-import com.example.iworks.domain.chat.domain.ChatMessage;
+import com.example.iworks.domain.chat.dto.ChatMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class RedisSubscriber implements MessageListener {
         try {
             String publishMessage = redisTemplate.getStringSerializer().deserialize(message.getBody());
             ChatMessage roomMessage = objectMapper.readValue(publishMessage, ChatMessage.class);
-            messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getRoomId(), roomMessage);
+            messagingTemplate.convertAndSend("/sub/chat/room/" + roomMessage.getChatRoomId(), roomMessage);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
