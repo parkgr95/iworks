@@ -1,5 +1,5 @@
 import BoardSideBar from './boards/BoardSideBar'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { getAccessToken } from '../utils/auth'
 import { useNavigate } from 'react-router-dom'
 
