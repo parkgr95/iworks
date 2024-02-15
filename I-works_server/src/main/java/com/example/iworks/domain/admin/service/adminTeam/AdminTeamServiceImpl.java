@@ -1,12 +1,15 @@
 package com.example.iworks.domain.admin.service.adminTeam;
 
+import com.example.iworks.domain.address.dto.response.AddressTeamInfoResponseDto;
 import com.example.iworks.domain.admin.dto.adminTeam.request.AdminTeamCreateRequestDto;
 import com.example.iworks.domain.admin.dto.adminTeam.request.AdminTeamUpdateRequestDto;
 import com.example.iworks.domain.admin.dto.adminTeam.response.AdminTeamResponseDto;
 import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.team.repository.team.TeamRepository;
+import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,7 @@ import static java.util.stream.Collectors.toList;
 public class AdminTeamServiceImpl implements AdminTeamService {
 
     private final TeamRepository teamRepository;
+    private final Response response;
 
     private final PageRequest pageRequest = PageRequest.of(0, 10);
 
@@ -54,9 +58,11 @@ public class AdminTeamServiceImpl implements AdminTeamService {
     }
 
     @Override
-    public AdminTeamResponseDto getTeam(int teamId) {
-        return teamRepository.findById(teamId)
-                .map(AdminTeamResponseDto::new)
-                .orElseThrow(IllegalStateException::new);
+    public ResponseEntity<?> getTeam(int teamId) {
+        Team team = teamRepository.findByTeamId(teamId);
+        if (team != null) {
+            return response.handleSuccess(new AddressTeamInfoResponseDto(team));
+        }
+        return response.handleFail("팀을 찾을 수 없습니다.", null);
     }
 }
