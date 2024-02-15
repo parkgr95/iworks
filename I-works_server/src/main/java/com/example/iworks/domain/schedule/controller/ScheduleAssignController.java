@@ -6,8 +6,10 @@ import com.example.iworks.domain.schedule.service.scheduleAssign.ScheduleAssignS
 import com.example.iworks.global.dto.DateCondition;
 import com.example.iworks.global.util.JwtProvider;
 import com.example.iworks.global.util.Response;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ public class ScheduleAssignController {
 
     @PostMapping("/get-by-assignees-and-date")
     public ResponseEntity<Map<String,Object>> getAllByAssigneesAndDate(@RequestBody @Validated ScheduleAssignSearchParameter searchParameterAndDate){
+
         return response.handleSuccess(scheduleAssignService.findByAssignees(searchParameterAndDate.getAssigneeInfos(), searchParameterAndDate.getDateCondition()));
     }
 
@@ -35,7 +38,12 @@ public class ScheduleAssignController {
     }
 
     @PostMapping("/task/date")
-    public ResponseEntity<Map<String,Object>> getAllByUserAndDate(@RequestHeader("Authorization") String authorizationToken, @RequestBody @Validated DateCondition dateCondition){
+    public ResponseEntity<Map<String,Object>> getAllByUserAndDate(@RequestHeader("Authorization") String authorizationToken,
+                                                                  @RequestBody @Valid DateCondition dateCondition,
+                                                                  BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return response.handleFail(bindingResult.getAllErrors().get(0).getDefaultMessage(),null);
+        }
         int userId = jwtProvider.getUserId(authorizationToken);
         return response.handleSuccess(scheduleAssignService.findTaskByUser(userId, dateCondition));
     }
