@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useState, FormEvent, useEffect, ChangeEvent } from 'react'
 import { Form, useParams, useNavigate } from 'react-router-dom'
 import { TextInput, Label, Button, Select } from 'flowbite-react'
-import { getAccessToken, getNewAccessToken } from '../../utils/auth'
+import { getAccessToken } from '../../utils/auth'
 
 interface UserDetailType {
   userId: number
