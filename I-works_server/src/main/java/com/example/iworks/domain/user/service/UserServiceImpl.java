@@ -10,6 +10,7 @@ import com.example.iworks.domain.user.dto.UserGetMyPageResponseDto;
 import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
 import com.example.iworks.domain.user.repository.UserRepository;
+import com.example.iworks.global.util.EmailSender;
 import com.example.iworks.global.util.JwtProvider;
 import com.example.iworks.global.util.RandomStringUtil;
 import com.example.iworks.global.util.Response;
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService{
     private final Response response;
     private final RandomStringUtil randomStringUtil;
     private final JwtProvider jwtProvider;
+    private final EmailSender emailSender;
 
     @Transactional
     @Override
@@ -81,7 +83,21 @@ public class UserServiceImpl implements UserService{
         String password = randomStringUtil.getRandomPassword(length);
         user.setRandomPassword(bCryptPasswordEncoder.encode(password));
         user.setRoleList(roleList);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("입사를 축하합니다.").append("\n");
+        sb.append("사번 : ").append(user.getUserEid()).append("\n");
+        sb.append("임시 비밀번호 : ").append(user.getUserPassword()).append("\n");
+        String message = sb.toString();
+
+        try {
+            emailSender.sendEmail(user.getUserEmail(), "iworks 메시지", message);
+        }catch (InterruptedException e){
+            return response.handleFail("email 전송 실패",null);
+        }
+
         userRepository.save(user);
+
         return response.handleSuccess(password);
     }
 

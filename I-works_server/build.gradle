@@ -44,9 +44,6 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-	// https://mvnrepository.com/artifact/io.openvidu/openvidu-java-client
-	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.29.0'
-
 
 	// === QueryDsl ===
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -59,6 +56,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.2.2'
+
 }
 
 tasks.named('test') {
