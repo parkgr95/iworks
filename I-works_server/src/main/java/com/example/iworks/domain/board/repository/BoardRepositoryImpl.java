@@ -1,8 +1,7 @@
 package com.example.iworks.domain.board.repository;
 
-import com.example.iworks.domain.board.domain.Board;
+import com.example.iworks.domain.board.entity.Board;
 import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
-import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
 import com.example.iworks.domain.board.repository.custom.BoardGetRepository;
 import com.example.iworks.domain.board.repository.custom.BoardSearchRepository;
 import com.example.iworks.domain.code.entity.Code;
@@ -17,8 +16,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.example.iworks.domain.board.domain.QBoard.board;
-import static java.util.stream.Collectors.*;
+import static com.example.iworks.domain.board.entity.QBoard.board;
+import static com.example.iworks.domain.board.entity.QBookmark.bookmark;
 
 @RequiredArgsConstructor
 @Repository
@@ -27,7 +26,7 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<BoardGetResponseDto> findAllByCategory(Pageable pageable, Code boardCategoryCode, int boardOwnerId) {
+    public List<Board> findAllByCategory(Pageable pageable, Code boardCategoryCode, int boardOwnerId) {
         return queryFactory
                 .selectFrom(board)
                 .where(
@@ -37,15 +36,12 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
+                .fetch();
     }
 
     @Override
-    public BoardGetResponseDto findByCategory(int boardId, Code boardCategoryCode, int boardOwnerId) {
-        Board findBoard = queryFactory
+    public Board findByCategory(int boardId, Code boardCategoryCode, int boardOwnerId) {
+        return queryFactory
                 .selectFrom(board)
                 .where(
                         eqBoardCategoryCode(boardCategoryCode)
@@ -54,11 +50,10 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                                 .and(eqDeleted())
                 )
                 .fetchOne();
-        return findBoard != null ? new BoardGetResponseDto(findBoard) : null;
     }
 
     @Override
-    public List<BoardGetResponseDto> findAllByCreator(Pageable pageable, int boardCreatorId) {
+    public List<Board> findAllByCreator(Pageable pageable, int boardCreatorId) {
         return queryFactory
                 .selectFrom(board)
                 .where(
@@ -67,44 +62,51 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
+                .fetch();
     }
 
     @Override
-    public List<BoardGetResponseDto> findAllByKeyword(Pageable pageable, BoardSearchRequestDto keyword) {
+    public List<Board> findAllByKeyword(Pageable pageable, BoardSearchRequestDto keyword) {
         return queryFactory
                 .selectFrom(board)
                 .where(
                         eqBoardCreatorId(keyword.getBoardCreatorId())
-                                .or(eqBoardTitle(keyword.getBoardTitle()))
-                                .or(eqBoardContent(keyword.getBoardContent()))
+                                .or(likeBoardTitle(keyword.getBoardTitle()))
+                                .or(likeBoardContent(keyword.getBoardContent()))
                                 .and(eqDeleted())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
+                .fetch();
     }
 
     @Override
-    public List<BoardGetResponseDto> findAllByKeywords(Pageable pageable, String keywords) {
+    public List<Board> findAllByKeywords(Pageable pageable, String keywords) {
         return queryFactory
                 .selectFrom(board)
                 .where(
-                        eqBoardAndTitle(keywords, keywords)
+                        likeTitleOrContent(keywords, keywords)
                                 .and(eqDeleted())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch()
-                .stream()
-                .map(BoardGetResponseDto::new)
-                .collect(toList());
+                .fetch();
+    }
+
+    @Override
+    public List<Board> findAllByBookmark(Pageable pageable, int userId) {
+        return queryFactory
+                .selectFrom(board)
+                .innerJoin(bookmark)
+                .on(board.eq(bookmark.board))
+                .where(
+                        eqUserId(userId)
+                                .and(eqActive())
+                                .and(eqDeleted())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     private BooleanExpression eqBoardCategoryCode(Code boardCategoryCode) {
@@ -123,20 +125,28 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
         return board.boardCreatorId.eq(boardCreatorId);
     }
 
-    private BooleanBuilder eqBoardAndTitle(String boardTitle, String boardContent) {
-        return eqBoardTitle(boardTitle).or(eqBoardContent(boardContent));
+    private BooleanBuilder likeTitleOrContent(String boardTitle, String boardContent) {
+        return new BooleanBuilder().or(likeBoardTitle(boardTitle)).or(likeBoardContent(boardContent));
     }
 
-    private BooleanBuilder eqBoardTitle(String boardTitle) {
-        return StringUtils.hasText(boardTitle) ? new BooleanBuilder(board.boardTitle.eq(boardTitle)) : new BooleanBuilder();
+    private BooleanBuilder likeBoardTitle(String boardTitle) {
+        return StringUtils.hasText(boardTitle) ? new BooleanBuilder(board.boardTitle.like("%" + boardTitle + "%")) : new BooleanBuilder();
     }
 
-    private BooleanBuilder eqBoardContent(String boardContent) {
-        return StringUtils.hasText(boardContent) ? new BooleanBuilder(board.boardContent.eq(boardContent)) : new BooleanBuilder();
+    private BooleanBuilder likeBoardContent(String boardContent) {
+        return StringUtils.hasText(boardContent) ? new BooleanBuilder(board.boardContent.like("%" + boardContent + "%")) : new BooleanBuilder();
+    }
+
+    private BooleanExpression eqUserId(int userId) {
+        return bookmark.user.userId.eq(userId);
     }
 
     private BooleanExpression eqDeleted() {
         return board.boardIsDeleted.isNull().or(board.boardIsDeleted.eq(Boolean.FALSE));
+    }
+
+    private BooleanExpression eqActive() {
+        return bookmark.bookmarkIsActive.eq(Boolean.TRUE);
     }
 
 }

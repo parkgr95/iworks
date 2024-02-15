@@ -14,29 +14,31 @@ import java.time.LocalDateTime;
 @Getter
 public class ScheduleResponseDto {
 
-    private String scheduleDivisionName;
-    private String scheduleTitle;
-    private Character schedulePriority;
-    private String scheduleContent;
-    private LocalDateTime scheduleStartDate;
-    private LocalDateTime scheduleEndDate;
-    private Boolean scheduleIsFinish;
-    private LocalDateTime scheduleFinishedAt;
-    private String schedulePlace;
+    private final int scheduleId;
+    private final String scheduleDivisionName;
+    private final String scheduleTitle;
+    private final Character schedulePriority;
+    private final String scheduleContent;
+    private final LocalDateTime scheduleStartDate;
+    private final LocalDateTime scheduleEndDate;
+    private final Boolean scheduleIsFinish;
+    private final LocalDateTime scheduleFinishedAt;
+    private final String schedulePlace;
 
     private LocalDateTime meetingDate; // 회의 일시
-    private String meetingCode; // 회의 참여 코드
+    private String meetingSessionId; // 회의 참여 세션 아이디
 
     private Integer scheduleCreatorId;
     private String scheduleCreatorName;
 
-    private LocalDateTime scheduleCreatedAt;
+    private final LocalDateTime scheduleCreatedAt;
     private Integer scheduleModifierId;
     private String scheduleModifierName;
-    private LocalDateTime scheduleModifiedAt;
+    private final LocalDateTime scheduleModifiedAt;
 
 
     public ScheduleResponseDto(Schedule schedule){
+        this.scheduleId = schedule.getScheduleId();
         this.scheduleDivisionName = schedule.getScheduleDivision().getCodeName();
         this.scheduleTitle = schedule.getScheduleTitle();
         this.schedulePriority = schedule.getSchedulePriority();
@@ -50,7 +52,7 @@ public class ScheduleResponseDto {
         Meeting scheduleMeeting = schedule.getScheduleMeeting();
         if (scheduleMeeting != null) {
             this.meetingDate = scheduleMeeting.getMeetingDate();
-            this.meetingCode = scheduleMeeting.getMeetingCode();
+            this.meetingSessionId = scheduleMeeting.getMeetingSessionId();
         }
 
         User scheduleCreator = schedule.getScheduleCreator();

@@ -1,6 +1,6 @@
 package com.example.iworks.domain.notification.domain;
 
-import com.example.iworks.domain.board.domain.Board;
+import com.example.iworks.domain.board.entity.Board;
 import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.user.domain.User;
@@ -39,6 +39,10 @@ public class UserNotification {
     @Column(name = "user_notification_is_deleted", nullable = false)
     private Boolean userNotificationIsDeleted = false; // 알림 삭제 여부
 
+    @Builder.Default
+    @Column(name = "user_notification_is_sent", nullable = false)
+    private Boolean userNotificationIsSent = false; // 알림 전송 여부
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_notification_receiver_id", nullable = false)
     private User userNotificationReceiver; // 받는 유저 아이디
@@ -57,6 +61,9 @@ public class UserNotification {
 
     public void delete() {
         this.userNotificationIsDeleted = true;
+    }
+    public void setIsSent() {
+        this.userNotificationIsSent = true;
     }
 
 }

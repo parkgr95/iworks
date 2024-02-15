@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public class AddressTeamUserResponseDto {
-    private Integer teamUserId;
-    private UserGetMyPageResponseDto userDto;
+    private final Integer teamUserId;
+    private final UserGetMyPageResponseDto userDto;
 
     public AddressTeamUserResponseDto(Integer teamUserId, User user) {
         this.teamUserId = teamUserId;

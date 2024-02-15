@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @Getter
 public class UserNotificationGetAllByUserResponseDto {
 
-    private Integer userNotificationId; //알림 아이디
+    private final Integer userNotificationId; //알림 아이디
 
-    private String userNotificationContent; // 알림 내용
+    private final String userNotificationContent; // 알림 내용
 
-    private LocalDateTime userNotificationCreatedAt; // 알림 생성 일시
+    private final LocalDateTime userNotificationCreatedAt; // 알림 생성 일시
 
-    private Boolean userNotificationIsChecked; // 알림 확인 여부
+    private final Boolean userNotificationIsChecked; // 알림 확인 여부
 
     public UserNotificationGetAllByUserResponseDto(UserNotification userNotification){
         this.userNotificationId = userNotification.getUserNotificationId();

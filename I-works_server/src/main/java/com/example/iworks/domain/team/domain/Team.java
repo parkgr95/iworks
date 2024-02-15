@@ -2,6 +2,7 @@ package com.example.iworks.domain.team.domain;
 
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.admin.dto.adminTeam.request.AdminTeamUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,12 +18,11 @@ import java.util.List;
 @Getter
 public class Team {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
     private int teamId; // 그룹 아이디
 
-    @Column(name = "team_name", length = 20, nullable = false)
+    @Column(name = "team_name", length = 20, nullable = false, unique = true)
     private String teamName; // 그룹명
 
     @Column(name = "team_leader", nullable = false)
@@ -72,6 +72,13 @@ public class Team {
     }
 
     public void update(AddressTeamEditRequestDto requestDto){
+        this.teamName = requestDto.getTeamName();
+        this.teamDescription = requestDto.getTeamDescription();
+        this.teamLeader = requestDto.getTeamLeaderId();
+        this.teamUpdatedAt = LocalDateTime.now();
+    }
+
+    public void update(AdminTeamUpdateRequestDto requestDto){
         this.teamName = requestDto.getTeamName();
         this.teamDescription = requestDto.getTeamDescription();
         this.teamLeader = requestDto.getTeamLeaderId();
