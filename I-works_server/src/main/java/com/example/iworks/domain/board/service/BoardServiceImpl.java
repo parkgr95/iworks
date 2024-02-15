@@ -1,14 +1,20 @@
 package com.example.iworks.domain.board.service;
 
-import com.example.iworks.domain.board.domain.Board;
-import com.example.iworks.domain.board.domain.Bookmark;
+import com.example.iworks.domain.board.entity.Board;
+import com.example.iworks.domain.board.entity.Bookmark;
 import com.example.iworks.domain.board.dto.request.BoardCreateRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardSearchRequestDto;
 import com.example.iworks.domain.board.dto.request.BoardUpdateRequestDto;
 import com.example.iworks.domain.board.dto.response.BoardGetResponseDto;
+import com.example.iworks.domain.board.exception.BoardErrorCode;
+import com.example.iworks.domain.board.exception.BoardException;
 import com.example.iworks.domain.board.repository.BoardRepository;
 import com.example.iworks.domain.board.repository.BookmarkRepository;
+import com.example.iworks.domain.code.exception.CodeErrorCode;
+import com.example.iworks.domain.code.exception.CodeException;
 import com.example.iworks.domain.user.domain.User;
+import com.example.iworks.domain.user.exception.UserErrorCode;
+import com.example.iworks.domain.user.exception.UserException;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.code.repository.CodeRepository;
@@ -18,8 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -34,24 +38,27 @@ public class BoardServiceImpl implements BoardService{
     private final PageRequest pageRequest = PageRequest.of(0, 10);
 
     @Transactional
-    public void createBoard(BoardCreateRequestDto boardCreateRequestDto) {
-        Code code = codeRepository.findById(boardCreateRequestDto.getBoardCategoryCodeId())
-                .orElseThrow(IllegalStateException::new);
-        boardRepository.save(boardCreateRequestDto.toEntity(code));
+    public void createBoard(int userId, BoardCreateRequestDto boardCreateRequestDto) {
+        Code code = findCode(boardCreateRequestDto.getBoardCategoryCodeId());
+        boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
     }
 
     @Transactional
-    public void updateBoard(int boardId, BoardUpdateRequestDto boardUpdateRequestDto) {
-        Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(IllegalStateException::new);
-        findBoard.update(boardUpdateRequestDto);
+    public void updateBoard(int boardId, int userId, BoardUpdateRequestDto boardUpdateRequestDto) {
+        Board board = findBoard(boardId);
+        if (board.getBoardCreatorId() != userId) {
+            throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
+        }
+        board.update(userId, boardUpdateRequestDto);
     }
 
     @Transactional
-    public void deleteBoard(int boardId) {
-        Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(IllegalStateException::new);
-        findBoard.delete();
+    public void deleteBoard(int boardId, int userId) {
+        Board board = findBoard(boardId);
+        if (board.getBoardCreatorId() != userId) {
+            throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
+        }
+        board.delete();
     }
 
     @Override
@@ -60,69 +67,104 @@ public class BoardServiceImpl implements BoardService{
                 .stream()
                 .filter(board -> !Boolean.TRUE.equals(board.getBoardIsDeleted()))
                 .map(BoardGetResponseDto::new)
-                .collect(toList());
+                .toList();
     }
 
     @Override
     public BoardGetResponseDto getBoard(int boardId) {
-        return boardRepository.findById(boardId)
-                .filter(board -> !Boolean.TRUE.equals(board.getBoardIsDeleted()))
-                .map(BoardGetResponseDto::new)
-                .orElseThrow(IllegalStateException::new);
+        return new BoardGetResponseDto(findBoard(boardId));
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByCategory(int boardCategoryCodeId, int boardOwnerId) {
-        return boardRepository.findAllByCategory(pageRequest, findCode(boardCategoryCodeId), boardOwnerId);
+        return boardRepository.findAllByCategory(pageRequest, findCode(boardCategoryCodeId), boardOwnerId)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     @Override
     public BoardGetResponseDto getByCategory(int boardId, int boardCategoryCodeId, int boardOwnerId) {
-        return boardRepository.findByCategory(boardId, findCode(boardCategoryCodeId), boardOwnerId);
+        Board findBoard =  boardRepository.findByCategory(boardId, findCode(boardCategoryCodeId), boardOwnerId);
+        if (findBoard == null) {
+            throw new BoardException(BoardErrorCode.BOARD_BY_CATEGORY_NOT_EXIST);
+        }
+        return new BoardGetResponseDto(findBoard);
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByCreator(int boardCreatorId) {
-        return boardRepository.findAllByCreator(pageRequest, boardCreatorId);
+         return boardRepository.findAllByCreator(pageRequest, boardCreatorId)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
+
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByKeyword(BoardSearchRequestDto keyword) {
-        return boardRepository.findAllByKeyword(pageRequest, keyword);
+        return boardRepository.findAllByKeyword(pageRequest, keyword)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     @Override
     public List<BoardGetResponseDto> getAllByKeywords(String keywords) {
-        return boardRepository.findAllByKeywords(pageRequest, keywords);
+        return boardRepository.findAllByKeywords(pageRequest, keywords)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
     }
 
     @Transactional
     @Override
-    public void updateBookmark(int boardId, String userEid) {
-        Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(IllegalStateException::new);
-        User findUser = userRepository.findByUserEid(userEid);
-        if (findBoard == null || findUser == null) {
-            throw new IllegalStateException("해당 북마크가 없습니다.");
-        }
+    public Boolean activateBookmark(int boardId, int userId) {
+        Board board = findBoard(boardId);
+        User user = findUser(userId);
 
-        Bookmark findBookmark = bookmarkRepository.findBookmarkByBoardAndUser(findBoard, findUser);
+        Bookmark findBookmark = bookmarkRepository.findBookmarkByBoardAndUser(board, user);
         if (findBookmark == null) {
-            Bookmark bookmark = Bookmark.builder()
-                    .board(findBoard)
-                    .user(findUser)
-                    .bookmarkIsActive(true)
-                    .build();
+            Bookmark bookmark = createBookmark(board, user);
             bookmarkRepository.save(bookmark);
+            return true;
         }
         else {
             findBookmark.update();
+            return findBookmark.getBookmarkIsActive();
         }
+    }
+
+    @Override
+    public List<BoardGetResponseDto> getAllByBookmark(int userid) {
+        return boardRepository.findAllByBookmark(pageRequest, userid)
+                .stream()
+                .map(BoardGetResponseDto::new)
+                .toList();
+    }
+
+    private Board findBoard(int boardId) {
+        return boardRepository.findById(boardId)
+                .filter(board -> !Boolean.TRUE.equals(board.getBoardIsDeleted()))
+                .orElseThrow(() -> new BoardException(BoardErrorCode.BOARD_NOT_EXIST));
     }
 
     private Code findCode(int boardCategoryCodeId) {
         return codeRepository.findById(boardCategoryCodeId)
-                .orElseThrow(IllegalStateException::new);
+                .orElseThrow(() -> new CodeException(CodeErrorCode.CODE_NOT_EXIST));
+    }
+
+    private User findUser(int userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_EXIST));
+    }
+
+    private static Bookmark createBookmark(Board board, User user) {
+        return Bookmark.builder()
+                .board(board)
+                .user(user)
+                .bookmarkIsActive(true)
+                .build();
     }
 
 }

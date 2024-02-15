@@ -44,6 +44,6 @@ public class AdminTeamController {
     // 팀 세부 조회
     @GetMapping("/{teamId}")
     public ResponseEntity<?> getTeam(@PathVariable(name = "teamId") int teamId) {
-        return response.handleSuccess(adminService.getTeam(teamId));
+        return adminService.getTeam(teamId);
     }
 }

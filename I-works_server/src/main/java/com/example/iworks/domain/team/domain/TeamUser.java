@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class TeamUser {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_user_id")
     private Integer teamUserId;
 

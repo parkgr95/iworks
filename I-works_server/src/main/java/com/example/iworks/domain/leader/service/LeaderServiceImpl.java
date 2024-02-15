@@ -1,6 +1,6 @@
 package com.example.iworks.domain.leader.service;
 
-import com.example.iworks.domain.board.domain.Board;
+import com.example.iworks.domain.board.entity.Board;
 import com.example.iworks.domain.board.repository.BoardRepository;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.global.util.JwtProvider;

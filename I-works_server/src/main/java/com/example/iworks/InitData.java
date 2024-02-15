@@ -7,7 +7,7 @@ import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.global.util.RandomPasswordUtil;
+import com.example.iworks.global.util.RandomStringUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -29,7 +29,7 @@ import java.util.List;
 public class InitData {
 
     private final InitDataService initDataService;
-    private final static RandomPasswordUtil randomPasswordUtil  = new RandomPasswordUtil();
+    private final static RandomStringUtil RANDOM_STRING_UTIL = new RandomStringUtil();
 
     @PostConstruct
     public void init(){
@@ -39,7 +39,7 @@ public class InitData {
 
     private static String makeRandomPassword(){
         int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
-        return randomPasswordUtil.getRandomPassword(length);
+        return RANDOM_STRING_UTIL.getRandomPassword(length);
     }
     private static Long Eid = 1L; //락 걸기?
 
@@ -77,30 +77,27 @@ public class InitData {
             List<User> userList = new ArrayList<>();
             List<Team> teamList = new ArrayList<>();
             List<Department> departmentList = new ArrayList<>();
-            String [] codeNameList = {"카테고리","타겟","상태","직급"};
+            String [] codeNameList = {"카테고리","타겟","상태","직급", "할일분류"};
             //코드 그룹, 코드 데이터
-            for (int i =0; i <4; i++){
+            for (String codeName : codeNameList){
                 em.persist(CodeGroup.builder()
-                        .codeGroupName(codeNameList[i])
+                        .codeGroupName(codeName)
                         .build());
             }
             CodeGroup codeGroup1 = em.find(CodeGroup.class, 1);
             test = Code.builder()
-                    .codeCode(1)
                     .codeName("할일")
-                    .codeCodeGroup(codeGroup1)
+                    .codeGroup(codeGroup1)
                     .build();
             em.persist(test);
             test = Code.builder()
-                    .codeCode(2)
                     .codeName("게시판")
-                    .codeCodeGroup(codeGroup1)
+                    .codeGroup(codeGroup1)
                     .build();
             em.persist(test);
             test = Code.builder()
-                    .codeCode(3)
                     .codeName("미팅")
-                    .codeCodeGroup(codeGroup1)
+                    .codeGroup(codeGroup1)
                     .build();
             em.persist(test);
 
@@ -109,25 +106,21 @@ public class InitData {
             CodeGroup codeGroup2 = em.find(CodeGroup.class, 2);
 
             codeUser = new Code();
-            codeUser.setCodeCode(100);
             codeUser.setCodeName("전체");
             codeUser.setCodeGroup(codeGroup2);
             em.persist(codeUser);
 
             codeUser = new Code();
-            codeUser.setCodeCode(101);
             codeUser.setCodeName("유저");
             codeUser.setCodeGroup(codeGroup2);
             em.persist(codeUser);
 
             codeDepartment = new Code();
-            codeDepartment.setCodeCode(102);
             codeDepartment.setCodeName("부서");
             codeDepartment.setCodeGroup(codeGroup2);
             em.persist(codeDepartment);
 
             codeTeam = new Code();
-            codeTeam.setCodeCode(103);
             codeTeam.setCodeName("팀");
             codeTeam.setCodeGroup(codeGroup2);
             em.persist(codeTeam);
@@ -135,71 +128,85 @@ public class InitData {
             CodeGroup codeGroup3 = em.find(CodeGroup.class, 3);
 
             ScheduleDivisionTask = Code.builder()
-                    .codeCode(200)
                     .codeName("온라인")
-                    .codeCodeGroup(codeGroup3)
+                    .codeGroup(codeGroup3)
                     .build();
             em.persist(ScheduleDivisionTask);
 
             test = Code.builder()
-                    .codeCode(201)
                     .codeName("외출중")
-                    .codeCodeGroup(codeGroup3)
+                    .codeGroup(codeGroup3)
                     .build();
             em.persist(test);
 
             ScheduleDivisionVacation = Code.builder()
-                    .codeCode(202)
                     .codeName("휴가중")
-                    .codeCodeGroup(codeGroup3)
+                    .codeGroup(codeGroup3)
                     .build();
             em.persist(ScheduleDivisionVacation);
 
             test = Code.builder()
-                    .codeCode(203)
                     .codeName("오프라인")
-                    .codeCodeGroup(codeGroup3)
+                    .codeGroup(codeGroup3)
                     .build();
             em.persist(test);
 
             CodeGroup codeGroup4 = em.find(CodeGroup.class, 4);
 
+            Code code_role_employee = Code.builder()
+                    .codeName("사원")
+                    .codeGroup(codeGroup4)
+                    .build();
+            em.persist(code_role_employee);
+
+
+
             test = Code.builder()
-                    .codeCode(300)
-                    .codeName("ROLE_EMPLOYEE")
-                    .codeCodeGroup(codeGroup4)
+                    .codeName("리더")
+                    .codeGroup(codeGroup4)
                     .build();
             em.persist(test);
 
-
-
             test = Code.builder()
-                    .codeCode(301)
-                    .codeName("ROLE_LEADER")
-                    .codeCodeGroup(codeGroup4)
-                    .build();
-            em.persist(test);
-
-            test = Code.builder()
-                    .codeCode(302)
-                    .codeName("ROLE_CEO")
-                    .codeCodeGroup(codeGroup4)
+                    .codeName("CEO")
+                    .codeGroup(codeGroup4)
                     .build();
             em.persist(test);
 
 
             test = Code.builder()
-                    .codeCode(303)
-                    .codeName("ROLE_ADMIN")
-                    .codeCodeGroup(codeGroup4)
+                    .codeName("관리자")
+                    .codeGroup(codeGroup4)
                     .build();
             em.persist(test);
+
+            CodeGroup codeGroup5 = em.find(CodeGroup.class, 5);
+            em.persist(Code.builder()
+                    .codeName("업무")
+                    .codeGroup(codeGroup5)
+                    .build());
+
+            em.persist(Code.builder()
+                    .codeName("행사")
+                    .codeGroup(codeGroup5)
+                    .build());
+
+            em.persist(Code.builder()
+                    .codeName("개인일정(병가)")
+                    .codeGroup(codeGroup5)
+                    .build());
+
+            em.persist(Code.builder()
+                    .codeName("개인일정(휴가)")
+                    .codeGroup(codeGroup5)
+                    .build());
 
             //부서별 유저 데이터
             for (int i = 1; i <= 5; i++){
                 String departmentName = "부서" + i;
                 Department department = Department.builder()
                         .departmentName(departmentName)
+                        .departmentLeaderId(1)
                         .build();
                 em.persist(department);
                 departmentList.add(department);
@@ -210,6 +217,7 @@ public class InitData {
                             .userPassword(makeRandomPassword())
                             .userEmail(userEmailSeq+++"")
                             .userNameFirst("유저"+userSeq)
+                            .userPositionCode(code_role_employee)
                             .userDepartment(department)
                             .build();
                     em.persist(user);
@@ -222,6 +230,7 @@ public class InitData {
             Schedule scheduleByDepartment = Schedule.builder()
                     .scheduleDivision(codeUser)
                     .scheduleTitle("부서의 할일"+ scheduleSeq)
+                    .scheduleStartDate(LocalDateTime.now())
                     .scheduleEndDate(LocalDateTime.now())
                     .scheduleCreator(user1)
                     .build();
@@ -232,7 +241,7 @@ public class InitData {
                             .scheduleAssigneeCategory(codeDepartment)
                             .scheduleAssigneeId(department1.getDepartmentId())
                             .build();
-            scheduleByDepartment.addScheduleAssigns(scheduleAssignDept);
+            scheduleByDepartment.addScheduleAssign(scheduleAssignDept);
 
 
             //팀 데이터
@@ -250,6 +259,7 @@ public class InitData {
                 Schedule schedule = Schedule.builder()
                         .scheduleDivision((i & 1)==1?ScheduleDivisionTask: ScheduleDivisionVacation)
                         .scheduleTitle("할일"+ scheduleSeq)
+                        .scheduleStartDate(LocalDateTime.now())
                         .scheduleEndDate(LocalDateTime.now())
                         .scheduleCreator(user1)
                         .build();
@@ -263,7 +273,7 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(user.getUserId())
                                     .build();
-                    schedule.addScheduleAssigns(scheduleAssign);
+                    schedule.addScheduleAssign(scheduleAssign);
                 }
                 //모든 부서를 할일에 배정
                 for (Department department : departmentList){
@@ -273,7 +283,7 @@ public class InitData {
                                     .scheduleAssigneeCategory(codeUser)
                                     .scheduleAssigneeId(department.getDepartmentId())
                                     .build();
-                    schedule.addScheduleAssigns(scheduleAssign);
+                    schedule.addScheduleAssign(scheduleAssign);
 
                 }
             }

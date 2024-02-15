@@ -15,19 +15,18 @@ import java.time.LocalDateTime;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class Meeting {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "meeting_id", nullable = false)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "meeting_id")
     private int meetingId; // 회의방 아이디
 
     @OneToOne(mappedBy = "scheduleMeeting", fetch = FetchType.LAZY)
     private Schedule schedule; // 할 일 아이디(외래키)
 
-    @Column(name = "meeting_date")
+    @Column(name = "meeting_date", nullable = false)
     private LocalDateTime meetingDate; // 회의 일시
 
-    @Column(name = "meeting_code", length = 2000)
-    private String meetingCode; // 회의 참여 코드
+    @Column(name = "meeting_sessionId", length = 2000, nullable = false , unique = true)
+    private String meetingSessionId; // 회의 세션 아이디
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
@@ -35,8 +34,9 @@ public class Meeting {
             schedule.setMeeting(this);
         }
     }
-    public void updateMeeting(LocalDateTime meetingDate, String meetingCode){
+
+    public void updateMeeting(LocalDateTime meetingDate, String meetingSessionId){
         this.meetingDate = meetingDate;
-        this.meetingCode = meetingCode;
+        this.meetingSessionId = meetingSessionId;
     }
 }

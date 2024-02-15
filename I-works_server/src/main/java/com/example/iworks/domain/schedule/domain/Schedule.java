@@ -5,10 +5,7 @@ import com.example.iworks.domain.meeting.domain.Meeting;
 import com.example.iworks.domain.schedule.dto.schedule.request.ScheduleUpdateRequestDto;
 import com.example.iworks.domain.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,13 +14,11 @@ import java.util.List;
 @Entity
 @Table(name = "schedule")
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-//@ToString
+@Builder @AllArgsConstructor @NoArgsConstructor
+@EqualsAndHashCode @ToString
 public class Schedule {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
     private Integer scheduleId; // 할 일 아이디
 
@@ -42,11 +37,10 @@ public class Schedule {
     @Builder.Default
     @Column(name = "schedule_content", columnDefinition = "TEXT" )
     private String scheduleContent = "this is content..."; //할 일 내용
-
-    @Builder.Default
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_start_date", nullable = false)
-    private LocalDateTime scheduleStartDate = LocalDateTime.now(); //할 일의 시작일시
+    private LocalDateTime scheduleStartDate; //할 일의 시작일시
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "schedule_end_date", nullable = false)
@@ -86,15 +80,21 @@ public class Schedule {
 
     @Builder.Default
     @Column(name = "schedule_is_deleted", nullable = false)
-    private Boolean scheduleIsDeleted = false;
+    private Boolean scheduleIsDeleted = false; //할일 삭제여부
 
     @Builder.Default
     @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //ScheduleAssign - Code 단방향
     private List<ScheduleAssign> scheduleAssigns = new ArrayList<>(); //할일 배정자
 
-    public void addScheduleAssigns(ScheduleAssign scheduleAssign){
+    public void addScheduleAssign(ScheduleAssign scheduleAssign){
         this.scheduleAssigns.add(scheduleAssign);
         scheduleAssign.setSchedule(this);
+    }
+    public void addScheduleAssignList(List<ScheduleAssign> scheduleAssignList){
+        this.scheduleAssigns.addAll(scheduleAssignList);
+        for (ScheduleAssign scheduleAssign : scheduleAssignList) {
+            scheduleAssign.setSchedule(this);
+        }
     }
 
     public void setMeeting(Meeting meeting){
@@ -104,7 +104,9 @@ public class Schedule {
         }
     }
     public void isFinished(boolean isFinish){
-        scheduleIsFinish = isFinish;
+        this.scheduleIsFinish = isFinish;
+        this.scheduleFinishedAt = LocalDateTime.now();
+
     }
 
     public void updateSchedule(Code code, ScheduleUpdateRequestDto scheduleUpdateRequestDto){
@@ -116,6 +118,10 @@ public class Schedule {
         this.scheduleEndDate = scheduleUpdateRequestDto.getScheduleEndDate();
         this.schedulePlace = scheduleUpdateRequestDto.getSchedulePlace();
         if (scheduleMeeting != null) this.scheduleMeeting.updateMeeting(scheduleUpdateRequestDto.getMeetingDate(), scheduleUpdateRequestDto.getMeetingCode());
+    }
+
+    public void delete(){
+        this.scheduleIsDeleted = true;
     }
 
 }
