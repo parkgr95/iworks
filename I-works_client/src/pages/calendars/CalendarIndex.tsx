@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   EventApi,
-  DateSelectArg,
+  // DateSelectArg,
   EventClickArg,
   EventContentArg,
 } from '@fullcalendar/core';
@@ -26,11 +26,14 @@ interface ScheduleType {
   scheduleTitle: string
   scheduleStartDate: string
   scheduleEndDate: string
+  schedulePriority: string
+  scheduleIsFinish: boolean
 }
 
 function CalendarIndex() {
 
   const [scheduleData, setScheduleData] = useState<ScheduleType[]>([])
+  const [selectedEvent, setSelectedEvent] = useState<ScheduleType | null>(null);
 
   useEffect(() => {
     async function getScheduleList() {
@@ -46,6 +49,7 @@ function CalendarIndex() {
             },
           })
         setScheduleData(res.data.data)
+        console.log(res.data.data)
       }
       catch (err) {
         console.log(err)
@@ -61,30 +65,18 @@ function CalendarIndex() {
     currentEvents: [],
   });
 
-  // 날짜 선택시 발생하는 함수 ==> 할 일 작성 링크로 변경
-  const handleDateSelect = (selectInfo: DateSelectArg) => {
-    const title = prompt('Please enter a new title for your event');
-    const calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-    }
-  };
-
   // 삭제 매커니즘 -- 모달창으로 변경 필요
   const handleEventClick = (clickInfo: EventClickArg) => {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
+    const clickedEvent = scheduleData.find(schedule => schedule.scheduleId == clickInfo.event.id);
+    if (clickedEvent) {
+      setSelectedEvent(clickedEvent);
     }
   };
+
+  const handleCloseModal = () => {
+    setSelectedEvent(null);
+  };
+
 
   // 변경이 있을 때, 현재 이벤트 목록을 업데이트해준다
   const handleEvents = (events: EventApi[]) => {
@@ -99,7 +91,6 @@ function CalendarIndex() {
 
   // 캘린더에 나타낼 문장들
   const renderEventContent = (eventContent: EventContentArg) => {
-    const startDate = eventContent.event.end
     return (
       <div>
         <i className='bg-maingray'>{eventContent.event.title}</i>
@@ -107,14 +98,6 @@ function CalendarIndex() {
       </div>
     )
   }
-
-  // 사이드 바 로직
-  // const renderSidebarEvent = (event: EventApi) => (
-  // 	<li key={event.id}>
-  // 		<b>{formatDate(event.start!, { year: 'numeric', month: 'short', day: 'numeric' })}</b>
-  // 		<i>{event.title}</i>
-  // 	</li>
-  // );
 
   return (
     <div className=''>
@@ -131,9 +114,8 @@ function CalendarIndex() {
         selectMirror={true}
         dayMaxEvents={true}
         weekends={state.weekendsVisible}
-        select={handleDateSelect}
-        eventContent={renderEventContent}
         eventClick={handleEventClick}
+        eventContent={renderEventContent}
         events={scheduleData.map((schedule: ScheduleType) => ({
           id: schedule.scheduleId,
           title: schedule.scheduleTitle,
@@ -142,35 +124,26 @@ function CalendarIndex() {
         }))}
         eventsSet={handleEvents}
       />
+      <div className="modal-wrapper">
+        {selectedEvent && (
+          <div className="modal border-2 fixed top-40 left-6 p-4 w-60 text-start">
+            <div className="modal-content text-lg">
+              <span className="close flex justify-between font-semibold items-center cursor-pointer" onClick={handleCloseModal}><p>할 일 제목</p>&times;</span>
+              <h2 className='border-b-2 mb-2 pb-2'>{selectedEvent.scheduleTitle}</h2>
+              <h2 className='font-semibold mt-2' >기간</h2>
+              <p className='border-b-2 mb-2 pb-2'>{selectedEvent.scheduleStartDate.replace("T", " / ")} ~ {selectedEvent.scheduleEndDate.replace("T", " / ")}</p>
+              <h2 className='font-semibold mt-2' >분류</h2>
+              <p className='border-b-2 mb-2 pb-2'>{selectedEvent.scheduleAssigneeCategoryName} {selectedEvent.scheduleDivisionName}</p>
+              <h2 className='font-semibold mt-2' >중요도</h2>
+              <p className='border-b-2 mb-2 pb-2'>{selectedEvent.schedulePriority}</p>
+              <h2 className='font-semibold mt-2' >상태</h2>
+              <p className=''>{selectedEvent.scheduleIsFinish ? "완료" : "진행중"}</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
-  // function renderSidebar() {
-  // 	return (
-  // 		<div className='demo-app-sidebar'>
-  // 			<div className='demo-app-sidebar-section'>
-  // 				<h2>Instructions</h2>
-  // 				<ul>
-  // 					<li>Select dates and you will be prompted to create a new event</li>
-  // 					<li>Drag, drop, and resize events</li>
-  // 					<li>Click an event to delete it</li>
-  // 				</ul>
-  // 			</div>
-  // 			<div className='demo-app-sidebar-section'>
-  // 				<label>
-  // 					<input
-  // 						type='checkbox'
-  // 						checked={state.weekendsVisible}
-  // 						onChange={handleWeekendsToggle}
-  // 					></input>
-  // 					toggle weekends
-  // 				</label>
-  // 			</div>
-  // 			<div className='demo-app-sidebar-section'>
-  // 				<h2>All Events ({state.currentEvents.length})</h2>
-  // 				<ul>{state.currentEvents.map(renderSidebarEvent)}</ul>
-  // 			</div>
-  // 		</div>
-  // 	);
 }
 
 
