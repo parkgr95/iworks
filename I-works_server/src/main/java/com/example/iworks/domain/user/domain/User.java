@@ -6,7 +6,6 @@ import com.example.iworks.domain.admin.dto.adminUser.request.AdminUserUpdateRequ
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.team.domain.TeamUser;
-import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
 import com.example.iworks.domain.code.entity.Code;
 import jakarta.persistence.*;
@@ -101,19 +100,6 @@ public class User {
 
     @OneToMany(mappedBy = "userNotificationReceiver")
     private List<UserNotification> userNotifications = new ArrayList<>(); // 유저별 알림
-
-    public User(UserJoinRequestDto dto){
-         this.userEid = dto.getUserEid();
-         this.userNameFirst =dto.getUserNameFirst();
-         this.userNameLast = dto.getUserNameLast();
-         this.userEmail = dto.getUserEmail();
-         this.userTel = dto.getUserTel();
-         this.userAddress = dto.getUserAddress();
-         this.userGender = dto.getUserGender();
-         this.userIsDeleted = false;
-         this.userCreatedAt = LocalDateTime.now();
-         this.userUpdatedAt = LocalDateTime.now();
-    }
 
     public User(AdminUserCreateRequestDto dto){
         this.userEid = dto.getUserEid();
