@@ -1,5 +1,6 @@
 import { redirect } from 'react-router-dom'
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 function getAccessToken () {
   const token = localStorage.getItem('accessToken')
@@ -27,4 +28,24 @@ function getDecoded(): { role: string[] | null } | null {
   return null;
 }
 
-export { getAccessToken, tokenLoader,getDecoded }
+
+
+function getNewAccessToken() {
+  const refresh = localStorage.getItem('refreshToken');
+  axios
+      .get('https://suhyeon.site/api/token', {
+        headers: {
+          'Authorization': 'Bearer '+refresh,
+        }
+      })
+      .then((res) => {
+        console.log(res.data.accessToken)
+        localStorage.setItem('accessToken',res.data.accessToken)
+      })
+    .catch((err) => {
+        alert(err.response.data.message)
+        console.log(err)
+      })
+}
+
+export { getAccessToken, tokenLoader,getDecoded,getNewAccessToken }
