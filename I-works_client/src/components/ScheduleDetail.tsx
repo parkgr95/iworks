@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { Button, Select, TextInput, Textarea } from 'flowbite-react'
 import { RiEdit2Line } from 'react-icons/ri'
-import { API_URL, formDataToRequestData } from '../utils/api'
+import { API_URL, REQUEST_HEADER, formDataToRequestData } from '../utils/api'
 import { FormEvent, useEffect, useState } from 'react'
 import { Form } from 'react-router-dom'
 import { RiDeleteBin2Line } from 'react-icons/ri'
 import { ScheduleDetailType } from './ScheduleList'
+import { getAccessToken } from '../utils/auth'
 
 const MEETING_SESSSION_URL = 'https://openvidu.iworks.live/#'
 
@@ -27,7 +28,10 @@ function ScheduleDetail({
   function handleFinish(id: number) {
     axios
       .post(API_URL + '/schedule' + `/${id}` + '/isFinish', !isFinished, {
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+          'content-type': 'application/json',
+        },
       })
       .then((_response) => {
         setIsFinished((prev) => !prev)
@@ -67,8 +71,9 @@ function ScheduleDetail({
       .post(
         API_URL + '/schedule' + `/${id}` + '/update',
         scheduleEditRequestData,
+        REQUEST_HEADER,
       )
-      .then((_response) => {      
+      .then((_response) => {
         getSchedule(startDate, endDate)
         getScheduleDetailInfo(id)
         setIsEdit((prev) => !prev)
@@ -82,7 +87,7 @@ function ScheduleDetail({
       return
     }
     axios
-      .post(API_URL + '/schedule' + `/${id}` + '/delete')
+      .post(API_URL + '/schedule' + `/${id}` + '/delete', {}, REQUEST_HEADER)
       .then((response) => {
         getSchedule(startDate, endDate)
         alert(response.data.data)
@@ -91,7 +96,7 @@ function ScheduleDetail({
       .catch((err) => alert(err.response.data.data))
   }
 
-  function openMeeting(url:string){
+  function openMeeting(url: string) {
     window.open(url)
   }
 
@@ -161,8 +166,15 @@ function ScheduleDetail({
             <div className="">
               <div className="flex text-xl font-bold border-b-2 pb-1 mb-1 border-b-mainGreen gap-4">
                 화상 회의
-              <div className="text-xs text-white px-4 py-1 self-center bg-mainGreen rounded" onClick={() => openMeeting(MEETING_SESSSION_URL + formInfo.meetingSessionId)}>         
-                    입장
+                <div
+                  className="text-xs text-white px-4 py-1 self-center bg-mainGreen rounded"
+                  onClick={() =>
+                    openMeeting(
+                      MEETING_SESSSION_URL + formInfo.meetingSessionId,
+                    )
+                  }
+                >
+                  입장
                 </div>
               </div>
               <div className="">
@@ -171,7 +183,6 @@ function ScheduleDetail({
                 {formInfo.meetingDate.slice(8, 10)}일{' '}
                 {formInfo.meetingDate.slice(11, 13)}시{' '}
                 {formInfo.meetingDate.slice(14, 16)}분
-                
               </div>
             </div>
           )}
@@ -263,7 +274,8 @@ function ScheduleDetail({
               />
             </div>
           </div>
-          {formInfo.meetingDate && <div>
+          {formInfo.meetingDate && (
+            <div>
               <p className="text-xl font-bold border-b-2 pb-1 mb-1 border-b-mainGreen">
                 회의 일시
               </p>
@@ -276,7 +288,8 @@ function ScheduleDetail({
                 type="datetime-local"
                 value={formInfo.meetingDate}
               />
-            </div>}
+            </div>
+          )}
           <div className="">
             <p className="text-xl font-bold border-b-2 pb-1 mb-1 border-b-mainGreen">
               우선순위

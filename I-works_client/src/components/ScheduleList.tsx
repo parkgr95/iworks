@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { API_URL } from '../utils/api'
+import { API_URL, REQUEST_HEADER } from '../utils/api'
 import ScheduleDetail from './ScheduleDetail'
 import axios from 'axios'
 import { Checkbox, Label, ToggleSwitch } from 'flowbite-react'
 import { ScheduleData } from '../utils/Schedule'
+import { getAccessToken } from '../utils/auth'
 
 export interface ScheduleDetailType {
   scheduleId: number
@@ -72,7 +73,7 @@ function ScheduleList({
   // 스케줄 상세 내려보내기
   function getScheduleDetailInfo(id: number) {
     axios
-      .get(SCH_DEATIL_URL + `/${id}`)
+      .get(SCH_DEATIL_URL + `/${id}`,REQUEST_HEADER)
       .then((response) => {
         setScheduleDetailInfo(response.data.data)
         setSelectedScheduleId(id)
@@ -85,7 +86,7 @@ function ScheduleList({
   function handleFinish(id: number, isFinished: boolean) {
     axios
       .post(API_URL + '/schedule' + `/${id}` + '/isFinish', !isFinished, {
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + getAccessToken() },
       })
       .then((_response) => {
         getSchedule(startDate, endDate)

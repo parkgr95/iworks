@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { API_URL } from './api'
-import { tokenLoader } from './auth'
+import { API_URL, REQUEST_HEADER } from './api'
+import { getAccessToken, tokenLoader } from './auth'
 
 const CODE_URL = API_URL + '/code'
 
@@ -16,7 +16,7 @@ export interface CodeData {
 
 export async function getPositionCodeList() {
   try {
-    const response = await axios.get<CodeListResponse>(CODE_URL + '/position')
+    const response = await axios.get<CodeListResponse>(CODE_URL + '/position', REQUEST_HEADER)
     return response.data.data
   } catch {
     alert('포지션 코드 불러오기 실패')
@@ -26,7 +26,7 @@ export async function getPositionCodeList() {
 
 export async function getStatusCodeList() {
   try {
-    const response = await axios.get<CodeListResponse>(CODE_URL + '/status')
+    const response = await axios.get<CodeListResponse>(CODE_URL + '/status', REQUEST_HEADER)
     return response.data.data
   } catch {
     alert('상태 코드 불러오기 실패')
@@ -36,7 +36,7 @@ export async function getStatusCodeList() {
 
 export async function getCategoryCodeList() {
   try {
-    const response = await axios.get<CodeListResponse>(CODE_URL + '/category')
+    const response = await axios.get<CodeListResponse>(CODE_URL + '/category', REQUEST_HEADER)
     return response.data.data
   } catch {
     alert('카테고리 코드 불러오기 실패')
@@ -46,7 +46,7 @@ export async function getCategoryCodeList() {
 
 export async function getTargetCodeList() {
   try {
-    const response = await axios.get<CodeListResponse>(CODE_URL + '/target')
+    const response = await axios.get<CodeListResponse>(CODE_URL + '/target', REQUEST_HEADER)
     return response.data.data
   } catch {
     alert('타겟 코드 불러오기 실패')
@@ -56,7 +56,7 @@ export async function getTargetCodeList() {
 
 export async function getScheduleDivisionCodeList() {
   try{
-    const response = await axios.get<CodeListResponse>(CODE_URL + '/schedule-division')
+    const response = await axios.get<CodeListResponse>(CODE_URL + '/schedule-division', REQUEST_HEADER)
     return response.data.data
   } catch {
     alert('할일 분류 코드 불러오기 실패')
