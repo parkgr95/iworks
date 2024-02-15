@@ -1,8 +1,8 @@
 package com.example.iworks.domain.chat.controller;
 
-import com.example.iworks.domain.chat.domain.ChatMessage;
-import com.example.iworks.domain.chat.domain.MessageType;
-import com.example.iworks.domain.chat.pubsub.RedisPublisher;
+import com.example.iworks.domain.chat.dto.ChatMessage;
+import com.example.iworks.domain.chat.entity.ChatMessageType;
+import com.example.iworks.domain.chat.service.RedisPublisher;
 import com.example.iworks.domain.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,11 +17,12 @@ public class ChatMessageController {
 
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {
-        if (message.getType().equals(MessageType.ENTER)) {
-            chatRoomRepository.enterChatRoom(message.getRoomId());
-            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+        if (message.getChatMessageType().equals(ChatMessageType.ENTER)) {
+            chatRoomRepository.enterChatRoom(message.getChatRoomId());
+            message.setChatMessageContent(message.getChatMessageSenderName() + "님이 입장하셨습니다.");
         }
-        redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
+        redisPublisher.publish(chatRoomRepository.getTopic(message.getChatRoomId()), message);
     }
 
 }
+

@@ -17,7 +17,7 @@
 <body>
 <div class="container" id="app" v-cloak>
     <div>
-        <h2>{{room.name}}</h2>
+        <h2>{{ room.chatRoomName }}</h2> <!-- 방 이름을 출력하는 부분 수정 -->
     </div>
     <div class="input-group">
         <div class="input-group-prepend">
@@ -29,8 +29,8 @@
         </div>
     </div>
     <ul class="list-group">
-        <li class="list-group-item" v-for="message in messages">
-            {{message.sender}} - {{message.message}}</a>
+        <li class="list-group-item" v-for="msg in messages" v-bind:key="msg.id">
+            {{ msg.chatMessageSenderName }} - {{ msg.chatMessageContent }}
         </li>
     </ul>
     <div></div>
@@ -66,16 +66,17 @@
         },
         methods: {
             findRoom: function() {
-                axios.get('/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+                axios.get('/api/chat/room/'+this.roomId).then(response => { this.room = response.data; });
             },
             sendMessage: function() {
                 if (this.message.trim() !== '') {
-                    ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, message:this.message}));
+                    ws.send("/pub/chat/message", {}, JSON.stringify({chatMessageType:'TALK', chatRoomId:this.roomId, chatMessageSenderName:this.sender, chatMessageContent:this.message})); // 수정된 부분
                     this.message = '';
                 }
             },
             recvMessage: function(recv) {
-                this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+                console.log("Received message:", recv); // 디버그 메시지 추가
+                this.messages.unshift({"type": recv.chatMessageType, "chatMessageSenderName": recv.chatMessageSenderName, "chatMessageContent": recv.chatMessageContent}); // 수정된 부분
             },
             handleKeyPress: function(event) {
                 if (event.key === 'Enter' && !event.isComposing) {
@@ -87,11 +88,11 @@
     });
     // pub/sub event
     ws.connect({}, function(frame) {
-        ws.subscribe("/sub/chat/room/"+vm.$data.roomId, function(message) {
+        ws.subscribe("/sub/chat/room/"+vm.roomId, function(message) {
             var recv = JSON.parse(message.body);
             vm.recvMessage(recv);
         });
-        ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, sender:vm.$data.sender}));
+        ws.send("/pub/chat/message", {}, JSON.stringify({chatMessageType:'ENTER', chatRoomId:vm.roomId, chatMessageSenderName:vm.sender})); // 수정된 부분
     }, function(error) {
         alert("error "+error);
     });
