@@ -1,7 +1,6 @@
-package com.example.iworks.domain.user.repository;
+package com.example.iworks.domain.user.repository.custom;
 
 import com.example.iworks.domain.user.domain.User;
-import com.example.iworks.domain.user.repository.custom.UserSearchRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,8 +11,7 @@ import static com.example.iworks.domain.user.domain.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserSearchRepository {
-
+public class UserSearchRepositoryImpl implements UserSearchRepository{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
@@ -23,4 +21,12 @@ public class UserRepositoryImpl implements UserSearchRepository {
                 .where(user.userId.in(dto))
                 .stream().toList();
     }
+
+    @Override
+    public User getAvailableUserByEmail(String email) {
+        return jpaQueryFactory
+                .selectFrom(user)
+                .where(user.userEmail.eq(email).and(user.userIsDeleted.isFalse())).fetchOne();
+    }
+
 }
