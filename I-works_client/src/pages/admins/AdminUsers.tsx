@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react"
 import SignupPage, { SignupRef } from '../SignupPage'
 import { Button } from "flowbite-react"
 import { useNavigate } from "react-router-dom"
+import { getAccessToken } from "../../utils/auth"
 
 interface UserData {
   userId: string,
@@ -30,7 +31,11 @@ function AdminUsers() {
   const [selectedDepartment, setSelectedDepartment] = useState<string>("")
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/user/`)
+    axios.get(`https://suhyeon.site/api/admin/user/`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setUserAll(res.data.data)
       })
@@ -38,7 +43,11 @@ function AdminUsers() {
         console.log(err)
       })
 
-    axios.get('https://suhyeon.site/api/address/department/all')
+    axios.get('https://suhyeon.site/api/address/department/all', {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setDepartmentList(res.data.data)
       })

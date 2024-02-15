@@ -24,7 +24,11 @@ function AdminBoards() {
   const [users, setUsers] = useState<UserType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/board`)
+    axios.get(`https://suhyeon.site/api/admin/board`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setBoardList(res.data.data)
       })
@@ -34,7 +38,11 @@ function AdminBoards() {
 
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        });
         setUsers(res.data.data)
       } catch (err) {
         console.log(err);

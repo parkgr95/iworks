@@ -28,8 +28,9 @@ import {
   } from '../../utils/Address'
   import { AiOutlineClose } from 'react-icons/ai'
   import { CodeData, getScheduleDivisionCodeList } from '../../utils/Code'
+import { getAccessToken } from '../../utils/auth'
   
-  const SCH_URL = API_URL + 'admin/schedule/'
+  const SCH_URL = API_URL + '/admin/schedule'
   
   export interface ScheduleCreateRef {
     open: () => void
@@ -216,7 +217,11 @@ import {
       // 폼 전송
   
       axios
-        .post(SCH_URL, scheduleRequestData)
+        .post(SCH_URL, scheduleRequestData, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        })
         .then((response) => {
           alert(response.data.data)
           formRef.current?.reset()

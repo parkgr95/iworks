@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect, FormEvent } from "react";
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router";
+import { getAccessToken } from "../../utils/auth";
 
 interface GroupType {
   teamId: number,
@@ -32,7 +33,11 @@ function AdminDepartments() {
   const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/team/all`).then((res) => {
+    axios.get(`https://suhyeon.site/api/admin/team/all`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    }).then((res) => {
         setGroupList(res.data.data);
       })
       .catch((err) => {
@@ -41,7 +46,11 @@ function AdminDepartments() {
 
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        });
         setUsers(res.data.data);
       } catch (err) {
         console.log(err);
@@ -57,7 +66,11 @@ function AdminDepartments() {
     if (!isConfirmed) {
       return; // 사용자가 취소한 경우 함수를 종료합니다.
     }
-    axios.delete(`https://suhyeon.site/api/admin/team/${teamId}`)
+    axios.delete(`https://suhyeon.site/api/admin/team/${teamId}`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then(() => {
         alert('삭제되었습니다.')
         window.location.reload()

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState, FormEvent, useEffect, ChangeEvent } from 'react'
 import { Form, useParams, useNavigate } from 'react-router-dom'
 import { TextInput, Label, Button, Select } from 'flowbite-react'
+import { getAccessToken } from '../../utils/auth'
 
 
 interface UserDetailType {
@@ -51,7 +52,11 @@ function AdminUsersDetail() {
   useEffect(() => {
     async function getGroupDetail() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/admin/user/detail/${userId}`)
+        const res = await axios.get(`https://suhyeon.site/api/admin/user/detail/${userId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        })
         setUserDetail(res.data.data)
         setFormData({
           userEmail: res.data.data.userEmail,
@@ -67,7 +72,11 @@ function AdminUsersDetail() {
         console.log(err)
       }
     }
-    axios.get('https://suhyeon.site/api/address/department/all')
+    axios.get('https://suhyeon.site/api/address/department/all', {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setDepartmentList(res.data.data)
       })
@@ -98,6 +107,10 @@ function AdminUsersDetail() {
       "userNameFirst": userNameFirst,
       "userNameLast": userNameLast,
       "userDepartmentId": departmentId
+    }, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
     })
       .then((res) => {
         navigate("/admin/users")
@@ -112,7 +125,11 @@ function AdminUsersDetail() {
     event.preventDefault()
 
     axios
-      .put(`https://suhyeon.site/api/admin/user/delete/${userId}`)
+      .put(`https://suhyeon.site/api/admin/user/delete/${userId}`, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
+      })
       .then((res) => {
         navigate("/admin/users")
         console.log(res.data)

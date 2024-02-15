@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { Button, Modal } from "flowbite-react";
 import { Form, useNavigate } from "react-router-dom";
+import { getAccessToken } from "../../utils/auth";
 
 interface ModalProps {
   show: boolean;
@@ -21,19 +22,6 @@ interface UserData {
   userTel: string,
   userEmail: string
 }
-
-// interface DepartmentType {
-//   departmentCreatedAt: string
-//   departmentDesc: string
-//   departmentId: number
-//   departmentIsUsed: boolean
-//   departmentLeaderId: number
-//   departmentName: string
-//   departmentTelFirst: string
-//   departmentTelLast: string
-//   departmentTelMiddle: string
-//   departmentUpdatedAt: string
-// }
 
 const AdminDepartmentsUpdate: React.FC<ModalProps> = ({ show, onClose, departmentId }) => {
   const navigate = useNavigate()
@@ -60,7 +48,11 @@ const AdminDepartmentsUpdate: React.FC<ModalProps> = ({ show, onClose, departmen
   };
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/user/`)
+    axios.get(`https://suhyeon.site/api/admin/user/`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setUserAll(res.data.data)
       })
@@ -68,7 +60,11 @@ const AdminDepartmentsUpdate: React.FC<ModalProps> = ({ show, onClose, departmen
         console.log(err)
       })
 
-    axios.get(`https://suhyeon.site/api/admin/department/${departmentId}`)
+    axios.get(`https://suhyeon.site/api/admin/department/${departmentId}`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setFormData({
           departmentName: res.data.data.departmentName,
@@ -97,6 +93,10 @@ const AdminDepartmentsUpdate: React.FC<ModalProps> = ({ show, onClose, departmen
         "departmentTelMiddle": departmentTelMiddle,
         "departmentTelLast": departmentTelLast,
         "departmentIsUsed": 1
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
       })
       .then((res) => {
         navigate("/admin/departments")
@@ -121,9 +121,14 @@ const AdminDepartmentsUpdate: React.FC<ModalProps> = ({ show, onClose, departmen
         "departmentTelMiddle": departmentTelMiddle,
         "departmentTelLast": departmentTelLast,
         "departmentIsUsed": 0
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
       })
       .then((res) => {
         navigate("/admin/departments")
+        window.location.reload()
         onClose()
         console.log(res.data)
       })

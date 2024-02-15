@@ -2,6 +2,7 @@ import { Button, Modal } from "flowbite-react";
 import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import axios from "axios";
 import { Form, useNavigate } from "react-router-dom";
+import { getAccessToken } from "../../utils/auth";
 
 interface ModalProps {
   show: boolean;
@@ -52,7 +53,11 @@ const AdminDepartmentsCreate: React.FC<ModalProps> = ({ show, onClose }) => {
   };
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/user/`)
+    axios.get(`https://suhyeon.site/api/admin/user/`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setUserAll(res.data.data)
       })
@@ -73,6 +78,10 @@ const AdminDepartmentsCreate: React.FC<ModalProps> = ({ show, onClose }) => {
         "departmentTelFirst": departmentTelFirst,
         "departmentTelMiddle": departmentTelMiddle,
         "departmentTelLast": departmentTelLast
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
       })
       .then((res) => {
         navigate("/admin/departments")

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { API_URL } from "./api";
+import { getAccessToken } from "./auth";
 
 const ADDRESS_URL = API_URL+ '/address'
 
@@ -16,7 +17,11 @@ interface res {
 export async function getUserAllList () {
     
     try{
-        const response = await axios.get(ADDRESS_URL+'/user/all')
+        const response = await axios.get(ADDRESS_URL+'/user/all', {
+            headers: {
+              Authorization: 'Bearer ' + getAccessToken(),
+            },
+          })
         return response.data.data
     } 
     catch {
@@ -29,7 +34,11 @@ export async function getUserAllList () {
 export async function getDepartmentAllList() {
     
     try{
-        const response : AxiosResponse<res>= await axios.get(ADDRESS_URL+'/department/all')
+        const response : AxiosResponse<res>= await axios.get(ADDRESS_URL+'/department/all', {
+            headers: {
+              Authorization: 'Bearer ' + getAccessToken(),
+            },
+          })
         return response.data.data
     } 
     catch {
@@ -42,7 +51,11 @@ export async function getDepartmentAllList() {
 export async function getTeamAllList()  {
     
     try{
-        const response  = await axios.get(ADDRESS_URL+'/team/all')
+        const response  = await axios.get(ADDRESS_URL+'/team/all', {
+            headers: {
+              Authorization: 'Bearer ' + getAccessToken(),
+            },
+          })
         return response.data.data
     } 
     catch {

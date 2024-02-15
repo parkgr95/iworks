@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button } from 'flowbite-react';
+import { getAccessToken } from '../utils/auth';
 
 interface OrganizationType {
   departmentName?: string;
@@ -33,7 +34,11 @@ function AddressSelect() {
   useEffect(() => {
     async function getDepartments() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/department/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/department/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        });
         setDepartmentList(res.data.data);
       } catch (err) {
         console.log(err);
@@ -42,7 +47,11 @@ function AddressSelect() {
 
     async function getUsers() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
+        const res = await axios.get(`https://suhyeon.site/api/address/user/all`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        });
         setUsers(res.data.data);
       } catch (err) {
         console.log(err);

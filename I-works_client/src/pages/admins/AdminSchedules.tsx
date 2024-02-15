@@ -4,6 +4,7 @@ import { useState, useEffect, FormEvent, useRef } from "react"
 import { Button } from "flowbite-react"
 import { useNavigate } from "react-router-dom"
 import AdminScheduleCreate, { ScheduleCreateRef } from "./AdminScheduleCreate"
+import { getAccessToken } from "../../utils/auth"
 
 interface ScheduleType {
   scheduleId: number
@@ -36,7 +37,11 @@ function AdminSchedules() {
   const [scheduleList, setScheduleList] = useState<ScheduleType[]>([])
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/schedule/`)
+    axios.get(`https://suhyeon.site/api/admin/schedule/`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
       .then((res) => {
         setScheduleList(res.data.data)
       })
@@ -59,7 +64,11 @@ function AdminSchedules() {
       return; // 사용자가 취소한 경우 함수를 종료합니다.
     }
     axios
-      .post(`https://suhyeon.site/api/admin/schedule/${shceduleId}/delete`)
+      .post(`https://suhyeon.site/api/admin/schedule/${shceduleId}/delete`, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
+      })
       .then(() => {
         alert('삭제되었습니다.')
         window.location.reload()

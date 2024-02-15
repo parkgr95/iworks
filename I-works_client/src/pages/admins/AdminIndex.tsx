@@ -1,6 +1,10 @@
+
+
 function AdminIndex() {
   return (
-    <div>Index</div>
+    <>
+      
+    </>
   )
 }
 

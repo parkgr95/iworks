@@ -52,14 +52,17 @@ function AdminGroupsCreate() {
         }
       })
       .then((res) => {
-        const teamId = res.data.data.teamId
-        console.log(teamId)
+        const teamId:string = res.data.data.teamId
         if (!teamId) {
           alert("팀ID가 존재하지 않습니다.")
         }
-        return axios.post(`https://suhyeon.site/api/admin//team/user/${teamId}`,
+        return axios.post(`https://suhyeon.site/api/admin/team/user/${teamId}`,
           {
             userIds: targetIdArray
+          }, {
+            headers: {
+              Authorization: 'Bearer ' + getAccessToken(),
+            },
           })
       })
       .then((res) => {
@@ -67,7 +70,6 @@ function AdminGroupsCreate() {
         console.log(res.data)
       })
       .catch((err) => {
-        console.log(targetIdArray)
         console.log(err)
       })
   }
@@ -112,7 +114,11 @@ function AdminGroupsCreate() {
   };
 
   useEffect(() => {
-    axios.get(`https://suhyeon.site/api/admin/user/`)
+    axios.get(`https://suhyeon.site/api/admin/user/`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
     .then((res) => {
       setUserAll(res.data.data)
     })
@@ -187,8 +193,8 @@ function AdminGroupsCreate() {
           )}
         </div>
         <div className="flex justify-end mt-4">
-          <Button className="bg-mainBlue mr-2">취소</Button>
-          <Button onClick={handleCreate} className="bg-mainGreen" type="submit">추가</Button>
+          <Button onClick={handleCreate} className="bg-mainGreen mr-2" type="submit">추가</Button>
+          <Button onClick={() => { navigate(`/admin/groups`) }} className="bg-mainBlue">취소</Button>
         </div>
       </Form>
     </div>

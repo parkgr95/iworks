@@ -52,6 +52,7 @@ function AdminGroupsUpdate() {
     teamUsers: [],
   })
   const [teamMemberData, setteamMemberData] = useState<UserData[]>([])
+  const [groupLeader, setGroupLeader] = useState<number>()
 
   let groupLeaderName = ""
   if (groupDetail.teamLeader) {
@@ -71,11 +72,16 @@ function AdminGroupsUpdate() {
   useEffect(() => {
     async function getGroupDetail() {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/admin/team/${groupId}`)
+        const res = await axios.get(`https://suhyeon.site/api/admin/team/${groupId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        })
         const groupDetailData: GroupType = res.data.data
         setgroupDetail(groupDetailData)
         setTeamName(groupDetailData.teamName)
         setTeamDescription(groupDetailData.teamDescription)
+        setGroupLeader(groupDetailData.teamLeader)
         const teamMembers: UserData[] = groupDetailData.teamUsers?.map((teamUser) => ({
           userId: teamUser.userDto.userId,
           userEid: '',
@@ -105,7 +111,7 @@ function AdminGroupsUpdate() {
   // 수정 요청
   function handleUpdate(event: FormEvent) {
     event.preventDefault()
-    const teamLeader = groupDetail.teamLeader
+    const teamLeader = groupLeader
 
     axios
       .put(`https://suhyeon.site/api/admin/team/${groupId}`, {
@@ -136,7 +142,8 @@ function AdminGroupsUpdate() {
         }
       })
       .then((res) => {
-        navigate("../")
+        navigate("/admin/groups")
+        window.location.reload()
         console.log(res?.data); // null이나 다른 값에 대한 응답 확인
       })
       .catch((err) => {
@@ -208,8 +215,30 @@ function AdminGroupsUpdate() {
     const updatedTeamMembers = teamMemberData.filter(user => user.userId !== userId);
     setteamMemberData(updatedTeamMembers);
   }
+  // 그룹 리더 선택
+  const [userAll, setUserAll] = useState<UserData[]>([])
+
+  const handleGroupLeaderSelect = (userId: number) => {
+    const selectedLeader = userAll.find(user => user.userId === userId);
+    if (selectedLeader) {
+      setGroupLeader(selectedLeader.userId);
+      setteamMemberData(prevMembers => [...prevMembers, selectedLeader]);
+    }
+  };
 
   useEffect(() => {
+    axios.get(`https://suhyeon.site/api/admin/user/`, {
+      headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      },
+    })
+    .then((res) => {
+      setUserAll(res.data.data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
     return () => {
       window.removeEventListener('message', handleMessage2);
     };
@@ -229,7 +258,21 @@ function AdminGroupsUpdate() {
         </div>
         <div className="flex items-center">
           <h3 className="text-lg">그룹 리더 : </h3>
-          <span className="ml-1 p-2 bg-mainGray">{groupLeaderName}</span>
+          <span className="ml-1 p-2 bg-mainGray">{groupLeaderName ? groupLeaderName : "unKnown"}</span>
+        </div>
+        <div className="flex flex-col my-2">
+          <label className="mb-2 text-lg" htmlFor="departmentLeader">그룹 리더 변경</label>
+          <select
+            onChange={(e) => handleGroupLeaderSelect(parseInt(e.target.value))}
+            className="h-10 w-full"
+            name="departmentLeader"
+            id="departmentLeader"
+          >
+            <option value="">그룹 리더를 선택해주세요..</option>
+            {userAll.map((user) => (
+              <option key={user.userId} value={user.userId}>{user.userNameLast}{user.userNameFirst}</option>
+            ))}
+          </select>
         </div>
         <div>
           <div className="flex justify-between items-center text-lg mb-2 mt-2">
@@ -262,8 +305,8 @@ function AdminGroupsUpdate() {
           )}
         </div>
         <div className="flex justify-end mt-4">
-          <Button onClick={handleUpdate} className="bg-mainGreen" type="submit">수정</Button>
-          <Button onClick={() => { navigate(`/admin/group/${groupId}`) }} className="bg-mainBlue mr-2">취소</Button>
+          <Button onClick={handleUpdate} className="mr-2 bg-mainGreen" type="submit">수정</Button>
+          <Button onClick={() => { navigate(`/admin/groups`) }} className="bg-mainBlue mr-2">취소</Button>
         </div>
       </Form>
     </div>

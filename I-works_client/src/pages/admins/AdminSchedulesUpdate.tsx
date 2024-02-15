@@ -4,6 +4,7 @@ import { useNavigate, useParams, Form } from 'react-router-dom'
 
 // import ScheduleModal from '../../components/ScheduleModal'
 import { Button, Label, Select, TextInput } from 'flowbite-react'
+import { getAccessToken } from '../../utils/auth'
 
 interface ScheduleType {
   scheduleId: number
@@ -59,7 +60,11 @@ const AdminSchedulesUpdate = () => {
   useEffect(() => {
     async function getScheduleDetail(scheduleId: string) {
       try {
-        const res = await axios.get(`https://suhyeon.site/api/admin/schedule/${scheduleId}`)
+        const res = await axios.get(`https://suhyeon.site/api/admin/schedule/${scheduleId}`, {
+          headers: {
+            Authorization: 'Bearer ' + getAccessToken(),
+          },
+        })
         setScheduleDetail(res.data.data)
         setFormData({
           scheduleDivisionCodeId: res.data.data.scheduleDivisionCodeId,
@@ -94,7 +99,11 @@ const AdminSchedulesUpdate = () => {
     }
 
     axios
-      .post(`https://suhyeon.site/api/admin/schedule/${scheduleId}/update`, updateSchedule)
+      .post(`https://suhyeon.site/api/admin/schedule/${scheduleId}/update`, updateSchedule, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
+      })
       .then(() => {
         alert('수정되었습니다.')
         navigate('/admin/schedules/')
