@@ -55,7 +55,7 @@ public class ScheduleCreateRequestDto {
                 .schedulePlace(this.schedulePlace)
                 .scheduleCreator(creator)
                 .build();
-        if (sessionId != null) {
+        if (isCreateMeeting && sessionId != null) {
             schedule.setMeeting(Meeting.builder()
                     .meetingSessionId(sessionId)
                     .meetingDate(this.meetingDate).build());
