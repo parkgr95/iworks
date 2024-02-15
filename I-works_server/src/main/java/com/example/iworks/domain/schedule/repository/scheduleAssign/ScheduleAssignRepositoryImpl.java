@@ -35,7 +35,7 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
                  jpaQueryFactory
                          .selectFrom(scheduleAssign)
                          .join(scheduleAssign.schedule, schedule).fetchJoin()
-                         .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId())
+                         .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId()).and(notDeleted())
                                  ,withInDate(dateCondition)
                                  ,filterTask(onlyTask)
                          )
