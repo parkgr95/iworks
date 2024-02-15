@@ -40,7 +40,7 @@ function getNewAccessToken() {
       })
       .then((res) => {
         console.log(res.data.accessToken)
-        localStorage.setItem('accessToken')
+        localStorage.setItem('accessToken',res.data.accessToken)
       })
     .catch((err) => {
         alert(err.response.data.message)
