@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService{
         StringBuilder sb = new StringBuilder();
         sb.append("입사를 축하합니다.").append("\n");
         sb.append("사번 : ").append(user.getUserEid()).append("\n");
-        sb.append("임시 비밀번호 : ").append(user.getUserPassword()).append("\n");
+        sb.append("임시 비밀번호 : ").append(password).append("\n");
         String message = sb.toString();
 
         try {
