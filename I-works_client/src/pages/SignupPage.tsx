@@ -30,7 +30,7 @@ interface PositonInfo {
   codeName: string
 }
 
-const SIGNUP_URL = API_URL + '/user/join'
+const SIGNUP_URL = API_URL + '/admin/user/join'
 
 const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
   const dialog = useRef<HTMLDialogElement>(null)
@@ -69,11 +69,14 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
     axios
       .post(SIGNUP_URL, signupRequestData)
       .then((response) => {
-        alert(response.data.data.message)
-        formRef.current?.reset()        
+        alert("회원가입 성공!")
+        console.log(response.data)
+        formRef.current?.reset()
+        dialog.current?.close()
       })
       .catch((error) => {
-        alert(error.response.data.data)
+        console.log(error)
+        alert(error.response.data.message)
       })
   }
 

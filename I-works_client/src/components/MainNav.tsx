@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useState } from "react";
 import { useUser } from "../utils/userInfo";
+import { getDecoded } from "../utils/auth";
 
 function MainNav() {
   const loginedUser = useUser()
@@ -22,6 +23,9 @@ function MainNav() {
     return navigate('/user/login');
   }
   
+  const decoded = getDecoded();
+  const isAdmin = decoded?.role?.includes('ROLE_ADMIN') ?? false;
+
   return (
     <nav className="max-full flex justify-between p-4 bg-mainBlue h-14">
       <div className="flex items-center space-x-3">
@@ -40,6 +44,11 @@ function MainNav() {
         <li>
           <Link to="/calendar" className="block py-2 px-4">캘린더</Link>
         </li>
+        {isAdmin && (
+          <li>
+          <Link to="/admin" className="block py-2 px-4">관리자</Link>
+        </li>
+        )}
         <li>
           <Link to="/schedule" className="block py-2 px-4">할 일</Link>
         </li>
