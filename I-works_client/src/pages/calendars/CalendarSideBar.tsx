@@ -1,8 +1,7 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 function CalendarSideBar() {
   // 네비게이션
-  const navigate = useNavigate()
 
   return (
     <div className="flex h-full">
