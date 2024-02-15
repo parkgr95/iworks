@@ -47,11 +47,11 @@ public class UserServiceImpl implements UserService{
         return response.handleFail("찾을 수 없는 사용자입니다.",null);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> updateUser(String token, UserUpdateMypageRequestDto dto) {
         int id = jwtProvider.getUserId(token);
         User origin = userRepository.findByUserId(id);
-        System.out.println("origin: " + origin);
         if(origin != null){
             origin.update(dto,bCryptPasswordEncoder);
             return response.handleSuccess(new UserGetMyPageResponseDto(origin));
