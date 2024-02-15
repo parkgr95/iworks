@@ -156,7 +156,7 @@ function ScheduleList({
                   (schedule.scheduleIsFinish ? finishedStyle : null) +
                   ' ' +
                   (selectedScheduleId == schedule.scheduleId
-                    ? 'bg-mainGreen text-white'
+                    ? 'bg-mainGray'
                     : null)
                 }
                 key={schedule.scheduleId}

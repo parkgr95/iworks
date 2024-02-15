@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { API_URL } from './api'
+import { tokenLoader } from './auth'
 
 const CODE_URL = API_URL + '/code'
 
@@ -19,7 +20,7 @@ export async function getPositionCodeList() {
     return response.data.data
   } catch {
     alert('포지션 코드 불러오기 실패')
-    return null
+    return tokenLoader()
   }
 }
 
@@ -29,7 +30,7 @@ export async function getStatusCodeList() {
     return response.data.data
   } catch {
     alert('상태 코드 불러오기 실패')
-    return null
+    return tokenLoader()
   }
 }
 
@@ -39,7 +40,7 @@ export async function getCategoryCodeList() {
     return response.data.data
   } catch {
     alert('카테고리 코드 불러오기 실패')
-    return null
+    return tokenLoader()
   }
 }
 
@@ -49,7 +50,7 @@ export async function getTargetCodeList() {
     return response.data.data
   } catch {
     alert('타겟 코드 불러오기 실패')
-    return null
+    return tokenLoader()
   }
 }
 
@@ -59,6 +60,7 @@ export async function getScheduleDivisionCodeList() {
     return response.data.data
   } catch {
     alert('할일 분류 코드 불러오기 실패')
+    return tokenLoader()
   }
   
 }

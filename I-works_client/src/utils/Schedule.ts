@@ -1,6 +1,6 @@
 import axios from "axios"
 import { API_URL } from "./api"
-import { getAccessToken } from "./auth"
+import { getAccessToken, tokenLoader } from "./auth"
 
 
 interface ScheduleResponse {
@@ -37,7 +37,6 @@ export async function getMyScheduleList(startDate:string, endDate:string) {
     )
     return response.data.data
   } catch {
-    alert('내 스케줄 목록 불러오기 실패!')
-    return null
+    return tokenLoader()
   }
 }

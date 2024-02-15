@@ -10,8 +10,9 @@ function getAccessToken () {
 
 function tokenLoader () {
   const token = getAccessToken()
-  if (!token) {
-    return redirect('/login')
+
+  if (!token && window.location.pathname !== "/user/login") {           
+    return redirect('/user/login')
   }
   return null
 }

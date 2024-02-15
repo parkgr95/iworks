@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { API_URL } from "./api";
+import { tokenLoader } from "./auth";
 
 const ADDRESS_URL = API_URL+ '/address'
 
@@ -20,8 +21,8 @@ export async function getUserAllList () {
         return response.data.data
     } 
     catch {
-        alert('유저 전체 불러오기 실패')
-        return null
+
+        return tokenLoader()
     }
 }
 
@@ -33,8 +34,8 @@ export async function getDepartmentAllList() {
         return response.data.data
     } 
     catch {
-        alert('부서 전체 불러오기 실패')
-        return null
+        
+        return tokenLoader()
     }
 }
 
@@ -46,7 +47,7 @@ export async function getTeamAllList()  {
         return response.data.data
     } 
     catch {
-        alert('팀 전체 불러오기 실패')
-        return null
+        
+        return tokenLoader()
     }
 }

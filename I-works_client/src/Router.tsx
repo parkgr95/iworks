@@ -1,31 +1,31 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import RootLayout from './pages/RootLayout';
-import LoginPage from './pages/LoginPage';
-import AddressPage from "./pages/AddressPage";
-import MyPage from "./pages/MyPage";
-import { logoutAction } from './pages/LogoutPage';
+import RootLayout from './pages/RootLayout'
+import LoginPage from './pages/LoginPage'
+import AddressPage from './pages/AddressPage'
+import MyPage from './pages/MyPage'
+import { logoutAction } from './pages/LogoutPage'
 
-import BoardPage from './pages/BoardPage';
-import BoardIndex from './pages/boards/BoardIndex';
-import BoardList from './pages/boards/BoardList';
-import BoardCreate from './pages/boards/BoardCreate';
-import BoardUpdate from './pages/boards/BoardUpdate';
-import BoardDetail from './pages/boards/BoardDetail';
-import BoardSearch from './pages/boards/BoardSearchPage';
-import BoardMy from './pages/boards/BoardMy';
-import BoardNew from './pages/boards/BoardNew';
-import BoardBookmark from './pages/boards/BoardBookmark';
+import BoardPage from './pages/BoardPage'
+import BoardIndex from './pages/boards/BoardIndex'
+import BoardList from './pages/boards/BoardList'
+import BoardCreate from './pages/boards/BoardCreate'
+import BoardUpdate from './pages/boards/BoardUpdate'
+import BoardDetail from './pages/boards/BoardDetail'
+import BoardSearch from './pages/boards/BoardSearchPage'
+import BoardMy from './pages/boards/BoardMy'
+import BoardNew from './pages/boards/BoardNew'
+import BoardBookmark from './pages/boards/BoardBookmark'
 
-import SchedulePage from './pages/SchedulePage';
-import { getMyPageData } from './utils/User';
+import SchedulePage from './pages/SchedulePage'
+import { getMyPageData } from './utils/User'
 
-import AddressIndex from './pages/addresses/AddressIndex';
-import AddressSelect from './components/AddressSelect';
-import AddressList from './pages/addresses/AddressList';
-import GroupCreate from './pages/addresses/GroupCreate';
-import GroupList from './pages/addresses/GroupList';
-import GroupDetail from './pages/addresses/GroupDetail';
-import GroupUpdate from './pages/addresses/GroupUpdate';
+import AddressIndex from './pages/addresses/AddressIndex'
+import AddressSelect from './components/AddressSelect'
+import AddressList from './pages/addresses/AddressList'
+import GroupCreate from './pages/addresses/GroupCreate'
+import GroupList from './pages/addresses/GroupList'
+import GroupDetail from './pages/addresses/GroupDetail'
+import GroupUpdate from './pages/addresses/GroupUpdate'
 
 const router = createBrowserRouter([
   {
@@ -58,29 +58,29 @@ const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <AddressIndex />
+            element: <AddressIndex />,
           },
           {
             path: ':departmentId',
-            element: <AddressList />
+            element: <AddressList />,
           },
           {
             path: 'create',
-            element: <GroupCreate />
+            element: <GroupCreate />,
           },
           {
             path: 'group',
-            element: <GroupList />
+            element: <GroupList />,
           },
           {
             path: 'group/:groupId',
-            element: <GroupDetail />
+            element: <GroupDetail />,
           },
           {
             path: 'group/update/:groupId',
-            element: <GroupUpdate />
+            element: <GroupUpdate />,
           },
-        ]
+        ],
       },
       // 게시판 라우터
       {
@@ -89,41 +89,41 @@ const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <BoardIndex />
+            element: <BoardIndex />,
           },
           {
             path: ':boardCategoryCodeId/:boardOwnerId',
-            element: <BoardList />
+            element: <BoardList />,
           },
           {
             path: 'create',
-            element: <BoardCreate />
+            element: <BoardCreate />,
           },
           {
             path: 'update/:boardId',
-            element: <BoardUpdate />
+            element: <BoardUpdate />,
           },
           {
             path: ':boardId',
-            element: <BoardDetail />
+            element: <BoardDetail />,
           },
           {
             path: 'search/:searchKeyword',
-            element: <BoardSearch />
+            element: <BoardSearch />,
           },
           {
             path: 'my/:userId',
-            element: <BoardMy />
+            element: <BoardMy />,
           },
           {
             path: 'new',
-            element: <BoardNew />
+            element: <BoardNew />,
           },
           {
             path: 'bookmark',
-            element: <BoardBookmark />
+            element: <BoardBookmark />,
           },
-        ]
+        ],
       },
       // 캘린더 라우터
       // {
@@ -133,19 +133,19 @@ const router = createBrowserRouter([
       {
         path: 'schedule',
         element: <SchedulePage />,
-        loader: getMyPageData
-      }
-    ]
+        loader: getMyPageData,
+      },
+    ],
   },
   // 공통 라우터
   {
     path: '/popup/address/select',
-    element: <AddressSelect />
+    element: <AddressSelect />,
   },
-]);
+])
 
 function AppProvider() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />
 }
 
-export default AppProvider;
+export default AppProvider

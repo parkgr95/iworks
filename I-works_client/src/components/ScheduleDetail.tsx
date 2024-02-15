@@ -62,13 +62,13 @@ function ScheduleDetail({
 
     const scheduleEditFormData = new FormData(event.target as HTMLFormElement)
     const scheduleEditRequestData = formDataToRequestData(scheduleEditFormData)
-
+    console.log(id, scheduleEditRequestData)
     axios
       .post(
         API_URL + '/schedule' + `/${id}` + '/update',
         scheduleEditRequestData,
       )
-      .then((_response) => {
+      .then((_response) => {      
         getSchedule(startDate, endDate)
         getScheduleDetailInfo(id)
         setIsEdit((prev) => !prev)
@@ -263,6 +263,20 @@ function ScheduleDetail({
               />
             </div>
           </div>
+          {formInfo.meetingDate && <div>
+              <p className="text-xl font-bold border-b-2 pb-1 mb-1 border-b-mainGreen">
+                회의 일시
+              </p>
+              <TextInput
+                id="meetingDate"
+                name="meetingDate"
+                onChange={(e) =>
+                  handleInfoChange('meetingDate', e.target.value)
+                }
+                type="datetime-local"
+                value={formInfo.meetingDate}
+              />
+            </div>}
           <div className="">
             <p className="text-xl font-bold border-b-2 pb-1 mb-1 border-b-mainGreen">
               우선순위

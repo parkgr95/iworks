@@ -1,4 +1,4 @@
-import { getAccessToken } from './auth'
+import { getAccessToken, tokenLoader } from './auth'
 import axios from 'axios'
 import { API_URL } from './api'
 
@@ -46,8 +46,7 @@ async function getMyPageData() {
 
     return response.data.data
   } catch (_error) {
-    alert('마이페이지 데이터 불러오기 실패')
-    return null
+    return tokenLoader()
   }
 }
 
@@ -60,8 +59,7 @@ async function getMyTeamList() {
     })
     return response.data.data
   } catch(_error){
-    alert('내 팀 정보 불러오기 실패')
-    return null
+    return tokenLoader()
   }
 }
 

@@ -7,13 +7,14 @@ import { useEffect, useState } from 'react'
 import ScheduleList from '../components/ScheduleList'
 
 import { ScheduleData, getMyScheduleList } from '../utils/Schedule'
-
-
-
+import { tokenLoader } from '../utils/auth'
 
 
 function SchedulePage() {
+
+
   // 초기 기간 설정
+
   const [startDate, setStartDate] = useState(() => {
     const currentDate = new Date()
     currentDate.setDate(currentDate.getDate())
@@ -69,11 +70,12 @@ function SchedulePage() {
           break
       }
     } catch {
-      alert('스케줄 불러오기 실패')
+      tokenLoader()
     }
   }
 
   useEffect(() => {
+    tokenLoader()
     getSchedule(startDate, endDate)
   }, [mode])
 
