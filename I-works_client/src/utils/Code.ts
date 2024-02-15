@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { API_URL, REQUEST_HEADER } from './api'
-import { getAccessToken, tokenLoader } from './auth'
+import { tokenLoader } from './auth'
 
 const CODE_URL = API_URL + '/code'
 
