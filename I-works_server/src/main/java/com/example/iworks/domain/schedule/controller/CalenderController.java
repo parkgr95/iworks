@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/calender")
@@ -18,9 +20,14 @@ public class CalenderController {
     private final Response response;
     private final JwtProvider jwtProvider;
 
-    /** 캘린더 : 유저의 모든 할일*/
+    /**
+     *
+     * @param authorizationToken
+     * @param dateCondition
+     * @return ScheduleAssignResponseDto
+     */
     @PostMapping("/date")
-    public ResponseEntity<?> getAllByUserAndDate(@RequestHeader("Authorization") String authorizationToken, @Validated @RequestBody DateCondition dateCondition){
+    public ResponseEntity<Map<String,Object>> getAllByUserAndDate(@RequestHeader("Authorization") String authorizationToken, @Validated @RequestBody DateCondition dateCondition){
         int userId = jwtProvider.getUserId(authorizationToken);
         return response.handleSuccess(scheduleAssignService.findByUser(userId, dateCondition));
     }
