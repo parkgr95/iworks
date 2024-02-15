@@ -1,12 +1,8 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { Button } from 'flowbite-react'
 
 function CalendarSideBar() {
   // 네비게이션
   const navigate = useNavigate()
-  const moveToCreate = () => {
-    navigate(`#`)
-  }
 
   return (
     <div className="flex h-full">
