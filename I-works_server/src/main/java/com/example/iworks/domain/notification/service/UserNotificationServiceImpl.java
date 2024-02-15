@@ -104,6 +104,7 @@ public class UserNotificationServiceImpl implements UserNotificationService {
         return userNotificationRepository.countOfIsNotSent(userId);
     }
 
+    @Transactional
     @Override
     public String getOneMessage(int userId) throws NotificationException{
         List<UserNotification> userNotificationList = userNotificationRepository.findAllIsNotSentByUserId(userId);//영속성 컨텍스트에 있음
