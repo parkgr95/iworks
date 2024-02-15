@@ -49,7 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Code divisionCode = findCode(createRequestDto.getScheduleDivisionCodeId());
         User creator = findUser(userId);
-        Schedule schedule = createRequestDto.toScheduleEntity(divisionCode, openViduUtil.createSessionId(), creator);
+        Schedule schedule = createRequestDto.toScheduleEntity(divisionCode, createRequestDto.getIsCreateMeeting()?openViduUtil.createSessionId():null, creator);
         schedule.addScheduleAssignList(toScheduleAssignList(createRequestDto.getAssigneeInfos()));
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
@@ -60,6 +60,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponseDto getSchedule(Integer scheduleId) {
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_NOT_EXIST));
+        if (findSchedule.getScheduleIsDeleted()) throw new ScheduleException(ScheduleErrorCode.SCHEDULE_IS_DELETED);
         return new ScheduleResponseDto(findSchedule);
     }
 
