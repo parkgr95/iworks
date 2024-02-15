@@ -14,6 +14,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +38,6 @@ public class InitData {
         initDataService.init();
     }
 
-    private static String makeRandomPassword(){
-        int length = (int) (Math.random() * (12 - 8 + 1)) +8; // 8~12 길이
-        return RANDOM_STRING_UTIL.getRandomPassword(length);
-    }
     private static Long Eid = 1L; //락 걸기?
 
     private static String generateEid(){
@@ -201,11 +198,11 @@ public class InitData {
                     .codeGroup(codeGroup5)
                     .build());
 
+            String [] departments = {"인사","총무","회계","기획","개발"};
             //부서별 유저 데이터
             for (int i = 1; i <= 5; i++){
-                String departmentName = "부서" + i;
                 Department department = Department.builder()
-                        .departmentName(departmentName)
+                        .departmentName(departments[i-1])
                         .departmentLeaderId(1)
                         .build();
                 em.persist(department);
@@ -214,7 +211,7 @@ public class InitData {
                 for (int j = 1; j <= 20; j++){
                     User user = User.builder()
                             .userEid(generateEid())
-                            .userPassword(makeRandomPassword())
+                            .userPassword(new BCryptPasswordEncoder().encode("1234"))
                             .userEmail(userEmailSeq+++"")
                             .userNameFirst("유저"+userSeq)
                             .userPositionCode(code_role_employee)

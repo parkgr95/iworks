@@ -34,13 +34,41 @@ public class BoardServiceImpl implements BoardService{
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
+    private static final int BOARD_CATEGORY_ANNOUNCEMENT =1;
+    private static final int BOARD_CATEGORY_FREE =2;
+    private static final int BOARD_CATEGORY_DEPARTMENT =3;
+
 
     private final PageRequest pageRequest = PageRequest.of(0, 10);
 
     @Transactional
     public void createBoard(int userId, BoardCreateRequestDto boardCreateRequestDto) {
+        User creator = userRepository.findByUserId(userId);
+
+        boolean isAdmin = false;
         Code code = findCode(boardCreateRequestDto.getBoardCategoryCodeId());
-        boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
+        for (String role : creator.getRoleList()) {
+            if (role.equals("ROLE_ADMIN")) {
+                isAdmin = true;
+                break;
+            }
+        }
+
+        if(code.getCodeId()==BOARD_CATEGORY_ANNOUNCEMENT&& isAdmin){
+            boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
+            return;
+        }
+
+        if(code.getCodeId()==BOARD_CATEGORY_FREE){
+            boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
+            return;
+        }
+
+        if(code.getCodeId()==BOARD_CATEGORY_DEPARTMENT&& creator.getUserDepartment().getDepartmentId() == boardCreateRequestDto.getBoardOwnerId()){
+            boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
+            return;
+        }
+        throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
     }
 
     @Transactional
