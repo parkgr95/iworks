@@ -29,8 +29,7 @@ import java.util.List;
 @Builder
 public class User {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int userId; //유저 아이디
 

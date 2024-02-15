@@ -18,8 +18,7 @@ import java.util.List;
 @Getter
 public class Team {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
     private int teamId; // 그룹 아이디
 
