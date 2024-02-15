@@ -5,6 +5,9 @@ import { API_URL, formDataToRequestData } from '../utils/api'
 import { FormEvent, useEffect, useState } from 'react'
 import { Form } from 'react-router-dom'
 import { RiDeleteBin2Line } from 'react-icons/ri'
+import { ScheduleDetailType } from './ScheduleList'
+
+const MEETING_SESSSION_URL = 'https://openvidu.iworks.live/#'
 
 function ScheduleDetail({
   scheduleDetailInfo,
@@ -12,6 +15,7 @@ function ScheduleDetail({
   endDate,
   getSchedule,
   getScheduleDetailInfo,
+  setScheduleDetailInfo,
 }: any) {
   const [isFinished, setIsFinished] = useState<boolean>()
   const [isEdit, setIsEdit] = useState<boolean>(false)
@@ -39,7 +43,8 @@ function ScheduleDetail({
     setIsEdit((prev) => !prev)
   }
 
-  const [formInfo, setFormInfo] = useState(scheduleDetailInfo)
+  const [formInfo, setFormInfo] =
+    useState<ScheduleDetailType>(scheduleDetailInfo)
 
   useEffect(() => {
     setFormInfo(scheduleDetailInfo)
@@ -72,17 +77,22 @@ function ScheduleDetail({
       .catch((_error) => alert('스케줄 수정 실패'))
   }
 
-  function handleDeleteSchedule(id:number){
-    if(!window.confirm('정말로 삭제하시겠습니까?')){
+  function handleDeleteSchedule(id: number) {
+    if (!window.confirm('정말로 삭제하시겠습니까?')) {
       return
     }
-    axios.post(API_URL + '/schedule' + `/${id}` + '/delete')
-    .then(response => {
-      console.log(id)
-      getSchedule(startDate, endDate)
-      alert(response.data.data)
-    })
-    .catch(err => alert(err.response.data.data))
+    axios
+      .post(API_URL + '/schedule' + `/${id}` + '/delete')
+      .then((response) => {
+        getSchedule(startDate, endDate)
+        alert(response.data.data)
+        setScheduleDetailInfo([])
+      })
+      .catch((err) => alert(err.response.data.data))
+  }
+
+  function openMeeting(url:string){
+    window.open(url)
   }
 
   return (
@@ -94,12 +104,19 @@ function ScheduleDetail({
         >
           <div className="flex text-2xl font-bold pb-2 border-b-2 border-b-mainGreen justify-between">
             {formInfo.scheduleTitle}
-            <div className='flex gap-4 self-center'>
-              <div className="text-sm self-center text-nowrap" onClick={() => handleFinish(formInfo.scheduleId)}>
+            <div className="flex gap-4 self-center">
+              <div
+                className="text-sm self-center text-nowrap"
+                onClick={() => handleFinish(formInfo.scheduleId)}
+              >
                 {isFinished ? (
-                  <span className="text-white bg-green-500 p-2 rounded">완료됨</span>
+                  <span className="text-white bg-green-500 p-2 rounded">
+                    완료됨
+                  </span>
                 ) : (
-                  <span className="text-white bg-red-500 p-2 rounded">미완료</span>
+                  <span className="text-white bg-red-500 p-2 rounded">
+                    미완료
+                  </span>
                 )}
               </div>
               <button
@@ -109,7 +126,11 @@ function ScheduleDetail({
               >
                 <RiEdit2Line />
               </button>
-              <button className="self-center" type='button' onClick={()=>handleDeleteSchedule(formInfo.scheduleId)}>
+              <button
+                className="self-center"
+                type="button"
+                onClick={() => handleDeleteSchedule(formInfo.scheduleId)}
+              >
                 <RiDeleteBin2Line />
               </button>
             </div>
@@ -136,6 +157,24 @@ function ScheduleDetail({
               {formInfo.scheduleEndDate.slice(14, 16)}분
             </div>
           </div>
+          {formInfo.meetingSessionId && (
+            <div className="">
+              <div className="flex text-xl font-bold border-b-2 pb-1 mb-1 border-b-mainGreen gap-4">
+                화상 회의
+              <div className="text-xs text-white px-4 py-1 self-center bg-mainGreen rounded" onClick={() => openMeeting(MEETING_SESSSION_URL + formInfo.meetingSessionId)}>         
+                    입장
+                </div>
+              </div>
+              <div className="">
+                {formInfo.meetingDate.slice(0, 4)}년{' '}
+                {formInfo.meetingDate.slice(5, 7)}월{' '}
+                {formInfo.meetingDate.slice(8, 10)}일{' '}
+                {formInfo.meetingDate.slice(11, 13)}시{' '}
+                {formInfo.meetingDate.slice(14, 16)}분
+                
+              </div>
+            </div>
+          )}
 
           <div className="">
             <p className="text-xl font-bold border-b-2 pb-1 mb-1 border-b-mainGreen">

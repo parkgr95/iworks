@@ -92,7 +92,7 @@ function SchedulePage() {
 
   return (
     <div className="flex h-full">
-      <ScheduleSideBar currentMode={mode} handleMode={handleMode} />
+      <ScheduleSideBar currentMode={mode} handleMode={handleMode} startDate={startDate} endDate={endDate} getSchedule={getSchedule}/>
       <div className="m-10">
         <Form className="flex gap-3">
           <TextInput

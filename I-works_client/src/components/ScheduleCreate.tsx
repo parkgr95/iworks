@@ -54,7 +54,7 @@ interface TeamInfo {
 const labelClass = 'text-md font-bold p-1'
 const inputClass = 'mt-1'
 
-const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
+const ScheduleCreate = forwardRef(function ScheduleCreatePage({startDate, endDate, getSchedule}:any, ref) {
   // 모달
   const dialog = useRef<HTMLDialogElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -212,8 +212,6 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
     scheduleRequestData.assigneeInfos = assigneeInfos
     scheduleRequestData.isCreateMeeting = toggleCreateMeeting
 
-    console.log(scheduleRequestData)
-
     // 폼 전송
 
     axios
@@ -228,6 +226,7 @@ const ScheduleCreate = forwardRef(function ScheduleCreatePage(_props, ref) {
         setAssigneeDepartmentList([])
         setAssigneeUserList([])
         setAssigneeTeamList([])
+        getSchedule(startDate, endDate)
       })
       .catch((error) => {
         console.log(error.response.data.data)

@@ -140,7 +140,7 @@ function ScheduleList({
         </div>
         <div
           className="flex flex-col gap-2 h-full"
-          style={{ width: '40vw', overflow: 'scroll' }}
+          style={{ width: scheduleDetailInfo ?'30vw':'40vw', overflow: 'scroll' }}
         >
           {sortedList.current.length == 0 && (
             <div className="text-center text-xl font-bold border-2 border-mainGreen rounded-xl text-nowrap h-full p-12">
@@ -156,7 +156,7 @@ function ScheduleList({
                   (schedule.scheduleIsFinish ? finishedStyle : null) +
                   ' ' +
                   (selectedScheduleId == schedule.scheduleId
-                    ? 'bg-mainGray'
+                    ? 'bg-mainGreen text-white'
                     : null)
                 }
                 key={schedule.scheduleId}
@@ -176,14 +176,14 @@ function ScheduleList({
                     }
                   />
                 </div>
-                <div className="truncate">
+                <div className="text-sm truncate">
                   시작 일시 : {schedule.scheduleStartDate.slice(0, 4)}년{' '}
                   {schedule.scheduleStartDate.slice(5, 7)}월{' '}
                   {schedule.scheduleStartDate.slice(8, 10)}일{' '}
                   {schedule.scheduleStartDate.slice(11, 13)}시{' '}
                   {schedule.scheduleStartDate.slice(14, 16)}분
                 </div>
-                <div className="truncate">
+                <div className="text-sm truncate">
                   종료 일시 : {schedule.scheduleEndDate.slice(0, 4)}년{' '}
                   {schedule.scheduleEndDate.slice(5, 7)}월{' '}
                   {schedule.scheduleEndDate.slice(8, 10)}일{' '}
@@ -204,9 +204,10 @@ function ScheduleList({
             scheduleDetailInfo={scheduleDetailInfo}
             handleFinish={handleFinish}
             getScheduleDetailInfo={getScheduleDetailInfo}
+            setSchedulDetailInfo={setScheduleDetailInfo}
           />
         ) : (
-          <div className="text-center text-xl font-bold border-2 border-mainGreen rounded-xl text-nowrap h-full p-12">
+          <div className="text-center text-xl font-bold border-2 border-mainGreen rounded-xl text-nowrap h-full p-20">
             스케줄을 선택해주세요
           </div>
         )}

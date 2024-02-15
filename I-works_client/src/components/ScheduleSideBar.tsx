@@ -8,10 +8,9 @@ import { RiBuilding4Line, RiUser3Line, RiGroupLine, RiListCheck } from "react-ic
 
 const listStyle = "flex p-3 pl-6 gap-2"
 
-function ScheduleSideBar(props:any) {
+function ScheduleSideBar({handleMode, currentMode, startDate, endDate, getSchedule}:any) {
 
-  const handleMode = props.handleMode
-  const currentMode = props.currentMode
+
 
   const dialog = useRef<ScheduleCreateRef>(null)
 
@@ -23,7 +22,7 @@ function ScheduleSideBar(props:any) {
   return (
     <div className="flex h-full flex-col items-center border-r-2 m-0 px-3 position-absolute w-56 flex-shrink-0">
       <div className="flex justify-center items-center w-full h-20">
-        <ScheduleCreate ref={dialog} />
+        <ScheduleCreate startDate={startDate} endDate={endDate} getSchedule={getSchedule} ref={dialog} />
         <Button className="flex-1 bg-mainGreen" onClick={handleModal}>
           할 일 생성
         </Button>
