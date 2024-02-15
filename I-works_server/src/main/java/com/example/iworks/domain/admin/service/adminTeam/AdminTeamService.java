@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface AdminTeamService {
+
+    ResponseEntity<Map<String, Object>> getTeamAll();
+
     ResponseEntity<Map<String, Object>> deleteTeam(int teamId);
 
     ResponseEntity<Map<String, Object>> addTeamUser(int teamId, AddressTeamUserAddRequestDto requestDto);

@@ -2,6 +2,7 @@ package com.example.iworks.domain.admin.service.adminTeam;
 
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
+import com.example.iworks.domain.admin.dto.adminTeam.response.AdminTeamResponseDto;
 import com.example.iworks.domain.team.domain.Team;
 import com.example.iworks.domain.team.domain.TeamUser;
 import com.example.iworks.domain.team.repository.team.TeamRepository;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -28,6 +31,15 @@ public class AdminTeamServiceImpl implements AdminTeamService{
     private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
     private final Response response;
+
+    @Override
+    public ResponseEntity<Map<String, Object>> getTeamAll() {
+        List<AdminTeamResponseDto> result = teamRepository.findAll()
+                .stream()
+                .map(AdminTeamResponseDto::new)
+                .collect(toList());
+        return response.handleSuccess(result);
+    }
 
     @Transactional
     @Override
