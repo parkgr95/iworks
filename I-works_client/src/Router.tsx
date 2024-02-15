@@ -26,6 +26,9 @@ import GroupList from './pages/addresses/GroupList';
 import GroupDetail from './pages/addresses/GroupDetail';
 import GroupUpdate from './pages/addresses/GroupUpdate';
 
+import CalendarPage from './pages/CalendarPage';
+import CalendarIndex from './pages/calendars/CalendarIndex';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -120,11 +123,16 @@ const router = createBrowserRouter([
           },
         ]
       },
-      // 캘린더 라우터
-      // {
-      //   path: 'schedule',
-      //   element: <SchedulePage />
-      // },
+      {
+        path: 'calendar',
+        element: <CalendarPage />,
+        children: [
+          {
+            path: '',
+            element: <CalendarIndex />
+          },
+        ]
+      },
       {
         path: 'schedule',
         element: <SchedulePage />,
