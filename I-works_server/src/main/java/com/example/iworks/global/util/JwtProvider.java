@@ -98,6 +98,7 @@ public class JwtProvider {
         if (type.equals("refresh")) {
             System.out.println("create refresh");
            ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
+            System.out.println(claims.get("id"));
             String redisValue = stringValueOperations.get(claims.get("id"));
             if (redisValue != null) {
                 return claims.getExpiration().after(new Date());
