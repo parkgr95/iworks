@@ -1,9 +1,8 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import RootLayout from './pages/RootLayout'
-import LoginPage from './pages/LoginPage'
-import AddressPage from './pages/AddressPage'
-import MyPage from './pages/MyPage'
-import { logoutAction } from './pages/LogoutPage'
+import RootLayout from './pages/RootLayout';
+import LoginPage from './pages/LoginPage';
+import AddressPage from "./pages/AddressPage";
+import MyPage from "./pages/MyPage";
 
 import BoardPage from './pages/BoardPage'
 import BoardIndex from './pages/boards/BoardIndex'
@@ -27,6 +26,9 @@ import GroupList from './pages/addresses/GroupList'
 import GroupDetail from './pages/addresses/GroupDetail'
 import GroupUpdate from './pages/addresses/GroupUpdate'
 
+import CalendarPage from './pages/CalendarPage';
+import CalendarIndex from './pages/calendars/CalendarIndex';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -39,10 +41,6 @@ const router = createBrowserRouter([
           {
             path: 'login',
             element: <LoginPage />,
-          },
-          {
-            path: 'logout',
-            action: logoutAction,
           },
           {
             path: 'mypage',
@@ -125,11 +123,16 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // 캘린더 라우터
-      // {
-      //   path: 'schedule',
-      //   element: <SchedulePage />
-      // },
+      {
+        path: 'calendar',
+        element: <CalendarPage />,
+        children: [
+          {
+            path: '',
+            element: <CalendarIndex />
+          },
+        ]
+      },
       {
         path: 'schedule',
         element: <SchedulePage />,
