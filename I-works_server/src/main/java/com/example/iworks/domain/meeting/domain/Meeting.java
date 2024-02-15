@@ -25,7 +25,7 @@ public class Meeting {
     @Column(name = "meeting_date", nullable = false)
     private LocalDateTime meetingDate; // 회의 일시
 
-    @Column(name = "meeting_sessionId", length = 2000, nullable = false , unique = true)
+    @Column(name = "meeting_sessionId", length = 2000, nullable = false, updatable = false)
     private String meetingSessionId; // 회의 세션 아이디
 
     public void setSchedule(Schedule schedule) {
@@ -35,8 +35,7 @@ public class Meeting {
         }
     }
 
-    public void updateMeeting(LocalDateTime meetingDate, String meetingSessionId){
+    public void updateMeeting(LocalDateTime meetingDate){
         this.meetingDate = meetingDate;
-        this.meetingSessionId = meetingSessionId;
     }
 }

@@ -117,7 +117,7 @@ public class Schedule {
         this.scheduleStartDate = scheduleUpdateRequestDto.getScheduleStartDate();
         this.scheduleEndDate = scheduleUpdateRequestDto.getScheduleEndDate();
         this.schedulePlace = scheduleUpdateRequestDto.getSchedulePlace();
-        if (scheduleMeeting != null) this.scheduleMeeting.updateMeeting(scheduleUpdateRequestDto.getMeetingDate(), scheduleUpdateRequestDto.getMeetingCode());
+        if (scheduleMeeting != null) this.scheduleMeeting.updateMeeting(scheduleUpdateRequestDto.getMeetingDate());
     }
 
     public void delete(){
