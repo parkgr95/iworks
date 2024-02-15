@@ -151,60 +151,60 @@ const router = createBrowserRouter([
         element: <SchedulePage />,
         loader: getMyPageData,
       },
-    ]
-  },
-  // 관리자 라우터
-  {
-    path: 'admin',
-    element: <AdminPage />,
-    children: [
+      // 관리자 라우터
       {
-        path: '',
-        element: <AdminIndex />
-      },
-      {
-        path: 'users',
-        element: <AdminUsers />
-      },
-      {
-        path: 'users/:userId',
-        element: <AdminUsersDetail />
-      },
-      {
-        path: 'departments',
-        element: <AdminDepartments />
-      },
-      {
-        path: 'groups',
-        element: <AdminGroups />
-      },
-      {
-        path: 'groups/create',
-        element: <AdminGroupsCreate />
-      },
-      {
-        path: 'groups/update/:groupId',
-        element: <AdminGroupsUpdate />
-      },
-      {
-        path: 'boards',
-        element: <AdminBoards />
-      },
-      {
-        path: 'boards/create',
-        element: <AdminBoardsCreate />
-      },
-      {
-        path: 'boards/update/:boardId',
-        element: <AdminBoardsUpdate />
-      },
-      {
-        path: 'schedules',
-        element: <AdminSchedules />
-      },
-      {
-        path: 'schedules/update/:scheduleId',
-        element: <AdminSchedulesUpdate />
+        path: 'admin',
+        element: <AdminPage />,
+        children: [
+          {
+            path: '',
+            element: <AdminIndex />
+          },
+          {
+            path: 'users',
+            element: <AdminUsers />
+          },
+          {
+            path: 'users/:userId',
+            element: <AdminUsersDetail />
+          },
+          {
+            path: 'departments',
+            element: <AdminDepartments />
+          },
+          {
+            path: 'groups',
+            element: <AdminGroups />
+          },
+          {
+            path: 'groups/create',
+            element: <AdminGroupsCreate />
+          },
+          {
+            path: 'groups/update/:groupId',
+            element: <AdminGroupsUpdate />
+          },
+          {
+            path: 'boards',
+            element: <AdminBoards />
+          },
+          {
+            path: 'boards/create',
+            element: <AdminBoardsCreate />
+          },
+          {
+            path: 'boards/update/:boardId',
+            element: <AdminBoardsUpdate />
+          },
+          {
+            path: 'schedules',
+            element: <AdminSchedules />
+          },
+          {
+            path: 'schedules/update/:scheduleId',
+            element: <AdminSchedulesUpdate />
+          },
+        ]
       },
     ]
   },

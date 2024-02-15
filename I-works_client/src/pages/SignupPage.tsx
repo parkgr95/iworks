@@ -14,6 +14,7 @@ import { TextInput, Button, Radio, Label, Select } from 'flowbite-react'
 import { API_URL, formDataToRequestData } from '../utils/api'
 import { getDepartmentAllList } from '../utils/Address'
 import { getPositionCodeList } from '../utils/Code'
+import { getAccessToken } from '../utils/auth'
 
 export interface SignupRef {
   open: () => void
@@ -67,7 +68,11 @@ const Signup = forwardRef<SignupRef>(function Signup(_props, ref) {
     const signupRequestData = formDataToRequestData(signupFormData)
 
     axios
-      .post(SIGNUP_URL, signupRequestData)
+      .post(SIGNUP_URL, signupRequestData, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        },
+      })
       .then((response) => {
         alert("회원가입 성공!")
         console.log(response.data)

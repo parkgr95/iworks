@@ -22,7 +22,7 @@ function MainNav() {
     localStorage.removeItem('refreshToken');
     return navigate('/user/login');
   }
-  
+
   const decoded = getDecoded();
   const isAdmin = decoded?.role?.includes('ROLE_ADMIN') ?? false;
 
@@ -44,11 +44,6 @@ function MainNav() {
         <li>
           <Link to="/calendar" className="block py-2 px-4">캘린더</Link>
         </li>
-        {isAdmin && (
-          <li>
-          <Link to="/admin" className="block py-2 px-4">관리자</Link>
-        </li>
-        )}
         <li>
           <Link to="/schedule" className="block py-2 px-4">할 일</Link>
         </li>
@@ -82,9 +77,11 @@ function MainNav() {
                 <li>
                   <button onClick={handleLogout} className="block w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">로그아웃</button>
                 </li>
-                <li>
-                  <Link to="/admin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin</Link>
-                </li>
+                {isAdmin && (
+                  <li>
+                    <Link to="/admin" className="block py-2 px-4">관리자</Link>
+                  </li>
+                )}
               </ul>
             </div>
           )}
