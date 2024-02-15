@@ -18,6 +18,7 @@ import com.example.iworks.domain.user.exception.UserException;
 import com.example.iworks.domain.user.repository.UserRepository;
 import com.example.iworks.domain.code.entity.Code;
 import com.example.iworks.domain.code.repository.CodeRepository;
+import com.example.iworks.global.common.BoardCodeDef;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,47 +35,22 @@ public class BoardServiceImpl implements BoardService{
     private final CodeRepository codeRepository;
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
-    private static final int BOARD_CATEGORY_ANNOUNCEMENT =1;
-    private static final int BOARD_CATEGORY_FREE =2;
-    private static final int BOARD_CATEGORY_DEPARTMENT =3;
-
 
     private final PageRequest pageRequest = PageRequest.of(0, 10);
 
     @Transactional
     public void createBoard(int userId, BoardCreateRequestDto boardCreateRequestDto) {
-        User creator = userRepository.findByUserId(userId);
-
-        boolean isAdmin = false;
+        if (!hasAuthorization(userId, boardCreateRequestDto)) {
+            throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
+        }
         Code code = findCode(boardCreateRequestDto.getBoardCategoryCodeId());
-        for (String role : creator.getRoleList()) {
-            if (role.equals("ROLE_ADMIN")) {
-                isAdmin = true;
-                break;
-            }
-        }
-
-        if(code.getCodeId()==BOARD_CATEGORY_ANNOUNCEMENT&& isAdmin){
-            boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
-            return;
-        }
-
-        if(code.getCodeId()==BOARD_CATEGORY_FREE){
-            boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
-            return;
-        }
-
-        if(code.getCodeId()==BOARD_CATEGORY_DEPARTMENT&& creator.getUserDepartment().getDepartmentId() == boardCreateRequestDto.getBoardOwnerId()){
-            boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
-            return;
-        }
-        throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
+        boardRepository.save(boardCreateRequestDto.toEntity(userId, code));
     }
 
     @Transactional
     public void updateBoard(int boardId, int userId, BoardUpdateRequestDto boardUpdateRequestDto) {
         Board board = findBoard(boardId);
-        if (board.getBoardCreatorId() != userId) {
+        if (!isAdmin(userId) && board.getBoardCreatorId() != userId) {
             throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
         }
         board.update(userId, boardUpdateRequestDto);
@@ -83,7 +59,7 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     public void deleteBoard(int boardId, int userId) {
         Board board = findBoard(boardId);
-        if (board.getBoardCreatorId() != userId) {
+        if (!isAdmin(userId) && board.getBoardCreatorId() != userId) {
             throw new UserException(UserErrorCode.USER_IS_NOT_AUTHORIZATION);
         }
         board.delete();
@@ -185,6 +161,26 @@ public class BoardServiceImpl implements BoardService{
     private User findUser(int userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_EXIST));
+    }
+
+    private boolean isAdmin(int userId) {
+        User user = findUser(userId);
+        for (String role : user.getRoleList()) {
+            if (role.equals("ROLE_ADMIN")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasAuthorization(int userId, BoardCreateRequestDto boardCreateRequestDto) {
+        User user = findUser(userId);
+        int codeId = boardCreateRequestDto.getBoardCategoryCodeId();
+
+        return isAdmin(userId) ||
+                codeId == BoardCodeDef.BOARD_CATEGORY_FREE ||
+                (codeId == BoardCodeDef.BOARD_CATEGORY_DEPARTMENT &&
+                        user.getUserDepartment().getDepartmentId().equals(boardCreateRequestDto.getBoardOwnerId()));
     }
 
     private static Bookmark createBookmark(Board board, User user) {
