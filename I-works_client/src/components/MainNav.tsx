@@ -66,7 +66,7 @@ function MainNav() {
               onClick={closeDropdown}
             >
               {/* Dropdown content */}
-              <div className="px-4 py-3">
+              <div className="px-4 py-3 z-50">
                 <span className="block text-sm text-gray-900 dark:text-white">{loginedUser?.userNameLast}{loginedUser?.userNameFirst}</span>
                 <span className="block text-sm text-gray-500 truncate dark:text-gray-400">사원번호 : {loginedUser?.userEid}</span>
               </div>

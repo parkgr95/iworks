@@ -70,7 +70,7 @@ function AddressIndex() {
                   </div>
                 </th>
                 <td className="px-6 py-4">
-                  {user.positionCodeName ? user.positionCodeName.substring(5) : ''}
+                  {user.positionCodeName ? user.positionCodeName : ''}
                 </td>
                 <td className="px-6 py-4">
                   {user.departmentName}

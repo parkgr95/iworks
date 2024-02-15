@@ -12,8 +12,8 @@ interface UserData {
   userNameLast: string,
   departmentName: string,
   departmentId: string,
-  positionCodeName: null,
-  positionCodeId: null,
+  userPosition: string | null,
+  positionCodeId: string | null,
   userTel: string,
   userEmail: string
 }
@@ -29,7 +29,7 @@ function AdminUsers() {
   const [userAll, setUserAll] = useState<UserData[]>([])
   const [departmentList, setDepartmentList] = useState<orginizationType[]>([])
   const [selectedDepartment, setSelectedDepartment] = useState<string>("")
-
+  console.log(userAll)
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/admin/user/`, {
       headers: {
@@ -115,25 +115,25 @@ function AdminUsers() {
             </thead>
             <tbody>
               {userAll.filter(user => selectedDepartment === "" || user.departmentName === selectedDepartment).map((user) => (
-                  <tr key={user.userId} onClick={() => handleTableRowClick(user.userId)} className="cursor-pointer bg-white border-b hover:bg-gray-100">
-                    <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                      <div className="ps-3">
-                        {user.userNameLast}{user.userNameFirst}
-                      </div>
-                    </th>
-                    <td className="px-6 py-4">
-                      {user.positionCodeName}
-                    </td>
-                    <td className="px-6 py-4">
-                      {user.departmentName}
-                    </td>
-                    <td className="px-6 py-4">
-                      {user.userEmail}
-                    </td>
-                    <td className="px-6 py-4">
-                      {user.userTel}
-                    </td>
-                  </tr>
+                <tr key={user.userId} onClick={() => handleTableRowClick(user.userId)} className="cursor-pointer bg-white border-b hover:bg-gray-100">
+                  <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                    <div className="ps-3">
+                      {user.userNameLast}{user.userNameFirst}
+                    </div>
+                  </th>
+                  <td className="px-6 py-4">
+                    {user.userPosition ? user.userPosition : ''}
+                  </td>
+                  <td className="px-6 py-4">
+                    {user.departmentName}
+                  </td>
+                  <td className="px-6 py-4">
+                    {user.userEmail}
+                  </td>
+                  <td className="px-6 py-4">
+                    {user.userTel}
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>

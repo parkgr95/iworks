@@ -125,10 +125,10 @@ function AdminUsersDetail() {
     event.preventDefault()
 
     axios
-      .put(`https://suhyeon.site/api/admin/user/delete/${userId}`, {
+      .put(`https://suhyeon.site/api/admin/user/delete/${userId}`, {} ,{
         headers: {
           Authorization: 'Bearer ' + getAccessToken(),
-        },
+        }
       })
       .then((res) => {
         navigate("/admin/users")

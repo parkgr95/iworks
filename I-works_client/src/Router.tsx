@@ -30,7 +30,6 @@ import CalendarPage from './pages/CalendarPage';
 import CalendarIndex from './pages/calendars/CalendarIndex';
 
 import AdminPage from './pages/AdminPage';
-import AdminIndex from './pages/admins/AdminIndex';
 import AdminUsers from './pages/admins/AdminUsers';
 import AdminDepartments from './pages/admins/AdminDepartments';
 import AdminGroups from './pages/admins/AdminGroups';
@@ -158,7 +157,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <AdminIndex />
+            element: <AdminUsers />
           },
           {
             path: 'users',
