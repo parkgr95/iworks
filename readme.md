@@ -10,12 +10,12 @@
 
 | Backend | Backend | Backend | Backend | 
 |--|--|--|--|
-| <img src="" width=400px alt=""/> | <img src="" width=400px alt=""/> |<img src="" width=400px alt=""/>	|	
+| <img src="https://avatars.githubusercontent.com/u/71250502?v=4" width=400px alt=""/> | <img src="https://avatars.githubusercontent.com/u/62732145?v=4" width=400px alt=""/> |<img src="https://avatars.githubusercontent.com/u/93829156?v=4" width=400px alt=""/>	|	<img src="https://avatars.githubusercontent.com/u/88698607?v=4" width=400px alt=""/>	|
 | [권용재](https://github.com/DevYJKwon) | [박기련](https://github.com/parkgr95) | [이수현](https://github.com/suhyeon06)	|[한지원](https://github.com/jiwon83)|
 
 | Frontend | Frontend |
 |--|--|
-|<img src="" width=400px alt=""/>|<img src="" width=400px alt=""/>	|	<img src="" width=400px alt=""/>|
+|<img src="https://avatars.githubusercontent.com/u/47100178?v=4" width=400px alt=""/>|<img src="https://avatars.githubusercontent.com/u/138846430?v=4" width=400px alt=""/>	|	<img src="" width=400px alt=""/>|
 |[김지용](https://github.com/gimjiyong)|[진창현](https://github.com/JDomynic)|
 
 ## 🛠️ PROJECT STACK
