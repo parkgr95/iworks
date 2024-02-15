@@ -1,15 +1,11 @@
 package com.example.iworks.domain.user.service;
 
-import com.example.iworks.domain.code.repository.CodeRepository;
-import com.example.iworks.domain.department.repository.DepartmentRepository;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.dto.UserGetMyPageResponseDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.global.util.EmailSender;
 import com.example.iworks.global.util.JwtProvider;
-import com.example.iworks.global.util.RandomStringUtil;
 import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +24,8 @@ import static com.example.iworks.global.common.CodeDef.*;
 public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
-    private final DepartmentRepository departmentRepository;
-    private final CodeRepository codeRepository;
     private final Response response;
-    private final RandomStringUtil randomStringUtil;
     private final JwtProvider jwtProvider;
-    private final EmailSender emailSender;
 
     @Override
     public ResponseEntity<Map<String, Object>> selectUser(String token) {
