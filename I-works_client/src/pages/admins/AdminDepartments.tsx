@@ -1,41 +1,43 @@
-import axios from "axios"
-import { useState, useEffect } from "react"
-import { Button } from "flowbite-react"
-import { useNavigate } from "react-router-dom"
-import AdminDepartmentsCreate from "./AdminDepartmentsCreate"
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { Button } from "flowbite-react";
+import AdminDepartmentsCreate from "./AdminDepartmentsCreate";
+import AdminDepartmentsUpdate from "./AdminDepartmentsUpdate";
 
 interface DepartmentType {
-  departmentCreatedAt: string
-  departmentDesc: string
-  departmentId: number
-  departmentIsUsed: boolean
-  departmentLeaderId: number
-  departmentName: string
-  departmentTelFirst: string
-  departmentTelLast: string
-  departmentTelMiddle: string
-  departmentUpdatedAt: string
+  departmentCreatedAt: string;
+  departmentDesc: string;
+  departmentId: number;
+  departmentIsUsed: boolean;
+  departmentLeaderId: number;
+  departmentName: string;
+  departmentTelFirst: string;
+  departmentTelLast: string;
+  departmentTelMiddle: string;
+  departmentUpdatedAt: string;
 }
 
 interface UserType {
-  userId: number
-  userEid: string
-  userNameFirst: string
-  userNameLast: string
-  departmentName: string
-  departmentId: string
-  positionCodeName: null
-  positionCodeId: null
-  userTel: string
-  userEmail: string
+  userId: number;
+  userEid: string;
+  userNameFirst: string;
+  userNameLast: string;
+  departmentName: string;
+  departmentId: string;
+  positionCodeName: null;
+  positionCodeId: null;
+  userTel: string;
+  userEmail: string;
 }
 
 function AdminDepartments() {
-  const [departmentList, setDepartmentList] = useState<DepartmentType[]>([])
-  const [users, setUsers] = useState<UserType[]>([])
-
+  const [departmentList, setDepartmentList] = useState<DepartmentType[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const openModal = () => {
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | null>(null);
+
+  const openModal = (departmentId: number) => {
+    setSelectedDepartmentId(departmentId !== 0 ? departmentId : null); // departmentId가 0이 아닐 때만 선택한 departmentId를 설정하고, 그렇지 않을 경우에는 null로 초기화
     setModalIsOpen(true);
   };
 
@@ -43,61 +45,32 @@ function AdminDepartments() {
     setModalIsOpen(false);
   };
 
-
   useEffect(() => {
     axios.get(`https://suhyeon.site/api/admin/department/`)
       .then((res) => {
-        console.log(res.data.data)
-        setDepartmentList(res.data.data)
+        setDepartmentList(res.data.data);
       })
       .catch((err) => {
-        console.log(err)
-      })
+        console.log(err);
+      });
 
     async function getUsers() {
       try {
         const res = await axios.get(`https://suhyeon.site/api/address/user/all`);
-        setUsers(res.data.data)
+        setUsers(res.data.data);
       } catch (err) {
         console.log(err);
       }
     }
 
-    getUsers()
-  }, [])
-
-  const navigate = useNavigate()
-  const moveToCreate = () => {
-    navigate(`/admin/boards/create`)
-  }
-  // const moveToUpdate = (boardId: string) => {
-  //   navigate(`/admin/boards/update/${boardId}`)
-  // }
-
-  // function deleteBoard(boardId: string, event: FormEvent) {
-  //   event.preventDefault()
-  //   const isConfirmed = window.confirm('게시물을 삭제하시겠습니까?');
-  //   if (!isConfirmed) {
-  //     return; // 사용자가 취소한 경우 함수를 종료합니다.
-  //   }
-  //   axios
-  //     .put(`https://suhyeon.site/api/board/delete/${boardId}`, {
-  //       'boardIsDeleted': '1'
-  //     })
-  //     .then(() => {
-  //       alert('삭제되었습니다.')
-  //       window.location.reload()
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }
+    getUsers();
+  }, []);
 
   return (
     <>
-      <div className="flex justify-between items-center text-2xl font-bold  mt-10">
+      <div className="flex justify-between items-center text-2xl font-bold mt-10">
         <h1 className="text-2xl font-bold">부서 관리</h1>
-        <Button onClick={openModal} className="bg-mainGreen text-white">
+        <Button onClick={() => openModal(0)} className="bg-mainGreen text-white">
           <span>부서 생성</span>
         </Button>
         <AdminDepartmentsCreate
@@ -128,9 +101,9 @@ function AdminDepartments() {
             </thead>
             <tbody>
               {departmentList.map((department) => {
-                const user: UserType | undefined = users.find((user) => user.userId == department.departmentLeaderId)
+                const user: UserType | undefined = users.find((user) => user.userId === department.departmentLeaderId);
                 return (
-                  <tr key={department.departmentId} className="cursor-pointer bg-white border-b hover:bg-gray-100">
+                  <tr key={department.departmentId} className=" bg-white border-b hover:bg-gray-100">
                     <th scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap ">
                       <div className="">
                         {department.departmentName}
@@ -145,16 +118,12 @@ function AdminDepartments() {
                     <td className="px-6 py-4">
                       {department.departmentTelFirst + "-" + department.departmentTelMiddle + "-" + department.departmentTelLast}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex">
-                        <Button onClick={openModal} className="bg-mainBlue text-white">
+                    <td className="w-48 py-4">
+                      <div className="flex items-center">
+                        <Button onClick={() => openModal(department.departmentId)} className="bg-mainBlue text-white">
                           <span>수정</span>
                         </Button>
-                        <AdminDepartmentsCreate
-                          show={modalIsOpen}
-                          onClose={closeModal}
-                        />
-                        {/* <Button onClick={(event) => deleteBoard(department.departmentLeaderId, event)} className="bg-rose-700 ml-2">삭제</Button> */}
+                        <span className="ml-4 font-semibold">{ department.departmentIsUsed ? "활성화" : "비활성화" }</span>
                       </div>
                     </td>
                   </tr>
@@ -164,10 +133,15 @@ function AdminDepartments() {
           </table>
         </div>
       </div>
+      {selectedDepartmentId !== null && (
+        <AdminDepartmentsUpdate
+          show={modalIsOpen}
+          onClose={closeModal}
+          departmentId={selectedDepartmentId}
+        />
+      )}
     </>
   )
 }
-
-
 
 export default AdminDepartments;

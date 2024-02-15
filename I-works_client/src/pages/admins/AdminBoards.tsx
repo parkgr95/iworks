@@ -104,7 +104,7 @@ function AdminBoards() {
             const user: UserType | undefined = users.find((user) => user.userId == article.boardCreatorId)
 
             return (
-              <tr key={article.boardId} className="cursor-pointer bg-white border-b hover:bg-gray-100">
+              <tr key={article.boardId} className=" bg-white border-b hover:bg-gray-100">
                 <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                   <div className="ps-3">
                   {article.boardTitle}

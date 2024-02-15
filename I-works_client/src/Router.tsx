@@ -22,6 +22,9 @@ import AdminUsersDetail from './pages/admins/AdminUsersDetail';
 import AdminBoardsUpdate from './pages/admins/AdminBoardsUpdate';
 import AdminBoardsCreate from './pages/admins/AdminBoardsCreate';
 import AdminSchedulesUpdate from './pages/admins/AdminSchedulesUpdate';
+import AdminGroupsCreate from './pages/admins/AdminGroupsCreate';
+import AdminGroupsUpdate from './pages/admins/AdminGroupsUpdate';
+import AddressSelect from './components/AddressSelect';
 
 const router = createBrowserRouter([
   {
@@ -41,7 +44,7 @@ const router = createBrowserRouter([
             action: logoutAction,
           },
           {
-            path:'mypage',
+            path: 'mypage',
             element: <MyPage />,
             loader: myPageLoader,
           },
@@ -109,6 +112,14 @@ const router = createBrowserRouter([
             element: <AdminGroups />
           },
           {
+            path: 'groups/create',
+            element: <AdminGroupsCreate />
+          },
+          {
+            path: 'groups/update/:groupId',
+            element: <AdminGroupsUpdate />
+          },
+          {
             path: 'boards',
             element: <AdminBoards />
           },
@@ -131,6 +142,11 @@ const router = createBrowserRouter([
         ]
       },
     ]
+  },
+  // 공통 라우터
+  {
+    path: '/popup/address/select',
+    element: <AddressSelect />
   },
 ]);
 

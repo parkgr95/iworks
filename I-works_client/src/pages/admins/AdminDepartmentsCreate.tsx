@@ -75,9 +75,9 @@ const AdminDepartmentsCreate: React.FC<ModalProps> = ({ show, onClose }) => {
         "departmentTelLast": departmentTelLast
       })
       .then((res) => {
-        navigate("../")
+        navigate("/admin/departments")
         onClose()
-        console.log(res.data)
+        console.log(res)
       })
       .catch((err) => {
         console.log(err)
