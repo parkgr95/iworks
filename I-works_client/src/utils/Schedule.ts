@@ -37,6 +37,7 @@ export async function getMyScheduleList(startDate:string, endDate:string) {
     )
     return response.data.data
   } catch {
+    alert('내 스케줄 실패')
     return tokenLoader()
   }
 }
