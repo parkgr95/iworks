@@ -67,9 +67,8 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<BoardGetResponseDto> getAll() {
-        return boardRepository.findAll(pageRequest)
+        return boardRepository.findAllIsNotDeleted(pageRequest)
                 .stream()
-                .filter(board -> !Boolean.TRUE.equals(board.getBoardIsDeleted()))
                 .map(BoardGetResponseDto::new)
                 .toList();
     }
