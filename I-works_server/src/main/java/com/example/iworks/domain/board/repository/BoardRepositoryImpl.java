@@ -26,6 +26,16 @@ public class BoardRepositoryImpl implements BoardGetRepository, BoardSearchRepos
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<Board> findAllIsNotDeleted(Pageable pageable) {
+        return queryFactory
+                .selectFrom(board)
+                .where(eqDeleted())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    @Override
     public List<Board> findAllByCategory(Pageable pageable, Code boardCategoryCode, int boardOwnerId) {
         return queryFactory
                 .selectFrom(board)
