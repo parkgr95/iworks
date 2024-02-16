@@ -64,11 +64,9 @@ function AdminSchedules() {
       return; // 사용자가 취소한 경우 함수를 종료합니다.
     }
     axios
-      .post(`https://suhyeon.site/api/admin/schedule/${shceduleId}/delete`, {
-        headers: {
-          Authorization: 'Bearer ' + getAccessToken(),
-        },
-      })
+      .post(`https://suhyeon.site/api/admin/schedule/${shceduleId}/delete`, {},{headers: {
+        Authorization: 'Bearer ' + getAccessToken(),
+      }})
       .then(() => {
         alert('삭제되었습니다.')
         window.location.reload()
