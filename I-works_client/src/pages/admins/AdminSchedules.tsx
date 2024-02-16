@@ -25,6 +25,8 @@ interface ScheduleType {
   scheduleModifierId: number | null,
   scheduleModifierName: string | null
   scheduleModifiedAt: string | null
+  assigneeList: string[]
+
 }
 
 function AdminSchedules() {
@@ -44,6 +46,7 @@ function AdminSchedules() {
     })
       .then((res) => {
         setScheduleList(res.data.data)
+        console.log(res.data.data)
       })
       .catch((err) => {
         console.log(err)
@@ -64,9 +67,11 @@ function AdminSchedules() {
       return; // 사용자가 취소한 경우 함수를 종료합니다.
     }
     axios
-      .post(`https://suhyeon.site/api/admin/schedule/${shceduleId}/delete`, {},{headers: {
-        Authorization: 'Bearer ' + getAccessToken(),
-      }})
+      .post(`https://suhyeon.site/api/admin/schedule/${shceduleId}/delete`, {}, {
+        headers: {
+          Authorization: 'Bearer ' + getAccessToken(),
+        }
+      })
       .then(() => {
         alert('삭제되었습니다.')
         window.location.reload()
@@ -98,6 +103,9 @@ function AdminSchedules() {
                   생성자
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  담당
+                </th>
+                <th scope="col" className="px-6 py-3">
                 </th>
               </tr>
             </thead>
@@ -106,7 +114,7 @@ function AdminSchedules() {
 
                 return (
                   <tr key={schedule.scheduleId} className=" bg-white border-b hover:bg-gray-100">
-                    <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                    <th scope="row" className="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                       <div className="">
                         {schedule.scheduleTitle}
                       </div>
@@ -114,8 +122,15 @@ function AdminSchedules() {
                     <td className="px-6 py-4">
                       {schedule.scheduleContent}
                     </td>
-                    <td className="px-6 py-4 w-20">
+                    <td className="px-6 py-4">
                       {schedule.scheduleCreatorName}
+                    </td>
+                    <td className="flex px-6 py-4 truncate... justify-center items-center">
+                    {schedule?.assigneeList.map((assign, index) => (
+                      <span key={index} className="pr-1">
+                        {assign}
+                      </span>
+                    ))}
                     </td>
                     <td className="px-6 py-4 w-48">
                       <div className="flex">
