@@ -36,7 +36,7 @@ public class BoardServiceImpl implements BoardService{
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
 
-    private final PageRequest pageRequest = PageRequest.of(0, 10);
+    private final PageRequest pageRequest = PageRequest.of(0, 100);
 
     @Transactional
     public void createBoard(int userId, BoardCreateRequestDto boardCreateRequestDto) {
