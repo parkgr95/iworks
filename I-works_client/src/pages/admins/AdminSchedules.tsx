@@ -98,9 +98,6 @@ function AdminSchedules() {
                   생성자
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  담당자
-                </th>
-                <th scope="col" className="px-6 py-3">
                 </th>
               </tr>
             </thead>
@@ -119,9 +116,6 @@ function AdminSchedules() {
                     </td>
                     <td className="px-6 py-4 w-20">
                       {schedule.scheduleCreatorName}
-                    </td>
-                    <td className="px-6 py-4">
-                      {schedule.scheduleModifierName == null ? 'null' : schedule.scheduleModifierName}
                     </td>
                     <td className="px-6 py-4 w-48">
                       <div className="flex">
