@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
