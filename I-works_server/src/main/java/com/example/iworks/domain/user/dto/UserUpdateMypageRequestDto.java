@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateMypageRequestDto {
-    private String userEmail; //유저 이메일
     private String userTel; //전화번호
     private String userAddress; //주소
     private String userPassword;

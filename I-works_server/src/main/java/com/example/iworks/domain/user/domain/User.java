@@ -1,12 +1,13 @@
 package com.example.iworks.domain.user.domain;
 
 
+import com.example.iworks.domain.admin.dto.adminUser.request.AdminUserCreateRequestDto;
+import com.example.iworks.domain.admin.dto.adminUser.request.AdminUserUpdateRequestDto;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.notification.domain.UserNotification;
 import com.example.iworks.domain.team.domain.TeamUser;
-import com.example.iworks.domain.user.dto.UserJoinRequestDto;
 import com.example.iworks.domain.user.dto.UserUpdateMypageRequestDto;
-import com.example.iworks.global.model.entity.Code;
+import com.example.iworks.domain.code.entity.Code;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +28,7 @@ import java.util.List;
 @Builder
 public class User {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int userId; //유저 아이디
 
@@ -88,7 +88,7 @@ public class User {
 
     @Builder.Default
     @Column(name = "user_role", nullable = false)
-    private String userRole = "USER,ADMIN"; //권한
+    private String userRole = "ROLE_USER,ROLE_ADMIN"; //권한
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "user_status")
@@ -101,17 +101,17 @@ public class User {
     @OneToMany(mappedBy = "userNotificationReceiver")
     private List<UserNotification> userNotifications = new ArrayList<>(); // 유저별 알림
 
-    public User(UserJoinRequestDto dto){
-         this.userEid = dto.getUserEid();
-         this.userNameFirst =dto.getUserNameFirst();
-         this.userNameLast = dto.getUserNameLast();
-         this.userEmail = dto.getUserEmail();
-         this.userTel = dto.getUserTel();
-         this.userAddress = dto.getUserAddress();
-         this.userGender = dto.getUserGender();
-         this.userIsDeleted = false;
-         this.userCreatedAt = LocalDateTime.now();
-         this.userUpdatedAt = LocalDateTime.now();
+    public User(AdminUserCreateRequestDto dto){
+        this.userEid = dto.getUserEid();
+        this.userNameFirst =dto.getUserNameFirst();
+        this.userNameLast = dto.getUserNameLast();
+        this.userEmail = dto.getUserEmail();
+        this.userTel = dto.getUserTel();
+        this.userAddress = dto.getUserAddress();
+        this.userGender = dto.getUserGender();
+        this.userIsDeleted = false;
+        this.userCreatedAt = LocalDateTime.now();
+        this.userUpdatedAt = LocalDateTime.now();
     }
 
     public void setRandomPassword(String password){
@@ -149,15 +149,48 @@ public class User {
         if(dto.getUserAddress() != null){
             this.userAddress = dto.getUserAddress();
         }
-        if(dto.getUserEmail() != null){
-            this.userEmail = dto.getUserEmail();
-        }
         if(dto.getUserTel() != null){
             this.userTel = dto.getUserTel();
         }
         if(dto.getUserPassword() != null){
             this.userPassword = encoder.encode(dto.getUserPassword());
         }
+        this.userUpdatedAt = LocalDateTime.now();
+    }
+
+    public void update(AdminUserUpdateRequestDto dto) {
+
+        if(dto.getUserEid() != null){
+            this.userEid = dto.getUserEid();
+        }
+        if(dto.getUserNameFirst() != null){
+            this.userNameFirst = dto.getUserNameFirst();
+        }
+        if(dto.getUserNameLast() != null){
+            this.userNameLast = dto.getUserNameLast();
+        }
+        if(dto.getUserEmail() != null){
+            this.userEmail = dto.getUserEmail();
+        }
+        if(dto.getUserTel() != null){
+            this.userTel = dto.getUserTel();
+        }
+//        if(dto.getUserAddress() != null){
+//            this.userAddress = dto.getUserAddress();
+//        }
+        this.userAddress = dto.getUserAddress();
+        if(dto.getUserGender() != null){
+            this.userGender = dto.getUserGender();
+        }
+        if(dto.getUserRole() != null){
+            this.setRoleList(dto.getUserRole());
+        }
+        this.userUpdatedAt = LocalDateTime.now();
+    }
+
+    public void delete() {
+        this.userIsDeleted = true;
+        this.userDeletedAt = LocalDateTime.now();
         this.userUpdatedAt = LocalDateTime.now();
     }
 

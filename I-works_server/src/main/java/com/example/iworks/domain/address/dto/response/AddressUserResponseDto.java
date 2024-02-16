@@ -1,6 +1,6 @@
 package com.example.iworks.domain.address.dto.response;
 
-import com.example.iworks.domain.address.domain.Address;
+import com.example.iworks.domain.address.entity.Address;
 import lombok.Getter;
 
 @Getter

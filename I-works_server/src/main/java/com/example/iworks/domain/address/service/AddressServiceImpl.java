@@ -1,12 +1,13 @@
 package com.example.iworks.domain.address.service;
 
-import com.example.iworks.domain.address.domain.Address;
 import com.example.iworks.domain.address.dto.request.AddressTeamCreateRequestDto;
 import com.example.iworks.domain.address.dto.request.AddressTeamEditRequestDto;
+import com.example.iworks.domain.address.dto.request.AddressTeamUserAddRequestDto;
 import com.example.iworks.domain.address.dto.response.AddressDepartmentResonseDto;
 import com.example.iworks.domain.address.dto.response.AddressTeamInfoResponseDto;
 import com.example.iworks.domain.address.dto.response.AddressTeamResponseDto;
 import com.example.iworks.domain.address.dto.response.AddressUserResponseDto;
+import com.example.iworks.domain.address.entity.Address;
 import com.example.iworks.domain.address.respository.AddressRepository;
 import com.example.iworks.domain.department.domain.Department;
 import com.example.iworks.domain.department.repository.DepartmentRepository;
@@ -17,9 +18,8 @@ import com.example.iworks.domain.team.repository.team.TeamSearchRepository;
 import com.example.iworks.domain.team.repository.teamuser.TeamUserRepository;
 import com.example.iworks.domain.user.domain.User;
 import com.example.iworks.domain.user.repository.UserRepository;
-import com.example.iworks.domain.user.repository.UserSearchRepository;
-import com.example.iworks.global.model.Response;
 import com.example.iworks.global.util.JwtProvider;
+import com.example.iworks.global.util.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class AddressServiceImpl implements AddressService {
     private final Response response;
     private final JwtProvider jwtProvider;
     private final TeamSearchRepository teamSearchRepository;
-    private final UserSearchRepository userSearchRepository;
+
 
     @Override
     public ResponseEntity<Map<String, Object>> selectAddressAll() {
@@ -89,6 +89,13 @@ public class AddressServiceImpl implements AddressService {
         return response.handleSuccess(result);
     }
 
+    @Override
+    public ResponseEntity<Map<String, Object>> selectMyTeamAll(String token) {
+        int userId = jwtProvider.getUserId(token);
+        Stream<AddressTeamResponseDto> result = teamSearchRepository.findTeamAllByUserId(userId).stream().filter(team -> !team.getTeamIsDeleted()).map(AddressTeamResponseDto::new);
+        return response.handleSuccess(result);
+    }
+
     @Transactional
     @Override
     public ResponseEntity<Map<String, Object>> deleteTeam(int teamId, String token) {
@@ -108,11 +115,13 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional
     @Override
-    public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, List<Integer> requestDto) {
+    public ResponseEntity<Map<String, Object>> addTeamUser(int teamId, String token, AddressTeamUserAddRequestDto requestDto) {
         int userId = jwtProvider.getUserId(token);
 
+        System.out.println("dto : "+requestDto.getUserIds());
+
         Team team = teamRepository.findByTeamId(teamId);
-        List<User> userList = userSearchRepository.getUserListByUserList(requestDto);
+        List<User> userList = userRepository.getUserListByUserIds(requestDto.getUserIds());
         System.out.println("userList : "+ userList);
         List<TeamUser> teamUserList = new ArrayList<>();
         if (userList.isEmpty()) {
@@ -147,10 +156,13 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public ResponseEntity<Map<String, Object>> removeTeamUser(int teamId, String token, int targetId) {
         int userId = jwtProvider.getUserId(token);
-        User user = userRepository.findByUserId(userId);
+        User target = userRepository.findByUserId(targetId);
         Team team = teamRepository.findByTeamId(teamId);
 
-        if (user == null || user.getUserIsDeleted()) {
+        if (team.getTeamLeader() != userId) {
+            return response.handleFail("팀의 리더가 아닙니다.", null);
+        }
+        if (target == null || target.getUserIsDeleted()) {
             return response.handleFail("유저를 찾을 수 없습니다.", null);
         }
 
@@ -158,10 +170,7 @@ public class AddressServiceImpl implements AddressService {
             return response.handleFail("팀을 찾을 수 없습니다.", null);
         }
 
-        if (team.getTeamLeader() != userId) {
-            return response.handleFail("팀의 리더가 아닙니다.", null);
-        }
-        Optional<TeamUser> teamUser = team.getTeamUsers().stream().filter(tu -> tu.getTeamUserUser().getUserId() == userId).findFirst();
+        Optional<TeamUser> teamUser = team.getTeamUsers().stream().filter(tu -> tu.getTeamUserUser().getUserId() == targetId).findFirst();
         try {
             team.removeTeamUser(teamUser.get());
             teamUserRepository.delete(teamUser.get());
