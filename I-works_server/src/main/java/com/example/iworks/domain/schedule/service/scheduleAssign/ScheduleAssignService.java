@@ -1,5 +1,6 @@
 package com.example.iworks.domain.schedule.service.scheduleAssign;
 
+import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.request.AssigneeInfo;
 import com.example.iworks.domain.schedule.dto.scheduleAssign.response.ScheduleAssignResponseDto;
 import com.example.iworks.global.dto.DateCondition;
@@ -27,5 +28,7 @@ public interface ScheduleAssignService {
 
     /** 유저의 모든 소속에 대한 할일 배정 검색 조건 조회*/
     List<AssigneeInfo> findUserBelongs(int userId);
+
+    List<String> getAssigneeNameList(List<ScheduleAssign> scheduleAssignList);
 
 }
