@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface BoardGetRepository {
 
+    //게시글 전체 조회
+    List<Board> findAllIsNotDeleted(Pageable pageable);
+
     //카테고리 별 게시글 전체 조회
     List<Board> findAllByCategory(Pageable pageable, Code boardCategoryCode, int boardOwnerId);
 
