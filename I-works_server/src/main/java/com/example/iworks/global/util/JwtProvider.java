@@ -2,13 +2,18 @@ package com.example.iworks.global.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtProvider {
@@ -20,11 +25,12 @@ public class JwtProvider {
     long refreshExpTime;
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final JwtSecretKey key;
 
-    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, JwtSecretKey key) {
+    private final SecretKey SECRET_KEY;
+
+    public JwtProvider(@Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate, @Value("${jwt.secret}")String key) {
         this.redisTemplate = redisTemplate;
-        this.key = key;
+        this.SECRET_KEY = new SecretKeySpec(key.getBytes(), SignatureAlgorithm.HS512.getJcaName());
     }
 
     public String createAccessToken(int id, List<String> role) {
@@ -33,14 +39,14 @@ public class JwtProvider {
                 .claim("type","access")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
-                .signWith(key.secretKey())
+                .signWith(SECRET_KEY)
                 .compact();
         return accessToken;
     }
 
     public String reCreateAccessToken(String refreshToken) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
@@ -56,14 +62,14 @@ public class JwtProvider {
                 .claim("type","refresh")
                 .claim("role",role)
                 .setExpiration(new Date(System.currentTimeMillis() + refreshExpTime))
-                .signWith(key.secretKey())
+                .signWith(SECRET_KEY)
                 .compact();
-/*        redisTemplate.opsForValue().set(
-                refreshToken, //key
-                id, //value
+        redisTemplate.opsForValue().set(
+                String.valueOf(id), //key
+                refreshToken, //value
                 refreshExpTime,
                 TimeUnit.MILLISECONDS
-        );*/
+        );
 
         return refreshToken;
     }
@@ -72,7 +78,7 @@ public class JwtProvider {
         System.out.println("access check");
         accessToken = accessToken.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(accessToken)
                 .getBody();
@@ -84,18 +90,18 @@ public class JwtProvider {
         System.out.println("refresh check");
         refreshToken = refreshToken.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
         String type = (String)claims.get("type");
         if (type.equals("refresh")) {
             System.out.println("create refresh");
-/*            ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
-            String redisValue = stringValueOperations.get(refreshToken);
-            if (redisValue != null) {*/
+           ValueOperations<String, String> stringValueOperations = redisTemplate.opsForValue();
+            String redisValue = stringValueOperations.get(String.valueOf(claims.get("id")));
+            if (redisValue != null) {
                 return claims.getExpiration().after(new Date());
-           // }
+            }
         }
         System.out.println("failed");
         return false;
@@ -104,7 +110,7 @@ public class JwtProvider {
     public int getUserId(String jwt) {
         jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
@@ -114,7 +120,7 @@ public class JwtProvider {
     public List<String> getUserRole(String jwt) {
         jwt = jwt.replace("Bearer ","");
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key.secretKey())
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();

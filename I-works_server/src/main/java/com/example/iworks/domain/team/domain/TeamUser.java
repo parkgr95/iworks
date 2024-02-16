@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class TeamUser {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_user_id")
     private Integer teamUserId;
 
@@ -24,8 +24,11 @@ public class TeamUser {
     @JoinColumn(name = "team_user_user_id", updatable = false)
     private User teamUserUser; // 유저 아이디
 
-    public void setTeamUserTeamId(Team team){
+    public void setTeamUserTeam(Team team){
         this.teamUserTeam = team;
+    }
+    public void setTeamUserUser(User user){
+        this.teamUserUser = user;
     }
 
 }

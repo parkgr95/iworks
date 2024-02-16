@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "comment")
 public class Comment {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id", nullable = false)
     private int commentId;
 
@@ -47,10 +46,12 @@ public class Comment {
     private LocalDateTime commentDeletedAt; //댓글 삭제 일시
 
     @Column(name = "comment_is_deleted", columnDefinition = "boolean default false")
-    private boolean commentIsDeleted; //댓글 삭제 여부
+    private Boolean commentIsDeleted; //댓글 삭제 여부
 
-    public void update(CommentUpdateRequestDto commentUpdateRequestDto) {
-        this.commentContent = commentUpdateRequestDto.getCommentContent();
+    public void update(CommentUpdateRequestDto requestComment) {
+        if (requestComment.getCommentContent() != null && requestComment.getCommentContent().isEmpty()) {
+            this.commentContent = requestComment.getCommentContent();
+        }
         this.commentUpdatedAt = LocalDateTime.now();
     }
 
