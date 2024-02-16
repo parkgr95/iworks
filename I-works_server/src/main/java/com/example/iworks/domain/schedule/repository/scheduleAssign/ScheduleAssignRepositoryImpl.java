@@ -34,7 +34,7 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
          List<ScheduleAssign> foundScheduleAssign =
                  jpaQueryFactory
                          .selectFrom(scheduleAssign)
-                         .join(scheduleAssign.schedule, schedule).fetchJoin()
+                         .join(scheduleAssign.schedule, schedule)//.fetchJoin()
                          .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId()).and(notDeleted())
                                  ,withInDate(dateCondition)
                                  ,filterTask(onlyTask)
@@ -46,47 +46,35 @@ public class ScheduleAssignRepositoryImpl implements ScheduleAssignGetRepository
       }
       return new ArrayList<>(foundScheduleAssignList);
    }
+   
 
-//   @Override
-//   public List<Schedule> findScheduleAssignsBySearchParameter(List<AssigneeInfo> requestDtoList, DateCondition dateCondition, boolean onlyTask) {
-//      Set<Schedule> scheduleSet = new HashSet<>();
-//      for (AssigneeInfo requestDto : requestDtoList){
-//         List<Schedule> foundSchedules =
-//                 jpaQueryFactory
-//                         .selectFrom(schedule)
-//                         .where(schedule.scheduleId.in(
-//                                 select(scheduleAssign.schedule.scheduleId)
-//                                         .from(scheduleAssign)
-//                                         .where(eqAssignee(requestDto.getCategoryCodeId(), requestDto.getAssigneeId())
-//                                                         .and(notDeleted())
-//                                                 ,withInDate(dateCondition)
-//                                                 ,filterTask(onlyTask)
-//                                         )
-//                         ))
-//                         .fetch();
-//
-//         scheduleSet.addAll(foundSchedules);
-//      }
-//      return new ArrayList<>(scheduleSet);
-//   }
-   private BooleanExpression filterTask(boolean onlyTask){
-      if (!onlyTask) return Expressions.TRUE;
-      return scheduleAssign.schedule.scheduleDivision.codeId.eq(SCHEDULE_DIVISION_TASK_CODE_ID);
-   }
-   private BooleanExpression eqCategoryCodeId (int categoryCodeId){
-      return scheduleAssign.scheduleAssigneeCategory.codeId.eq(categoryCodeId);
-   }
-   private BooleanExpression eqAssigneeId(int assigneeId){
-      return scheduleAssign.scheduleAssigneeId.eq(assigneeId);
-   }
+   /**
+    * search condition
+    */
+
    private BooleanExpression eqAssignee(int categoryCodeId, int assigneeId){
       return eqCategoryCodeId(categoryCodeId).and(eqAssigneeId(assigneeId));
    }
+
+   private BooleanExpression eqCategoryCodeId (int categoryCodeId){
+      return scheduleAssign.scheduleAssigneeCategory.codeId.eq(categoryCodeId);
+   }
+
+   private BooleanExpression eqAssigneeId(int assigneeId){
+      return scheduleAssign.scheduleAssigneeId.eq(assigneeId);
+   }
+
    private BooleanExpression withInDate(DateCondition dateCondition){
       if (dateCondition == null) return Expressions.TRUE;
       return schedule.scheduleStartDate.loe(dateCondition.getEndDate())
               .and(schedule.scheduleEndDate.goe(dateCondition.getStartDate()));
    }
+
+   private BooleanExpression filterTask(boolean onlyTask){
+      if (!onlyTask) return Expressions.TRUE;
+      return scheduleAssign.schedule.scheduleDivision.codeId.eq(SCHEDULE_DIVISION_TASK_CODE_ID);
+   }
+
    private BooleanExpression notDeleted() {
       return schedule.scheduleIsDeleted.isFalse();
    }

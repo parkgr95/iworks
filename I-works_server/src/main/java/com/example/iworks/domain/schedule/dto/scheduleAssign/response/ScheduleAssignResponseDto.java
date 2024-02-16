@@ -3,7 +3,6 @@ package com.example.iworks.domain.schedule.dto.scheduleAssign.response;
 import com.example.iworks.domain.schedule.domain.Schedule;
 import com.example.iworks.domain.schedule.domain.ScheduleAssign;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -39,5 +38,18 @@ public class ScheduleAssignResponseDto {
       this.scheduleEndDate = scheduleAssign.getSchedule().getScheduleEndDate();
       this.scheduleIsFinish = scheduleAssign.getSchedule().getScheduleIsFinish();
       this.scheduleFinishedAt = scheduleAssign.getSchedule().getScheduleFinishedAt();
+   }
+   public ScheduleAssignResponseDto(Schedule schedule) {
+      this.scheduleAssigneeId = schedule.getScheduleAssigns().get(0).getScheduleAssigneeId();
+      this.scheduleAssigneeCategoryId = schedule.getScheduleAssigns().get(0).getScheduleAssigneeCategory().getCodeId();
+      this.scheduleAssigneeCategoryName = schedule.getScheduleAssigns().get(0).getScheduleAssigneeCategory().getCodeName();
+      this.scheduleId = schedule.getScheduleId();
+      this.scheduleDivisionName = schedule.getScheduleDivision().getCodeName();
+      this.scheduleTitle = schedule.getScheduleTitle();
+      this.schedulePriority = schedule.getSchedulePriority();
+      this.scheduleStartDate = schedule.getScheduleStartDate();
+      this.scheduleEndDate = schedule.getScheduleEndDate();
+      this.scheduleIsFinish = schedule.getScheduleIsFinish();
+      this.scheduleFinishedAt = schedule.getScheduleFinishedAt();
    }
 }
