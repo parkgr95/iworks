@@ -8,15 +8,10 @@
 ## :construction_worker: Member
 
 
-| Backend | Backend | Backend | Backend | 
-|--|--|--|--|
-| <img src="https://avatars.githubusercontent.com/u/71250502?v=4" width=400px alt=""/> | <img src="https://avatars.githubusercontent.com/u/62732145?v=4" width=400px alt=""/> |<img src="https://avatars.githubusercontent.com/u/93829156?v=4" width=400px alt=""/>	|	<img src="https://avatars.githubusercontent.com/u/88698607?v=4" width=400px alt=""/>	|
-| [권용재](https://github.com/DevYJKwon) | [박기련](https://github.com/parkgr95) | [이수현](https://github.com/suhyeon06)	|[한지원](https://github.com/jiwon83)|
-
-| Frontend | Frontend |
-|--|--|
-|<img src="https://avatars.githubusercontent.com/u/47100178?v=4" width=400px alt=""/>|<img src="https://avatars.githubusercontent.com/u/138846430?v=4" width=400px alt=""/>	|	<img src="" width=400px alt=""/>|
-|[김지용](https://github.com/gimjiyong)|[진창현](https://github.com/JDomynic)|
+| Backend | Backend | Backend | Backend | Frontend | Frontend |
+|--|--|--|--|--|--|
+| <img src="https://avatars.githubusercontent.com/u/71250502?v=4" width=400px alt=""/> | <img src="https://avatars.githubusercontent.com/u/62732145?v=4" width=400px alt=""/> |<img src="https://avatars.githubusercontent.com/u/93829156?v=4" width=400px alt=""/>	|	<img src="https://avatars.githubusercontent.com/u/88698607?v=4" width=400px alt=""/>	| <img src="https://avatars.githubusercontent.com/u/47100178?v=4" width=400px alt=""/>|<img src="https://avatars.githubusercontent.com/u/138846430?v=4" width=400px alt=""/>	|	<img src="" width=400px alt=""/> |
+| [권용재](https://github.com/DevYJKwon) | [박기련](https://github.com/parkgr95) |[이수현](https://github.com/suhyeon06) | [한지원](https://github.com/jiwon83) | [김지용](https://github.com/gimjiyong) | [진창현](https://github.com/JDomynic) |
 
 ## 🛠️ PROJECT STACK
 
@@ -40,18 +35,18 @@
 
 ## 📋 사용 기술
 
-- Frontend
+### Frontend
 
-- Backend  
-SpringBoot 3.2.1  
-SpringSecurity 6.2.1  
-Java-JWT 4.4.0  
-QueryDsl 5.0.0  
+### Backend
+**Language** | Java  
+**Framework** | Spring Boot 3.2.1, Spring Security 6.2.1, Jpa  
+**Library** | Java-JWT 4.4.0, QueryDsl 5.0.0  
+**Build Tool** | Gradle  
 
+### Database
 
-
-Redis
-MySql
+**RDBMS** | MySql  
+**Cache** | Redis
 
 ## Architecture
 
