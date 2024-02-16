@@ -22,11 +22,11 @@ public class AdminScheduleServiceImpl implements AdminScheduleService {
     public List<AdminScheduleResponseDto> getScheduleAll() {
         return scheduleRepository.findAll()
                 .stream()
-                .map(schedule -> {
-                    AdminScheduleResponseDto adminScheduleResponseDto = new AdminScheduleResponseDto(schedule);
-                    adminScheduleResponseDto.assigneeList = scheduleAssignService.getAssigneeNameList(schedule.getScheduleAssigns());
-                    return adminScheduleResponseDto;
-                })
+                .map(schedule -> new AdminScheduleResponseDto(
+                        schedule,
+                        scheduleAssignService.getAssigneeNameList(
+                                schedule.getScheduleAssigns()))
+                )
                 .collect(Collectors.toList());
     }
 

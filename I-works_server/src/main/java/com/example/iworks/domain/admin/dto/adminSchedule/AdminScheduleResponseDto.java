@@ -37,7 +37,7 @@ public class AdminScheduleResponseDto {
     public List<String> assigneeList;
 
 
-    public AdminScheduleResponseDto(Schedule schedule){
+    public AdminScheduleResponseDto(Schedule schedule, List<String> assigneeList){
         this.scheduleId = schedule.getScheduleId();
         this.scheduleDivisionName = schedule.getScheduleDivision().getCodeName();
         this.scheduleTitle = schedule.getScheduleTitle();
@@ -70,6 +70,7 @@ public class AdminScheduleResponseDto {
         }
 
         this.scheduleModifiedAt = schedule.getScheduleModifiedAt();
+        this.assigneeList = assigneeList;
 
     }
 }
